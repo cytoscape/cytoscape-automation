@@ -1,2 +1,2 @@
 # cytoscape-automation
-Collection of scripts that include programmatic io and control of Cytoscape
+Collection of scripts and code samples that enable programmatic io and control of Cytoscape
