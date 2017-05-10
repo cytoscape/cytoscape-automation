@@ -32,7 +32,15 @@ In addition, Cytoscape can also generate a dialog to access SayHelloTask, which 
 
 ## Producing Output from Tasks
 
+Tasks can provide output to the Command Line Dialog through the TaskMonitor argument passed in the run(TaskMonitor arg0) method.
 
+In ```SayHelloTask```, the following code is responsible for printing a message to either the Command Line Dialog or the Cytoscape Task History window:
+
+```
+arg0.showMessage(Level.INFO, "Hello" + name + ".");
+```
+
+Tasks that implement ```ObservableTask```, such as ```ReturnAValueTask``` must implement a method ```public <R> R getResults(Class<? extends R> type)```, which allows programmatic access to results after the Task has completed. Note that this implementation allows different return types. All ObservableTask implementations should allow String types to be returned. ```ReturnAValueTask``` also allows a Double type to be returned, which can be useful to other App developers wishing to access automation functions from your App.
 
 ## Registering TaskFactories
 
@@ -70,7 +78,13 @@ Available commands:
 
 ## Accessing TaskFactories from outside of Cytoscape
 
-TaskFactories registered as Commands can be accessed via CyREST. 
+TaskFactories registered as Commands can be accessed from an HTTP utility, such as [curl](https://curl.haxx.se/) or a wrapper library. There are three REST endpoints devoted to commands:
+
+- GET /v1/commands
+- GET /v1/commands/{namespace}
+- GET /v1/commands/{namespace}/{command}
+
+The exact functionality of these is documented in CyREST.
 
 ## Next Steps
 
