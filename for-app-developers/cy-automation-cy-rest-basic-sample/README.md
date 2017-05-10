@@ -124,7 +124,7 @@ The Swagger UI provides an interface that not only describes each endpoint in an
 
 ## Next Steps
 
-It is **strongly recommended** to follow up this Sample with the [CyREST Best Practices Sample App](https://github.com/dotasek/cyrest-best-practices-sample), which demonstrates ways to avoid errors and make your CyREST App easier to use and maintain.
+It is **strongly recommended** to follow up this Sample with the [CyREST Best Practices Sample App](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-best-practices-sample), which demonstrates ways to avoid errors and make your CyREST App easier to use and maintain.
 
 JAX-RS and Swagger annotations provide functionality well beyond their use in this app. Additional documentation on these can be found below:
 
