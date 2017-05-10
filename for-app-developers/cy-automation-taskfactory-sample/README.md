@@ -78,13 +78,15 @@ Available commands:
 
 ## Accessing TaskFactories from outside of Cytoscape
 
-TaskFactories registered as Commands can be accessed from an HTTP utility, such as [curl](https://curl.haxx.se/) or a wrapper library. There are three REST endpoints devoted to commands:
+TaskFactories registered as Commands can be accessed from an HTTP utility, such as [curl](https://curl.haxx.se/) or a wrapper library which provides access from within a scripting language, like python or R. There are three REST endpoints devoted to commands:
 
 - GET /v1/commands
 - GET /v1/commands/{namespace}
 - GET /v1/commands/{namespace}/{command}
 
 The exact functionality of these is documented in CyREST.
+
+Some useful wrapper libraries for accessing Cytoscape's REST automation are [py2cytoscape](https://github.com/idekerlab/py2cytoscape) and [RCy3](https://bioconductor.org/packages/release/bioc/html/RCy3.html).
 
 ## Next Steps
 
