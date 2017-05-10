@@ -4,7 +4,7 @@ This is a simple App intended to demonstrate best practices in registering endpo
 
 ## Prerequisites
 
-It is recommended to be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](https://github.com/dotasek/cy-rest-swagger-sample).
+It is recommended to be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-basic-sample).
 
 ## Notes
 
