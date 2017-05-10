@@ -35,7 +35,7 @@ public class ReturnAValueTask extends AbstractTask implements ObservableTask {
 	public <R> R getResults(Class<? extends R> type) {
 		if (type.equals(String.class)) {
 			return (R) (value.toString());
-		} else if (type.equals(Long.class)) {
+		} else if (type.equals(Double.class)) {
 			return (R) value;
 		}
 		else {
