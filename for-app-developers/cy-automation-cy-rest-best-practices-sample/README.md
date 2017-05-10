@@ -8,7 +8,7 @@ It is recommended to be familiar with concepts in [Cytoscape 3.0 App Development
 
 ## Notes
 
-This sample app uses Java comments to describe particular details in-code. General project setup is the same as for the ```CyREST Sample App with Swagger```. An overview of key points is provided below.
+This sample app uses Java comments to describe particular details in-code. General project setup is the same as for the ```CyREST Basic Sample App```. An overview of key points is provided below.
 
 ### Recommended Resource Path Structure
 
