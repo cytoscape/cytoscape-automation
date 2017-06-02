@@ -1,0 +1,282 @@
+---
+title: "Introduction to cyREST"
+author: "Keiichiro Ono"
+date: "6/15/2015"
+output:
+  html_document:
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+# Basic Workflow 1: Fundamentals
+
+by [Keiichiro Ono](http://keiono.github.io/)
+
+![](http://cytoscape.org/images/logo/cy3logoOrange.svg)
+![](http://www.r-project.org/Rlogo.png)
+
+----
+
+## Introduction
+
+![](http://chianti.ucsd.edu/~kono/images/cyrest_intro1_network.png)
+
+This is an introduction to cyREST using R.  You will learn how to access Cytoscape features from R environment.
+
+### Prerequisites
+* Basic knowledge of RESTful API
+    * [This is a good introduction to REST](http://www.restapitutorial.com/)
+* Basic R knowledge
+* Basic knowledge of Cytoscape
+
+### System Requirments
+* [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Cytoscape 3.2.1 or newer](http://cytoscape.org/download.html)
+* Latest version of [cyREST app](http://apps.cytoscape.org/apps/cyrest)
+
+----
+
+### Questions or Feature Requests?
+Please send them to our [mailing list](https://groups.google.com/forum/#!forum/cytoscape-discuss)
+
+----
+
+## Install R Packages and Basic Setup
+
+### 3rd Party Library
+In this tutorial, we will use several popular R packages to make this workflow more realistic. You need to install the following R packages to run this example.
+
+#### igraph
+[The igraph package](http://igraph.org/r/) is a de-facto standard graph anaysis library for R.  We will use this for manipulate/analyze graph data sets.
+
+#### HTTP Client
+Since you need to access Cytoscape via RESTful API, HTTP client library is the most important tool you need to understand.  In this example, we use [httr](http://cran.r-project.org/web/packages/httr/index.html).
+
+#### JSON Encoding and Decoding
+Data will be exchanged as JSON between Cytoscape and R.  We will use 3rd party package [RJSONIO](http://cran.r-project.org/web/packages/RJSONIO/index.html) in this workflow to encode/decode JSON.
+
+### Basic Setup
+At this point, there is only one option for the cy-rest module: port number.
+
+#### URL to Access Cytoscape REST API
+We assume that you are running Cytoscape desktop application and R on a same machine.  To access Cytoscape via cyREST, use the following URL:
+
+```
+http://localhost:PORT_NUMBER/v1/
+```
+
+where __v1__ is the current version number of API.  Once the final release is ready, we guarantee compatibility of your scripts as long as major version number is the same.
+
+
+#### Changing Port Number
+By default, port number used by cy-rest module is __1234__.  To change this, you need set a global Cytoscape property from _Edit-->Preserences-->Properties..._ and add a new property __port.number__.
+
+
+```{r}
+library(RJSONIO)
+library(igraph)
+library(httr)
+
+# Basic settings
+port.number = 1234
+base.url = paste("http://localhost:", toString(port.number), "/v1", sep="")
+
+print(base.url)
+```
+
+## Test cyREST
+
+### Understanding REST Basics
+
+| HTTP Verb | Description |
+|:----------:|:------------|
+| GET | Retrieving resources (in most cases, it is Cytoscape data objects, such as networks or tables) |
+| POST | Creating resources | 
+| PUT | Changing/replacing resources or collections |
+| DELETE | Deleting resources |
+
+----
+
+### Check Connection
+First, send a simple request and check server status.
+
+```{r}
+version.url = paste(base.url, "version", sep="/")
+cytoscape.version = GET(version.url)
+cy.version = fromJSON(rawToChar(cytoscape.version$content))
+print(cy.version)
+```
+
+### Generate Network with igraph
+
+```{r}
+# 1. Create simple directed graph with Barabasi-Albert model
+graph1 <- barabasi.game(200)
+
+# 2. Calculate some statistics and assign then to the graph
+graph1$name = "Scale-Free Network (BA Model)"
+graph1$density = graph.density(graph1)
+
+V(graph1)$degree <- degree(graph1)
+V(graph1)$closeness <- closeness(graph1)
+V(graph1)$betweenness <- betweenness(graph1)
+V(graph1)$page_rank <- page.rank(graph1)$vector
+V(graph1)$community <- label.propagation.community(graph1)$membership
+
+E(graph1)$betweenness <- edge.betweenness(graph1)
+```
+
+### Create Custom Visual Style
+You can create your own custom Visual Styles as R object.  The best way to learn how to create them is getting preset Styles as JSON.  For example, if you want to see how ___default___ style is composed as JSON, you can get it by the following code.
+
+```{r}
+default.style.url = paste(base.url, "styles/default", sep="/")
+GET(url=default.style.url)
+```
+
+Or, you can simply access the following URL from web browser:
+
+```
+http://localhots:1234/v1/styles/default
+```
+
+Here is the sample code to generate new Style:
+
+```{r}
+style.name = "R Style"
+
+# Defaults
+def.node.color <- list(
+  visualProperty = "NODE_FILL_COLOR",
+  value = "#00aabb"
+)
+
+def.node.border.width <- list(
+  visualProperty = "NODE_BORDER_WIDTH",
+  value = 0
+)
+
+def.node.size <- list(
+  visualProperty = "NODE_SIZE",
+  value = 25
+)
+
+def.edge.target.arrow <- list(
+  visualProperty="EDGE_TARGET_ARROW_SHAPE",
+  value="ARROW"
+)
+
+def.edge.width <- list(
+  visualProperty="EDGE_WIDTH",
+  value=3
+)
+
+defaults <- list(
+  def.node.color,
+  def.node.border.width,
+  def.node.size,
+  def.edge.target.arrow,
+  def.edge.width)
+
+# Visual Mappings
+min.betweenness = min(V(graph1)$betweenness)
+max.betweenness = max(V(graph1)$betweenness)
+
+mappings = list()
+
+point1 = list(
+  value=min.betweenness,
+  lesser= "20.0",
+  equal="20.0",
+  greater="20.0"
+)
+
+point2 = list(
+  value=max.betweenness,
+  lesser="100.0",
+  equal="100.0",
+  greater="100.0"
+)
+
+node.size.continuous.points = list(point1, point2)
+
+node.size = list(
+  mappingType="continuous",
+  mappingColumn="betweenness",
+  mappingColumnType="Double",
+  visualProperty="NODE_SIZE",
+  points = node.size.continuous.points
+)
+
+node.label = list(
+  mappingType="passthrough",
+  mappingColumn="name",
+  mappingColumnType="String",
+  visualProperty="NODE_LABEL"
+)
+
+mappings = list(node.size, node.label)
+
+style <- list(title=style.name, defaults = defaults, mappings = mappings)
+style.JSON <- toJSON(style)
+
+style.url = paste(base.url, "styles", sep="/")
+POST(url=style.url, body=style.JSON, encode = "json")
+```
+
+### Sending network to Cytoscape
+You need to convert your network data into Cytoscape-compatible JSON to send it to Cytoscape.  For your convenience, there is a utility to convert igraph object into JSON:
+
+```{r}
+# Load utility functions
+source("../utility/cytoscape_util.R")
+
+# Convert to Cytoscape style JSON object
+cygraph <- toCytoscape(graph1)
+
+# Send it to Cytoscape!
+network.url = paste(base.url, "networks", sep="/")
+res <- POST(url=network.url, body=cygraph, encode="json")
+
+# Extract SUID of the new network
+network.suid = unname(fromJSON(rawToChar(res$content)))
+```
+
+### Apply layout algorithm and Visual Style
+Finally, let's apply new Visual Style and layout algorithm:
+
+```{r}
+apply.layout.url = paste(
+  base.url,
+  "apply/layouts/force-directed",
+  toString(network.suid),
+  sep="/"
+)
+
+apply.style.url = paste(
+  base.url,
+  "apply/styles",
+  style.name,
+  toString(network.suid),
+  sep="/"
+)
+
+res <- GET(apply.layout.url)
+res <- GET(apply.style.url)
+```
+
+### Getting network view as image
+
+```{r}
+network.image.url = paste(
+  base.url,
+  "networks",
+  toString(network.suid),
+  "views/first.png",
+  sep="/"
+)
+print(network.image.url)
+```
+
+You can open the URL above to see the image of new network as PNG.

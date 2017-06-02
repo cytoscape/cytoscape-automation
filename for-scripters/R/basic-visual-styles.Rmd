@@ -1,0 +1,253 @@
+---
+title: "More network analysis with igraph and Cytoscape"
+author: "Keiichiro Ono"
+date: "6/17/2015"
+output: html_document
+---
+
+## Basic Workflow 3: Visual Styles
+
+by [Kazuhiro Takemoto](https://sites.google.com/site/kztakemoto/r-seminar-on-igraph---supplementary-information)*
+
+
+Updated by [Keiichiro Ono](http://keiono.github.io/)
+
+
+(The original tutorial was developed by Dr. Takemoto, and updated by Keiichiro Ono for cy-rest.)
+
+----
+
+![](http://cytoscape.org/images/logo/cy3logoOrange.svg)
+![](http://www.r-project.org/Rlogo.png)
+
+## Introduction
+Welcome to part 3 of the R tutorial.  In this section, you will learn how to use more advanced igraph features to analyse your networks.
+
+```{r}
+# Basic setup
+library(igraph)
+library(RJSONIO)
+library(httr)
+library(RColorBrewer)
+source('../utility/cytoscape_util.R')
+```
+
+
+## Loading Network and Data Table
+Loading and mapping data onto networks is a bit complicated in Cytoscape.  Let's do it in R instead.
+
+```{r}
+# Read network from edge list file
+df <- read.table("../../data/ecoli_ppi_Hu_etal_2009.txt")
+
+# Create undirected igraph object from data frame
+g <- graph.data.frame(df, directed=F)
+
+# Make this network a bit more biologist-friendly by adding some more annotations.
+#   Original table is from: http://www.ecogene.org/?q=ecodownload/dbtable
+
+annotations <-read.delim("../../data/EcoData061715-172714.txt",header=T,  quote = NULL)
+column.names <- colnames(annotations)
+filtered <- annotations[1:(length(column.names)-1)]
+
+V(g)$symbol <- as.character(filtered$Gene[match(V(g)$name, filtered$b.)])
+V(g)$description <- as.character(filtered$Description[match(V(g)$name, filtered$b.)])
+V(g)$func <- as.character(filtered$Function[match(V(g)$name, filtered$b.)])
+V(g)$protein <- as.character(filtered$Protein[match(V(g)$name, filtered$b.)])
+V(g)$eg <- as.character(filtered$EG[match(V(g)$name, filtered$b.)])
+V(g)$sp <- as.character(filtered$SP[match(V(g)$name, filtered$b.)])
+
+# Read essentiality table
+ess<-read.table("../../data/ecoli_proteins_essentiality_Baba2006MSB.txt", header=T)
+
+# Basic graph analysis: Calculate degree of nodes
+degrees <- degree(g)
+V(g)$degree <- degrees
+
+
+# Find intersection of these two data sets
+targets <- intersect(ess$gene, V(g)$name)
+
+# And create subset from the original table
+ess.selected <- subset(ess, is.element(ess$gene, targets)==T & duplicated(ess$gene)==F)
+ess.selected.ord <- ess.selected[order(ess.selected$gene),]
+
+# Add it as attribute
+V(g)$ess <- as.character(ess.selected$essential[match(V(g)$name, ess.selected$gene)])
+
+# Plot degrees
+degrees.selected <- subset(degrees, is.element(names(degrees), targets)==T)
+degrees.selected.ord <- degrees.selected[order(names(degrees.selected))]
+
+boxplot(log(degrees.selected.ord)~ess.selected.ord$ess, ylab="log(Degree)")
+```
+
+
+## Visualize the result in Cytoscape
+Boxplot is a great way to see the overall trend in the network, but it is more helpful if you can see the result in a network diagram.  You can do it by creating custom style for Cytoscape, that has mappings from degree to size, and from essintiality to colors.
+
+```{r}
+# Name of this new style
+style.name = "EssentialityAndDegree"
+
+# Delete the existing style for fresh start...
+style.url = paste(base.url, "styles", sep="/")
+style.delete.url = paste(style.url, style.name, sep="/")
+DELETE(url=style.delete.url)
+
+# Define default values
+def.node.color <- list(
+  visualProperty = "NODE_FILL_COLOR",
+  value = "#eeeeee"
+)
+
+def.node.size <- list(
+  visualProperty = "NODE_SIZE",
+  value = 10
+)
+
+def.node.border.width <- list(
+  visualProperty = "NODE_BORDER_WIDTH",
+  value = 0
+)
+
+def.edge.width <- list(
+  visualProperty = "EDGE_WIDTH",
+  value = 1
+)
+
+def.edge.color <- list(
+  visualProperty = "EDGE_STROKE_UNSELECTED_PAINT",
+  value = "#aaaaaa"
+)
+
+def.edge.transparency = list(
+  visualProperty="EDGE_TRANSPARENCY",
+  value = 50
+)
+
+def.node.transparency = list(
+  visualProperty="NODE_TRANSPARENCY",
+  value = 200
+)
+
+def.node.label.transparency = list(
+  visualProperty="NODE_LABEL_TRANSPARENCY",
+  value = 100
+)
+
+defaults <- list(def.node.color, def.node.size, 
+                 def.edge.color, def.node.border.width, 
+                 def.edge.width, def.node.transparency, def.node.label.transparency,
+                 def.edge.transparency)
+```
+
+### Mapping Definition
+* Node Degree to Node Size
+* Essentiality to Node Color
+* Use Gene symbol as label
+
+```{r}
+# Visual Mappings
+mappings = list()
+
+colors <- brewer.pal(3,"Dark2")
+essvals <- c("E", "N", "u")
+discrete.mappings = list()
+for(i in 1:length(colors)) {
+  discrete.mappings[[i]] <- list(key = essvals[i], value = colors[i])
+}
+
+node.color = list(
+  mappingType="discrete",
+  mappingColumn="ess",
+  mappingColumnType="String",
+  visualProperty="NODE_FILL_COLOR",
+  map = discrete.mappings
+)
+
+node.label = list(
+  mappingType="passthrough",
+  mappingColumn="symbol",
+  mappingColumnType="String",
+  visualProperty="NODE_LABEL"
+)
+# Node Size Mapping
+min.degree = min(V(g)$degree)
+max.degree = max(V(g)$degree)
+
+point1 = list(
+  value=min.degree,
+  lesser= "10.0",
+  equal="10.0",
+  greater="10.0"
+)
+
+point2 = list(
+  value=max.degree,
+  lesser= "100.0",
+  equal="100.0",
+  greater="100.0"
+)
+
+node.size.continuous.points = list(point1, point2)
+
+node.size = list(
+  mappingType="continuous",
+  mappingColumn="degree",
+  mappingColumnType="Double",
+  visualProperty="NODE_SIZE",
+  points = node.size.continuous.points
+)
+
+mappings = list(node.color, node.label, node.size)
+
+style <- list(title=style.name, defaults = defaults, mappings = mappings)
+style.JSON <- toJSON(style)
+
+POST(url=style.url, body=style.JSON, encode = "json")
+```
+
+## Layout and Visualization in Cytoscape
+Once everything is ready, send it to Cytoscape.  This code executes edge bundling, too.
+
+```{r}
+cygraph <- toCytoscape(g)
+network.url = paste(base.url, "networks", sep="/")
+res <- POST(url=network.url, body=cygraph, encode="json")
+
+# Extract SUID of the new network
+network.suid = unname(fromJSON(rawToChar(res$content)))
+
+# Apply style
+apply.style.url = paste(base.url, "apply/styles", style.name , toString(network.suid), sep="/")
+GET(apply.style.url)
+
+# Apply force-directed layout
+
+# Tweak Layout parameters
+layout.params = list(
+  name="unweighted",
+  value=TRUE
+)
+layout.params.url = paste(base.url, "apply/layouts/kamada-kawai/parameters", sep="/")
+PUT(layout.params.url, body=toJSON(list(layout.params)), encode = "json")
+
+apply.layout.url = paste(base.url, "apply/layouts/kamada-kawai", toString(network.suid), sep="/")
+GET(apply.layout.url)
+
+# Perform Edge Bundling
+apply.bundling.url = paste(base.url, "apply/edgebundling", toString(network.suid), sep="/")
+GET(apply.bundling.url)
+
+# Toggle graphics details
+lod.url = paste(base.url, "ui/lod", sep="/")
+PUT(lod.url)
+```
+
+## Final Result
+Fater a minuite or so, you can see something like this in the Cytoscape window:
+
+![](http://chianti.ucsd.edu/~kono/images/r_basic_3.png)
+
+Now you can visually see the trend, that is, __E__ nodes tend to have higher degrees.
