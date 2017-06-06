@@ -128,6 +128,6 @@ It is **strongly recommended** to follow up this Sample with the [CyREST Best Pr
 
 JAX-RS and Swagger annotations provide functionality well beyond their use in this app. Additional documentation on these can be found below:
 
-[JAX-RS Application, Resources and Sub-Resources](https://jersey.java.net/documentation/latest/jaxrs-resources.html)
+[Building RESTful Web Services with JAX-RS](http://docs.oracle.com/javaee/6/tutorial/doc/giepu.html)
 
 [Swagger Annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
