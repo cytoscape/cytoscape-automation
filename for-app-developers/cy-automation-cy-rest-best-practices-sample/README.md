@@ -62,6 +62,6 @@ You can also limit the expected values to an explicit set by using the ```allowa
 
 JAX-RS and Swagger annotations provide functionality well beyond their use in this app. Additional documentation on these can be found below:
 
-[Building RESTful Web Services with JAX-RS](http://docs.oracle.com/javaee/6/tutorial/doc/giepu.html)
+[Building RESTful Web Services with JAX-RS](https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU)
 
 [Swagger Annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
