@@ -1,0 +1,216 @@
+---
+title: "Cytoscape Tutorial:  R driving CyREST"
+output: html_notebook
+---
+```{python}
+
+```
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook that encapsulates a common bioinformatics workflow.  
+
+ We load a text file, parse it into a graph, and then analyze visualize the graph.  Three different images are generated to illustrate the difference between three community definition algorithms.
+
+[**If you are in RStudio**] When you execute code within the notebook, the results appear beneath the code. When viewed as html, it does not execute code, and offers the ability to hide one or all code blocks.   
+
+```{r}
+
+```
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+
+###There are 5 basic steps to this workflow. 
+
++ Load requisite libraries and confirm readiness.
++ Load the data files specific to this analysis.
++ Run graph level statistics on vertices and edges.
++ Run community based analysis to determine loci of interest.
++ Visualize and style the network to improve 
+
+###Step 0: Ready?
+
+This section will load the appropriate libraries and ensure they are functional.  If you see errors running this code you should proceed to the troubleshooting section for further explanation.
+
+[**If you are in RStudio**] try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*.   It will query your version of R to test the basic requisites and mechanisms.
+```{r}
+# Basic libraries for graphing, json, and network access
+library(igraph)
+library(RJSONIO)
+library(httr)
+# Utilities to use Cytoscape and R
+source("utility-functions.R")
+print("ready")
+# TODO -- add sanity checks, version reporting, phone home etc.
+```
+
+###Step 1: Load Data & Preprocess graph
+The only thing that will change between invocations of this script is the source data file.  There are at least a couple of strategies to make this easy to adjust.  You can either assume a location relative to this script, or provide an interface here to set the file.
+
+
+```{r}
+filename <- "data/yeastHighQuality.sif"
+```
+
+We read in a SIF file, reducing it down to just the first three columns, and read it into a graph data structure.  Then we reduce it down by finding the largest independent subgraph, and removing its duplicate edges.
+```{r}
+# Load yeast network SIF file as Data Frame
+yeast.table <- read.table(filename)
+
+# Convert it to simple edge list
+yeast.table.edgelist <- yeast.table[c(1,3)]
+
+# Convert DF to undirected igraph object
+# This is a PPI network, so import as undirected.
+g.original <- graph.data.frame(yeast.table.edgelist, directed=F)
+
+# Extract componentes (individual connected subgraphs)
+subgraphs <- decompose.graph(g.original)
+
+# Pick largest subgraph
+largest.subgraph <- subgraphs[[which.max(sapply(subgraphs, vcount))]]
+
+# Remove duplicate edges
+g <- simplify(largest.subgraph, remove.multiple=T, remove.loops=T)
+g$name <- "Yeast network"
+```
+###Step 2: Graph Level Statistical Analysis
+
+The igraph package provides a broad library of functions to analysis graphs.
+We look at the scalars density and transitivity to get a broad sense of the level of connectivity within our network. 
+```{r}
+
+# Step 2: Basic statistical analysis
+
+# Global Network Statistics
+g$density <- graph.density(g) # Density
+g$transitivity <- transitivity(g) # Transitivity
+```
+The V() function in igraph yields the graph's nodes (Vertices).
+
+Node statistics generate additional attributes for each node.  We are looking for the nodes with greatest (or least) degree of interconnectivity with the rest of the graph.
+
+Edge statistics 
+
+```{r}
+
+# Node statistics
+V(g)$closeness <- closeness(g) # Closeness Centrarity
+V(g)$degree <- degree(g) # Degree
+V(g)$pagerank <- page.rank(g, directed = FALSE) # PageRank
+V(g)$betweenness <- betweenness(g) # Betweenness Centrarity
+
+# Edge statistics
+E(g)$betweenness.edge <- edge.betweenness(g) # Edge Betweenness
+
+```
+
+###Step 3: Community Analysis
+
+We want to identify groups of nodes that are more highly interconnected, as these generally will have functional relationships.  
+
+There are several community algorithms in the literature.  We apply three here:
+
++ Greedy   (http://igraph.org/r/doc/cluster_fast_greedy.html)
++ Leading (http://igraph.org/r/doc/cluster_leading_eigen.html)
++ Propagation[^1]  (http://igraph.org/r/doc/cluster_label_prop.html)
+
+This will color the nodes and edges to show the three different community groupings.  
+
+NOTE:  Does it make sense to refactor this into a function that is called three times?
+
+[^1]:  Gopalan, Prem K.; David M. Blei (2013-09-03). "Efficient discovery of overlapping communities in massive networks".  PMID 23950224.
+
+```{r}
+# Step 3: Community Detection: Try multiple algorithms
+communities.greedy <- fastgreedy.community(g)
+communities.leading <- leading.eigenvector.community(g)
+communities.label.propagation <- label.propagation.community(g)
+
+V(g)$community.greedy <- communities.greedy$membership
+V(g)$community.leading <- communities.leading$membership
+V(g)$community.label.propagation<- communities.label.propagation$membership
+
+V(g)$colors.community.greedy <- communityToColors(
+  communities.greedy$membership,
+  length(communities.greedy))
+V(g)$colors.community.leading <- communityToColors(
+  communities.leading$membership,
+  length(communities.leading))
+V(g)$colors.community.label.propagation <- communityToColors(
+  communities.label.propagation$membership,
+  length(communities.label.propagation))
+
+E(g)$community.greedy <- getCommunityEdge(g, V(g)$community.greedy)
+E(g)$community.leading <- getCommunityEdge(g, V(g)$community.leading)
+E(g)$community.label.propagation <- getCommunityEdge(g, V(g)$community.label.propagation)
+
+E(g)$colors.community.greedy <- communityToColors(array(E(g)$community.greedy), length(communities.greedy))
+E(g)$colors.community.leading <- communityToColors(array(E(g)$community.leading), length(communities.leading))
+E(g)$colors.community.label.propagation <- communityToColors(array(E(g)$community.label.propagation), length(communities.label.propagation))
+```
+###Step 4: Cytoscape Visualizaiton
+
+Open a RESTful connection to Cytoscape, and post a series of urls that give the commands to layout and render the graph.
+
+NOTE:  Running this script repeatedly in the same cytoscape session will create excessive style objects named uniquely (greedy-1, greedy-2)
+
+
+```{r}
+
+# Convert igraph object into Cytoscape.js JSON
+cyjs <- toCytoscape(g)
+
+# POST it to Cytoscape
+network.url = paste(base.url, "networks", sep="/")
+res <- POST(url=network.url, body=cyjs, encode="json")
+
+# Extract network SUID from the return value
+network.suid = unname(fromJSON(rawToChar(res$content)))
+
+```
+###Step 5: Use structure information for Visual Styles
+This is a RATHER SLOW step where the styles are applied to the graph.  
+NOTE:  It seems apparent that event handling slows this way down.  A headless version is essential to this workflow.
+```{r}
+
+# Generate Visual Styles
+style.greedy <- buildStyle("greedy", g, colors = "colors.community.greedy", community="community.greedy")
+style.leading <- buildStyle("leading", g, colors = "colors.community.leading", community="community.leading")
+style.label.propagation <- buildStyle("label.propagation", g,
+                                      colors = "colors.community.label.propagation", community="community.label.propagation")
+
+style.url = paste(base.url, "styles", sep="/")
+POST(url=style.url, body=style.greedy, encode = "json")
+POST(url=style.url, body=style.leading, encode = "json")
+POST(url=style.url, body=style.label.propagation, encode = "json")
+
+# Apply a Style
+apply.style.url = paste(base.url, "apply/styles/greedy", toString(network.suid), sep="/")
+GET(apply.style.url)
+
+# Tweak Layout parameters
+layout.params = list( name="unweighted", value=TRUE )
+
+layout.params.url = paste(base.url, "apply/layouts/kamada-kawai/parameters", sep="/")
+PUT(layout.params.url, body=toJSON(list(layout.params)), encode = "json")
+
+# Apply layout
+params <- paste(toString(network.suid), "?column=community.greedy", sep="")
+apply.layout.url = paste(base.url, "apply/layouts/kamada-kawai", params, sep="/")
+GET(apply.layout.url)
+
+# Perform Edge Bundling
+apply.bundling.url = paste(base.url, "apply/edgebundling", toString(network.suid), sep="/")
+GET(apply.bundling.url)
+
+# Toggle graphics details
+lod.url = paste(base.url, "ui/lod", sep="/")
+PUT(lod.url)
+
+#TODO capture the images and display all three here.
+```
+
+
+```{r}
+```
+
+
