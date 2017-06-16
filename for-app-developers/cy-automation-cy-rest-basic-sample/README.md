@@ -91,36 +91,7 @@ Swagger is a framework for documenting and developing in the REST world. CyREST 
 
 GreetingResource includes a single Swagger tag ```@Api```. This is the minimum requirement for including a class and its methods in Swagger.
 
-To see the resulting Swagger document, you can load the URL below:
-
-```
-http://localhost:1234/v1/swagger.json
-```
-
-If our sample app has loaded, we should see the following somewhere in the returned JSON:
-
-```
-/swaggergreeting" : {
-      "get" : {
-        "operationId" : "greeting",
-        "produces" : [ "application/json" ],
-        "parameters" : [ ],
-        "responses" : {
-          "200" : {
-            "description" : "successful operation",
-            "schema" : {
-              "$ref" : "#/definitions/SimpleMessage"
-            },
-            "headers" : { }
-          }
-        }
-      }
-    }
-```
-
-This data can be made more useful by importing it into a application that accepts Swagger JSON, such as the [Swagger UI](http://swagger.io/swagger-ui/).
-
-The Swagger UI provides an interface that not only describes each endpoint in an easy-to-read manner, but also allows the user to see example arguments and data structures. It can also send queries directly to the application. If you want to explore this functionality, you can use Swagger UI's Live Demo with CyREST's generated Swagger JSON. To do this, first go to the [Live Demo](http://petstore.swagger.io/). Then, enter the address for the CyREST JSON in the text field at the top of the page (```http://localhost:1234/v1/swagger.json```) and click on '''Explore'''. You should then see a page that indexes all of CyREST's various endpoints, including ours from our app.
+To see the resulting Swagger document, follow the steps outlined in [Accessing Automation: Accessing through CyREST's Swagger UI](https://github.com/cytoscape/cytoscape-automation/blob/master/for-app-developers/accessing_automation.md#accessing-through-cyrests-swagger-ui). Your operation will be available under the ```default``` tag.
 
 ## Next Steps
 
