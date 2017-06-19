@@ -2,3 +2,4 @@
 /.settings
 .classpath
 .project
+/python_tests/.idea/
