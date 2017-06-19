@@ -77,7 +77,7 @@ public class ClassroomResourceImpl implements ClassroomResource
 	}
 
 	/*
-	 * The following is a useful way to send 
+	 * The following is a useful way to send a message along with an exception
 	 */
 	private static NotFoundException studentNotFoundInstance(Integer id) {
 		return new NotFoundException("Student not found", Response.status(Response.Status.NOT_FOUND)

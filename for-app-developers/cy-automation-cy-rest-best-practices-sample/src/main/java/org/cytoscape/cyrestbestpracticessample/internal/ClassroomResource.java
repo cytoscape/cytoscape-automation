@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api(tags="Apps, Best Practices")
+@Api(tags="Apps: Best Practices")
 @Path("/cyrestbestpractices/v1/classroom/")
 public interface ClassroomResource {
 
