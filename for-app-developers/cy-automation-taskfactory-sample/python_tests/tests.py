@@ -41,9 +41,11 @@ class SampleTestCase(unittest.TestCase):
         pass
 
     """
-    This is a test of basic functionality. 
-    
     All tests in our test suite are named starting with the text 'test'. This is set up in the suite() definition.
+    
+    This is a test of the operation we defined in the ReturnAValueTask. It is reachable via the GET 
+    /v1/commands/sample_app/return_a_value operation. We send it two parameters, and check that the response is what we 
+    expected.
     """
     @staticmethod
     def test_return_a_value():
@@ -63,7 +65,10 @@ class SampleTestCase(unittest.TestCase):
         """
         assert result.status_code == codes.OK , "Status code was expected to be 200, but was {}".format(result.status_code)
 
-        # Assert that our result is what is expected.
+        """ 
+        Assert that our result is what is expected. By default, Commands that are reached by GET return their data in 
+        plain text, along with messages about their execution. This necessitates the more verbose text match below.
+        """
         assert result.text == "12.0\nFinished\n", "Expected:\n12.0\nFinished\n\nbut received:\n" + result.text
 
 # This defines our test suite.
