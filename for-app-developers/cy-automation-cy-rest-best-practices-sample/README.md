@@ -1,6 +1,6 @@
 # CyREST Best Practices Sample App
 
-This is a simple App intended to demonstrate best practices in registering endpoints with CyREST and documenting them in Swagger.
+This is a simple App intended to demonstrate best practices in registering endpoints with CyREST using JAX-RS and documenting them using Swagger.
 
 ## Prerequisites
 
@@ -14,13 +14,23 @@ This sample app uses Java comments to describe particular details in-code. Gener
 
 Choosing paths for your resources is not a trivial task. Bad naming practices can cause problems when locating resources via REST. Below, is a description of this App's resources and their paths.
 
-The main resource in this app, defined in the ```ClassroomResource``` interface, is located on the path ```/cyrestbestpractices/v1/classroom/```. This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of it's subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
+The main resource in this app, defined in the ```ClassroomResource``` interface, is located on the path ```/cyrestbestpractices/v1/classroom/```.  The way it is set is demonstrated in the code snippet below:
+
+```java
+@Api(tags="Apps: Best Practices")
+@Path("/cyrestbestpractices/v1/classroom/")
+public interface ClassroomResource {
+   ...
+}
+```
+
+This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of it's subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
 
 These paths above were chosen according to the following best practices:
 
 #### Path Uniqueness
 
-The paths you choose for your resources should be unique in the CyREST API; a path to any of your resources should not map to any existing path in CyREST. Violating this requirement could result in resources not being registered, or throwing runtime errors. A simple way to satisfy the uniqueness requirement is to use the best practice of making your App's namespace unique (in our app, it's ```cyrestbestpractices```), and making this the first component in every one of your app's resources.
+The paths you choose for your resources should be unique in the CyREST API; a path to any of your resources should not map to any existing path in CyREST. Violating this requirement could result in resources not being registered, or throwing runtime errors. A simple way to satisfy the uniqueness requirement is to use the best practice of making your App's namespace unique (in our app, it's ```cyrestbestpractices```).
 
 #### Versioning
 
@@ -28,7 +38,29 @@ Since REST APIs may change in future implementations, it is good practice to ens
 
 ### Swagger Documentation
 
-Although Swagger can do a great deal by simply introspecting your Java code, customizing your Swagger can greatly improve a user's access to your app's automation features. This App provides examples of some best practices for documenting an App using Swagger, as outlined in the [Swagger Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices).
+Although Swagger can do a great deal by simply introspecting your Java code, this sample app uses Swagger annotations extensively to provide comprehensive documentation.
+
+For example, the following code snippet from ```ClassroomResource``` demonstrates the usage of the ```@ApiOperation``` and ```@ApiParam``` annotations.
+
+```java
+@ApiOperation(value = "Replace the teacher",
+	notes = "Replaces the classes teacher.\n\nYou can use this to 'edit' the teacher's information by replacing their "
+			+ " entire record with a newer one.", 
+			response=Person.class)
+@Path("teacher")
+@PUT
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public Person putTeacher(
+   @ApiParam(value = "The new teacher data", required = true) //The ApiParam annotation lets us add a brief 
+    		 //explanation of what the parameter does. We can also specify a few useful features, like whether or not 
+    		 //the parameter is required for method execution.
+   Person teacher //This java parameter represents the message body of a request. JAX-RX expects one parameter 
+    		 //like this in every PUT/POST method. 
+    );
+```
+
+This App provides many examples of best practices for documenting an App using Swagger, and more information about these can be found in the [Swagger Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices).
 
 ## Next Steps
 
@@ -37,3 +69,5 @@ JAX-RS and Swagger annotations provide functionality well beyond their use in th
 [Building RESTful Web Services with JAX-RS](https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU)
 
 [Swagger Annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
+
+[Cytoscape Automation: Swagger Best Practices](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices)
