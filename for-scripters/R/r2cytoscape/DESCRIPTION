@@ -1,0 +1,13 @@
+Package: r2cytoscape
+Title: Simple wrapper functions to use CyREST in R
+Version: 0.0.2
+Authors@R: c(person("Shraddha", "Pai", email = "shraddha.pai@utoronto.ca", role = c("aut", "cre")), 
+	person("Ruth","Isserlin",role="aut"),person("Alex","Pico",role="aut"),person("Kei","Ono",role="aut"))
+Description: Scripts to automate network, creation, style application using
+    CyREST. Functions written on an as-needed basis.
+Depends:
+    R (>= 3.3.1),RJSONIO,httr
+License: GPL>=2.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
