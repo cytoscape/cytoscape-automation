@@ -60,7 +60,7 @@ public Person putTeacher(
     );
 ```
 
-This App provides many examples of best practices for documenting an App using Swagger, and more information about these can be found in the [Swagger Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices).
+This App provides many examples of best practices for documenting an App using Swagger, with in-code comments describing them. More information about these can be found in the [Swagger Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices).
 
 ## Next Steps
 
