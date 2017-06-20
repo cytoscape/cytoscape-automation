@@ -22,7 +22,7 @@ You should get console output that says looks something like the folllowing:
   
   Process finished with exit code 0
 
-This indicates that your app has passed the two tests we have written below.
+This indicates that your app has passed the test we have written below.
 
 """
 
