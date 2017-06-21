@@ -1,14 +1,15 @@
 #' Make enrichment map from GMT
 #'
-#' @param base.url cyrest base url for communicating with cytoscape
 #' @param gmtFile (char) path to GMT file
 #' @param simCutoff (numeric from 0-1) similarity cutoff for node pruning
 #' @param coefType (one of JACCARD or COMBINED) type of similarity measure
+#' @param portNum (int) port number for cytoscape (Deprecated)
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @return (int) network ID of newly created network
 #' @import httr
 #' @export
-makeEMapfromGMT <- function(base.url='http://localhost:1234/v1',gmtFile,simCutoff=0.05,coefType="JACCARD",
-	portNum=1234) {
+makeEMapfromGMT <- function(gmtFile,simCutoff=0.05,coefType="JACCARD",
+	portNum=1234,base.url='http://localhost:1234/v1') {
     
     #Deprecated in 0.0.2
     if(!missing(portNum)){

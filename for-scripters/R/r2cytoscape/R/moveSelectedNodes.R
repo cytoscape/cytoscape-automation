@@ -11,12 +11,6 @@
 #' @import RJSONIO
 #' @import httr
 
-#Deprecated in 0.0.2
-cyMoveSelectedNodes <- function (base.url, network.suid,x.offset=0,y.offset=0,network.viewid){
-    .Deprecated("moveSelectedNodes")
-    moveSelectedNodes(base.url, network.suid,x.offset=0,y.offset=0,network.viewid)
-}
-
 moveSelectedNodes <- function(base.url='http://localhost:1234/v1', network.suid,x.offset=0,y.offset=0,network.viewid){
 
   #node selection might have changed since positions were retrieved'
@@ -53,3 +47,10 @@ moveSelectedNodes <- function(base.url='http://localhost:1234/v1', network.suid,
   return(response)
 
 }
+
+#Deprecated in 0.0.2
+cyMoveSelectedNodes <- function (base.url, network.suid,x.offset=0,y.offset=0,network.viewid){
+    .Deprecated("moveSelectedNodes")
+    moveSelectedNodes(base.url, network.suid,x.offset=0,y.offset=0,network.viewid)
+}
+

@@ -7,13 +7,6 @@
 #' @import RJSONIO
 #' @import httr
 
-#Deprecated in 0.0.2
-getNodeviewId <- function(base.url, network.suid){
-    .Deprecated("getNetworkViewId")
-    getNetworkViewId(base.url, network.suid)
-}
-
-
 getNetworkViewId <- function(base.url='http://localhost:1234/v1', network.suid){
   #get the network view suid
   get.viewid.url <- paste(base.url,"networks",network.suid,"views",sep="/")
@@ -22,3 +15,10 @@ getNetworkViewId <- function(base.url='http://localhost:1234/v1', network.suid){
 
   return(network.viewid)
 }
+
+#Deprecated in 0.0.2
+getNodeviewId <- function(base.url, network.suid){
+    .Deprecated("getNetworkViewId")
+    getNetworkViewId(base.url, network.suid)
+}
+

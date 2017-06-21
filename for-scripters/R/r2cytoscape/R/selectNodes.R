@@ -9,12 +9,6 @@
 #' @import RJSONIO
 #' @import httr
 
-#Deprecated in 0.0.2
-cySelectNodes <- function(base.url, nodes, network.suid){
-    .Deprecated("selectNodes")
-    selectNodes(base.url, nodes, network.suid)
-}
-
 selectNodes <- function(base.url='http://localhost:1234/v1', nodes, network.suid){
   #go through the set of nodes and create key-value pairs
 
@@ -39,3 +33,11 @@ selectNodes <- function(base.url='http://localhost:1234/v1', nodes, network.suid
     return("nothing selected")
   }
 }
+
+#Deprecated in 0.0.2
+cySelectNodes <- function(base.url, nodes, network.suid){
+    .Deprecated("selectNodes")
+    selectNodes(base.url, nodes, network.suid)
+}
+
+

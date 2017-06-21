@@ -7,12 +7,6 @@
 #' @import RJSONIO
 #' @import httr
 
-#Deprecated in 0.0.2
-cyUnselectAllNodes <- function(base.url,network.suid){
-    .Deprecated("unselectAllNodes")
-    unselectAllNodes(base.url,network.suid)
-}
-
 unselectAllNodes <- function(base.url='http://localhost:1234/v1',network.suid){
 
   column_name = "selected"
@@ -24,3 +18,10 @@ unselectAllNodes <- function(base.url='http://localhost:1234/v1',network.suid){
                          query=set_params))
 
 }
+
+#Deprecated in 0.0.2
+cyUnselectAllNodes <- function(base.url,network.suid){
+    .Deprecated("unselectAllNodes")
+    unselectAllNodes(base.url,network.suid)
+}
+

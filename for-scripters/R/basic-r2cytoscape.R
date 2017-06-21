@@ -30,7 +30,7 @@ collName <- "myCollection"
 # ----------------------------------------------------------------
 
 # create network
-network.suid <- createNetwork(mynodes,myedges,"myNetwork","myColl",
+network.suid <- createNetwork(mynodes,myedges,"myNetwork","myNetworkCollection",
 	node_IDcolumn="Alias")
 
 # spring-embedded layout on edge 'weight' column
@@ -41,7 +41,7 @@ response <- GET(url=layout.url)
 rawToChar(response$content)
 
 # create style with node attribute-fill mappings and some defaults
-nodeFills <- map_NodeFillDiscrete("GROUP",c("YES","NO"),
+nodeFills <- mapNodeFillDiscrete("GROUP",c("YES","NO"),
 							c("#FF9900","#66AAAA"))
 defaults <- list("NODE_SHAPE"="diamond",
 		"NODE_SIZE"=12,

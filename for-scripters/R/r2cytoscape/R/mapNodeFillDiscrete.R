@@ -6,12 +6,6 @@
 #' @return (list) ready to convert for JSON style mapping
 #' @export
 
-#Deprecated in 0.0.2
-map_NodeFillDiscrete <- function(attrName, attrVals,cols) {
-    .Deprecated("mapNodeFillDiscrete")
-    mapNodeFillDiscrete(attrName, attrVals,cols) 
-}
-
 mapNodeFillDiscrete <- function(attrName, attrVals,cols) {
 	node.fill.color <- list(
     mappingType="discrete",
@@ -27,4 +21,12 @@ mapNodeFillDiscrete <- function(attrName, attrVals,cols) {
 	node.fill.color$map=map
 return(node.fill.color)
 }
+
+
+#Deprecated in 0.0.2
+map_NodeFillDiscrete <- function(attrName, attrVals,cols) {
+    .Deprecated("mapNodeFillDiscrete")
+    mapNodeFillDiscrete(attrName, attrVals,cols)
+}
+
 

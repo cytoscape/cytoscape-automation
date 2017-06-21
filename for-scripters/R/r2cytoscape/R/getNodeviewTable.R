@@ -1,4 +1,5 @@
-#' Get view node information from cytoscape, get the node view table - x and y positions
+#' @title Get Node View Table
+#' @description Get node view information from cytoscape, get the node view table - x and y positions
 #'
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @param network.suid suid of the network that you want to get the view for
@@ -7,7 +8,8 @@
 #' @export
 #' @import RJSONIO
 #' @import httr
-getNodeviewTable <- function(base.url, network.suid, network.viewid){
+
+getNodeViewTable <- function(base.url='http://localhost:1234/v1', network.suid, network.viewid){
 
   #get the view node table
   get.viewinfo.url <- paste(base.url,"networks",network.suid,"views",network.viewid,sep="/")
@@ -34,3 +36,11 @@ getNodeviewTable <- function(base.url, network.suid, network.viewid){
   }
   return(node_positions)
 }
+
+#Deprecated in 0.0.2
+getNodeviewTable <- function(base.url, network.suid, network.viewid){
+    .Deprecated("getNodeViewTable")
+    getNodeViewTable(base.url, network.suid, network.viewid)
+}
+
+

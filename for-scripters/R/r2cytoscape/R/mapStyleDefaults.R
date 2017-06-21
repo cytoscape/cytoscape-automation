@@ -13,12 +13,6 @@
 #' mapStyleDefaults(list(NODE_FILL_COLOR="#FF0000",NODE_SIZE=12))
 #' @export
 
-#Deprecated in 0.0.2
-map_styleDefaults <- function(attrList) {
-    .Deprecated("mapStyleDefaults")
-    mapStyleDefaults(attrList)
-}
-
 mapStyleDefaults <- function(attrList) {
 		out <- list()
 		for (i in 1:length(attrList)) {
@@ -27,3 +21,10 @@ mapStyleDefaults <- function(attrList) {
 		}
 	return(out)
 }
+
+#Deprecated in 0.0.2
+map_styleDefaults <- function(attrList) {
+    .Deprecated("mapStyleDefaults")
+    mapStyleDefaults(attrList)
+}
+
