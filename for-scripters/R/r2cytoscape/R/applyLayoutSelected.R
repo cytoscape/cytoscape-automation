@@ -1,4 +1,5 @@
-#' Apply layout to just the selected nodes (Needs to be one of the layours available through cytoscape commands)
+#' @title Apply layout on selected nodes
+#' @description Apply layout to just the selected nodes (Needs to be one of the layours available through cytoscape commands)
 #' There are tunable parameters for attributes-layout layout
 #'
 #' @param base.url cyrest base url for communicating with cytoscape
@@ -11,7 +12,7 @@
 #' @import httr
 #
 #
-applyLayoutSelected <- function(base.url, selected.layout= "degree-circle",
+applyLayoutSelected <- function(base.url='http://localhost:1234/v1', selected.layout= "degree-circle",
                                   max.width = 500, node.attribute = "__mclCluster"){
   layout.url <- paste(base.url,"commands/layout",selected.layout, sep="/")
 

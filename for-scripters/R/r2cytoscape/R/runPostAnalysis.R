@@ -12,7 +12,7 @@
 #' @import RJSONIO
 #' @import httr
 ###################################################################
-runPostAnalysis <- function(base.url,pa.name,pa.gmtFile,test = "MANN_WHIT_LESS",
+runPostAnalysis <- function(base.url='http://localhost:1234/v1',pa.name,pa.gmtFile,test = "MANN_WHIT_LESS",
                               network.name = "none" , threshold){
 
   postanalysis.url <- paste(base.url, "commands","enrichmentmap","pa", sep="/")

@@ -15,7 +15,7 @@
 # given:
 # base.url - cyrest base url for communicating with cytoscape
 # name - name to call the new enrichment map network
-runAutoAnnotate <- function(base.url,cluster.alg = "MCL",max.words = 3,  network.name = "none" ){
+runAutoAnnotate <- function(base.url='http://localhost:1234/v1',cluster.alg = "MCL",max.words = 3,  network.name = "none" ){
 
   aaanalysis.url <- paste(base.url, "commands","autoannotate","annotate-clusterBoosted", sep="/")
 

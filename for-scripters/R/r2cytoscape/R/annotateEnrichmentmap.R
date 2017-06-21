@@ -1,4 +1,5 @@
-#' Run autoannotate analysis on network and try and optimize layout
+#' @title Annotate Enrichment Map 
+#' @description Run autoannotate analysis on network and try and optimize layout
 #'
 #' @param base.url - cyrest base url for communicating with cytoscape
 #' @param cluster.alg - cluster algorithm to use - default set to MCL
@@ -10,7 +11,7 @@
 #' @import RJSONIO
 #' @import httr
 
-annotateEnrichmentmap <- function(base.url, network.suid, cluster.alg = "MCL",max.words = 3,  network.name = "none" ){
+annotateEnrichmentmap <- function(base.url='http://localhost:1234/v1', network.suid, cluster.alg = "MCL",max.words = 3,  network.name = "none" ){
 
   #annotate the network
   runAutoAnnotate(base.url, cluster.alg ,max.words,network.name)

@@ -7,7 +7,7 @@
 #' @export
 #' @import RJSONIO
 #' @import httr
-renameNetwork <- function(base.url, new.name, network.suid){
+renameNetwork <- function(base.url='http://localhost:1234/v1', new.name, network.suid){
 
   #change the name of the network
   key_value_pairs <- c()

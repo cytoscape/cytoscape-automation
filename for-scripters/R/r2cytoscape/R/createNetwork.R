@@ -1,5 +1,6 @@
-#' create a network
+#' Create a network
 #' 
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @param nodes (data.frame) see nodeSet2JSON() for details
 #' @param edges (data.frame) see edgeSet2JSON() for details
 #' @param netName (char) network name
@@ -9,9 +10,15 @@
 #' @return (int) network ID
 #' @export
 #' @import RJSONIO
-createNetwork <- function(nodes, edges,netName="network",
+createNetwork <- function(base.url='http://localhost:1234/v1', nodes, edges,netName="network",
 	collName="collection",portNum=1234,...) {
-
+    
+    #Deprecated in 0.0.2
+    if(!missing(portNum)){
+        warning("portNum is deprecated; please use base.url instead.", call. = FALSE)
+        base.url=sprintf("http://localhost:%i/v1", portNum)
+    }
+    
 json_nodes <- nodeSet2JSON(nodes,...)
 json_edges <- edgeSet2JSON(edges,...)
 json_network <- list(
@@ -21,8 +28,8 @@ json_network <- list(
 network <- toJSON(json_network)
 
 cat("* Create network URL\n")
-url<- sprintf("http://localhost:%i/v1/networks?title=%s&collection=%s",
-	portNum,netName,collName,sep="")	
+url<- sprintf("%i/networks?title=%s&collection=%s",
+	base.url,netName,collName,sep="")	
 response <- POST(url=url,body=network, encode="json")
 
 network.suid <- unname(fromJSON(rawToChar(response$content)))

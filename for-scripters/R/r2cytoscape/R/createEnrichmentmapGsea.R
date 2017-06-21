@@ -15,7 +15,7 @@
 #' @import httr
 ###################################################################
 
-createEnrichmentmapGsea <- function(base.url, name,
+createEnrichmentmapGsea <- function(base.url='http://localhost:1234/v1', name,
                                       pvalue_thresh, qvalue_thresh, similarity_thresh, similarity_metric,
                                       gmt_gsea_file,gsea_ranks_file,gsea_results_filename,exp_file ){
   network_ids <- fromJSON(httr::content(GET(url=paste(base.url,"networks",sep="/")), "text", encoding = "ISO-8859-1"))

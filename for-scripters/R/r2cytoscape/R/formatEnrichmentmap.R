@@ -1,4 +1,5 @@
-#' Format the Enrichment map - move all red (NES +ve nodes) to the right and
+#' @title Format Enrichment Map
+#' @description Format the Enrichment map - move all red (NES +ve nodes) to the right and
 #' all blue (NES -ve nodes) to the left
 #'
 #' @param base.url cyrest base url for communicating with cytoscape
@@ -7,7 +8,7 @@
 #' @export
 #' @import RJSONIO
 #' @import httr
-formatEnrichmentmap <- function(base.url,network.suid){
+formatEnrichmentmap <- function(base.url='http://localhost:1234/v1',network.suid){
 
   #get the nodes table
   nodes_info <- getNodeTable(base.url, network.suid)
