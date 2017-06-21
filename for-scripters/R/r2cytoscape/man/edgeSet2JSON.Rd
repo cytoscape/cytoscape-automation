@@ -18,4 +18,3 @@ Convert edges to JSON format needed for CyRest network creation
 Function takes a table of interactions.  Interaction table needs to
 contain columns: AliasA, AliasB, and pmids
 }
-

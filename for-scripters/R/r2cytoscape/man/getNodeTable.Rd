@@ -2,9 +2,9 @@
 % Please edit documentation in R/getNodeTable.R
 \name{getNodeTable}
 \alias{getNodeTable}
-\title{Get node information from cytoscape,get the whole node table}
+\title{Get node table}
 \usage{
-getNodeTable(base.url, network.suid)
+getNodeTable(base.url = "http://localhost:1234/v1", network.suid)
 }
 \arguments{
 \item{base.url}{cyrest base url for communicating with cytoscape}

@@ -2,10 +2,10 @@
 % Please edit documentation in R/createNetwork.R
 \name{createNetwork}
 \alias{createNetwork}
-\title{create a network}
+\title{Create a network}
 \usage{
 createNetwork(nodes, edges, netName = "network", collName = "collection",
-  portNum = 1234, ...)
+  portNum = 1234, base.url = "http://localhost:1234/v1", ...)
 }
 \arguments{
 \item{nodes}{(data.frame) see nodeSet2JSON() for details}
@@ -16,7 +16,9 @@ createNetwork(nodes, edges, netName = "network", collName = "collection",
 
 \item{collName}{(char) network collection name}
 
-\item{portNum}{(int) port number for cytoscape}
+\item{portNum}{(int) port number for cytoscape (Deprecated)}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 
 \item{...}{params for nodeSet2JSON() and edgeSet2JSON()}
 }
@@ -24,6 +26,5 @@ createNetwork(nodes, edges, netName = "network", collName = "collection",
 (int) network ID
 }
 \description{
-create a network
+Create a network
 }
-

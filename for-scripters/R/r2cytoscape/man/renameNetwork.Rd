@@ -4,7 +4,7 @@
 \alias{renameNetwork}
 \title{Rename network}
 \usage{
-renameNetwork(base.url, new.name, network.suid)
+renameNetwork(base.url = "http://localhost:1234/v1", new.name, network.suid)
 }
 \arguments{
 \item{base.url}{cyrest base url for communicating with cytoscape}

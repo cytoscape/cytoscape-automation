@@ -2,11 +2,11 @@
 % Please edit documentation in R/applyLayoutSelected.R
 \name{applyLayoutSelected}
 \alias{applyLayoutSelected}
-\title{Apply layout to just the selected nodes (Needs to be one of the layours available through cytoscape commands)
-There are tunable parameters for attributes-layout layout}
+\title{Apply layout on selected nodes}
 \usage{
-applyLayoutSelected(base.url, selected.layout = "degree-circle",
-  max.width = 500, node.attribute = "__mclCluster")
+applyLayoutSelected(base.url = "http://localhost:1234/v1",
+  selected.layout = "degree-circle", max.width = 500,
+  node.attribute = "__mclCluster")
 }
 \arguments{
 \item{base.url}{cyrest base url for communicating with cytoscape}

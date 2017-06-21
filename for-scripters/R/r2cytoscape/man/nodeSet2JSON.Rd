@@ -22,4 +22,3 @@ mynodes <- data.frame(Alias=c("A","B","C","D"),
 	stringsAsFactors=FALSE)
 json_nodes <- convert_nodes_tojson(mynodes)
 }
-

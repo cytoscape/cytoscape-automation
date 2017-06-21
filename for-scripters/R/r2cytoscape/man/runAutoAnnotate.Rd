@@ -4,8 +4,8 @@
 \alias{runAutoAnnotate}
 \title{Run autoannotate analysis on network}
 \usage{
-runAutoAnnotate(base.url, cluster.alg = "MCL", max.words = 3,
-  network.name = "none")
+runAutoAnnotate(base.url = "http://localhost:1234/v1", cluster.alg = "MCL",
+  max.words = 3, network.name = "none")
 }
 \arguments{
 \item{base.url}{- cyrest base url for communicating with cytoscape}

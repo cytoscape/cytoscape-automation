@@ -4,8 +4,8 @@
 \alias{runPostAnalysis}
 \title{Run post analysis on network}
 \usage{
-runPostAnalysis(base.url, pa.name, pa.gmtFile, test = "MANN_WHIT_LESS",
-  network.name = "none", threshold)
+runPostAnalysis(base.url = "http://localhost:1234/v1", pa.name, pa.gmtFile,
+  test = "MANN_WHIT_LESS", network.name = "none", threshold)
 }
 \arguments{
 \item{base.url}{- cyrest base url for communicating with cytoscape}

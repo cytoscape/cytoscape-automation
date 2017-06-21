@@ -4,18 +4,21 @@
 \alias{createStyle}
 \title{create a style from components}
 \usage{
-createStyle(styleName, defaults, mappings, portNum = 1234)
+createStyle(styleName, defaults, mappings, portNum = 1234,
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
 \item{styleName}{(char) name for style}
 
 \item{defaults}{(list) key-value pairs for default mappings. See
-map_styleDefaults() for details on formatting of this variable}
+mapStyleDefaults() for details on formatting of this variable}
 
 \item{mappings}{(list) attribute mappings. Each entry should be 
 a specific attribute mapping (e.g. discrete fill color)}
 
-\item{portNum}{(int) port to which Cytoscape is mapped}
+\item{portNum}{(int) port number for cytoscape (Deprecated)}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 URL of style and JSON. Side effect of POSTing Style.
@@ -26,4 +29,3 @@ create a style from components
 \details{
 requires attribute mappings to be previously created
 }
-

@@ -2,10 +2,9 @@
 % Please edit documentation in R/formatEnrichmentmap.R
 \name{formatEnrichmentmap}
 \alias{formatEnrichmentmap}
-\title{Format the Enrichment map - move all red (NES +ve nodes) to the right and
-all blue (NES -ve nodes) to the left}
+\title{Format Enrichment Map}
 \usage{
-formatEnrichmentmap(base.url, network.suid)
+formatEnrichmentmap(base.url = "http://localhost:1234/v1", network.suid)
 }
 \arguments{
 \item{base.url}{cyrest base url for communicating with cytoscape}

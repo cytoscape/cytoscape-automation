@@ -2,10 +2,10 @@
 % Please edit documentation in R/makeEMapfromGMT.R
 \name{makeEMapfromGMT}
 \alias{makeEMapfromGMT}
-\title{make enrichment map from GMT}
+\title{Make enrichment map from GMT}
 \usage{
 makeEMapfromGMT(gmtFile, simCutoff = 0.05, coefType = "JACCARD",
-  portNum = 1234)
+  portNum = 1234, base.url = "http://localhost:1234/v1")
 }
 \arguments{
 \item{gmtFile}{(char) path to GMT file}
@@ -14,12 +14,13 @@ makeEMapfromGMT(gmtFile, simCutoff = 0.05, coefType = "JACCARD",
 
 \item{coefType}{(one of JACCARD or COMBINED) type of similarity measure}
 
-\item{portNum}{(int) port number for Cytoscape}
+\item{portNum}{(int) port number for cytoscape (Deprecated)}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 (int) network ID of newly created network
 }
 \description{
-make enrichment map from GMT
+Make enrichment map from GMT
 }
-

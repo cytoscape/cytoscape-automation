@@ -2,10 +2,10 @@
 % Please edit documentation in R/annotateEnrichmentmap.R
 \name{annotateEnrichmentmap}
 \alias{annotateEnrichmentmap}
-\title{Run autoannotate analysis on network and try and optimize layout}
+\title{Annotate Enrichment Map}
 \usage{
-annotateEnrichmentmap(base.url, network.suid, cluster.alg = "MCL",
-  max.words = 3, network.name = "none")
+annotateEnrichmentmap(base.url = "http://localhost:1234/v1", network.suid,
+  cluster.alg = "MCL", max.words = 3, network.name = "none")
 }
 \arguments{
 \item{base.url}{- cyrest base url for communicating with cytoscape}
