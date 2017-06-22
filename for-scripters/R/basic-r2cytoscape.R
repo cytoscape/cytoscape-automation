@@ -43,7 +43,7 @@ rawToChar(response$content)
 # create style with node attribute-fill mappings and some defaults
 nodeFills <- mapNodeFillDiscrete("GROUP",c("YES","NO"), c("#FF9900","#66AAAA"))
 defaults <- list("NODE_SHAPE"="diamond",
-		"NODE_SIZE"=12,
+		"NODE_SIZE"=20,
 		"EDGE_TRANSPARENCY"=120)
 sty <- createStyle("myStyle", defaults, list(nodeFills))
 

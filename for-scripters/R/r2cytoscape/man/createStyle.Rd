@@ -2,7 +2,7 @@
 % Please edit documentation in R/createStyle.R
 \name{createStyle}
 \alias{createStyle}
-\title{create a style from components}
+\title{Create a style from components}
 \usage{
 createStyle(styleName, defaults, mappings, portNum = 1234,
   base.url = "http://localhost:1234/v1")
@@ -24,8 +24,8 @@ a specific attribute mapping (e.g. discrete fill color)}
 URL of style and JSON. Side effect of POSTing Style.
 }
 \description{
-create a style from components
+Creates a style from defaults and predefined mappings.
 }
 \details{
-requires attribute mappings to be previously created
+Requires attribute mappings to be previously created.
 }

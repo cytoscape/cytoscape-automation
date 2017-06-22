@@ -1,6 +1,7 @@
-#' create a style from components
-#'
-#' @details requires attribute mappings to be previously created
+#' Create a style from components
+#' 
+#' @description Creates a style from defaults and predefined mappings.
+#' @details Requires attribute mappings to be previously created.
 #' @param styleName (char) name for style
 #' @param defaults (list) key-value pairs for default mappings. See
 #' mapStyleDefaults() for details on formatting of this variable
