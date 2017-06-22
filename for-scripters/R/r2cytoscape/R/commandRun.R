@@ -7,7 +7,7 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return List object
 #' @export
-#' @example commandRun('layout get preferred')
+#' @section Example: commandRun('layout get preferred')
 #' @import XML
 #' @import httr
 

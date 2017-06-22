@@ -6,7 +6,6 @@
 #' @rdname r2cytoscape-deprecated
 #' @name r2cytoscape-deprecated
 #' @usage See newer versions of deprecated functions linked below
-#' @param 
 #' @export cySelectNodes getNodeviewId getNodeviewTable map_NodeFillDiscrete map_styleDefaults cyMoveSelectedNodes cyUnselectAllNodes
 #' @aliases cySelectNodes getNodeviewId getNodeviewTable map_NodeFillDiscrete map_styleDefaults cyMoveSelectedNodes cyUnselectAllNodes
 #' @section Deprecation notices:

@@ -19,3 +19,7 @@ Using the same syntax as Cytoscape's Command Line Dialog,
 this function converts a command string into a CyREST URL, executes a GET
 request, and parses the HTML result content into an R list object.
 }
+\section{Example}{
+ commandRun('layout get preferred')
+}
+

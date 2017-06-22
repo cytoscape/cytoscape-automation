@@ -5,7 +5,8 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return cyrest url
 #' @export
-#' @example command2query('layout get preferred')
+#' @section Example: command2query('layout get preferred')
+#' @import stringr
 
 command2query<-function(cmd.string, base.url='http://localhost:1234/v1'){
     cmd.string = sub(" ([[:alnum:]]*=)","XXXXXX\\1",cmd.string)
