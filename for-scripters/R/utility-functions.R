@@ -2,32 +2,6 @@
 port.number = 1234
 base.url = paste("http://localhost:", toString(port.number), "/v1", sep="")
 
-# Utility to convert commands to query urls. Simply copy/paste command into string variables.
-## example:
-##  command = 'string disease query disease="glioblastoma multiforme" cutoff=0.9 species="Homo sapiens" limit=150'
-command2query<-function(command){
-    command = sub(" ([a-z]*=)","XXXXXX\\1",command)
-    cmdargs = unlist(strsplit(command,"XXXXXX"))
-    cmd = cmdargs[1]
-    q.cmd = URLencode(paste(base.url, "commands", sub(" ","/",cmd), sep="/"))
-    args = cmdargs[2]
-    if (is.na(args)){
-        q.cmd
-    }else{
-        args = gsub("\"","",args)
-        args1 = unlist(str_extract_all(args,"[a-z]+(?==)"))
-        args2 = unlist(strsplit(args," *[a-z]+="))
-        args2 = args2[-1]
-        q.args = NULL
-        
-        for (i in seq(args1)){
-            arg = paste(args1[i],URLencode(args2[i]),sep="=")
-            q.args = paste(q.args,arg,sep="&")
-        }
-        paste(q.cmd,q.args,sep="?")   
-    }
-}
-
 #
 # Returns edge attributes for member edges.
 #
