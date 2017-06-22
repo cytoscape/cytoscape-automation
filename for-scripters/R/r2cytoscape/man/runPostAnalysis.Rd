@@ -4,12 +4,10 @@
 \alias{runPostAnalysis}
 \title{Run post analysis on network}
 \usage{
-runPostAnalysis(base.url = "http://localhost:1234/v1", pa.name, pa.gmtFile,
-  test = "MANN_WHIT_LESS", network.name = "none", threshold)
+runPostAnalysis(pa.name, pa.gmtFile, test = "MANN_WHIT_LESS",
+  network.name = "none", threshold, base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{- cyrest base url for communicating with cytoscape}
-
 \item{pa.name}{- name to call post analysis dataset}
 
 \item{pa.gmtFile}{- path to post analysis gmt file}
@@ -20,6 +18,8 @@ runPostAnalysis(base.url = "http://localhost:1234/v1", pa.name, pa.gmtFile,
 \item{network.name}{- name of network to perform post analysis on.}
 
 \item{threshold}{- post analysis edge threshold}
+
+\item{base.url}{- cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

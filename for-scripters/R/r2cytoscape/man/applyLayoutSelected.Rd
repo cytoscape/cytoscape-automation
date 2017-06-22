@@ -4,18 +4,17 @@
 \alias{applyLayoutSelected}
 \title{Apply layout on selected nodes}
 \usage{
-applyLayoutSelected(base.url = "http://localhost:1234/v1",
-  selected.layout = "degree-circle", max.width = 500,
-  node.attribute = "__mclCluster")
+applyLayoutSelected(selected.layout = "degree-circle", max.width = 500,
+  node.attribute = "__mclCluster", base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{cyrest base url for communicating with cytoscape}
-
 \item{selected.layout}{layout to be applied - default ot degree circle}
 
 \item{max.width}{parameter used to attribtues circle layout that determines how many circles on x-axis - default to 500}
 
 \item{node.attribute}{parameter used to attribtues circle layout that determines which attribute to use for circles}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

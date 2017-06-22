@@ -1,17 +1,18 @@
 #' @title Annotate Enrichment Map 
 #' @description Run autoannotate analysis on network and try and optimize layout
 #'
-#' @param base.url - cyrest base url for communicating with cytoscape
 #' @param cluster.alg - cluster algorithm to use - default set to MCL
 #' (options include - AFFINITY_PROPAGATION|CLUSTER_FIZZIFIER|GLAY|CONNECTED_COMPONENTS|MCL|SCPS)
 #' @param max.words - max words to be used in each annotation - default set to 3.
 #' @param network.name - name of network to perform post analysis on.
+#' @param network.suid suid of the network that you want to get the view for
+#' @param base.url - cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 
-annotateEnrichmentmap <- function(base.url='http://localhost:1234/v1', network.suid, cluster.alg = "MCL",max.words = 3,  network.name = "none" ){
+annotateEnrichmentmap <- function(cluster.alg = "MCL",max.words = 3,  network.name = "none", network.suid, base.url='http://localhost:1234/v1'){
 
   #annotate the network
   runAutoAnnotate(base.url, cluster.alg ,max.words,network.name)

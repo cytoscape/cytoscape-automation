@@ -4,18 +4,21 @@
 \alias{annotateEnrichmentmap}
 \title{Annotate Enrichment Map}
 \usage{
-annotateEnrichmentmap(base.url = "http://localhost:1234/v1", network.suid,
-  cluster.alg = "MCL", max.words = 3, network.name = "none")
+annotateEnrichmentmap(cluster.alg = "MCL", max.words = 3,
+  network.name = "none", network.suid,
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{- cyrest base url for communicating with cytoscape}
-
 \item{cluster.alg}{- cluster algorithm to use - default set to MCL
 (options include - AFFINITY_PROPAGATION|CLUSTER_FIZZIFIER|GLAY|CONNECTED_COMPONENTS|MCL|SCPS)}
 
 \item{max.words}{- max words to be used in each annotation - default set to 3.}
 
 \item{network.name}{- name of network to perform post analysis on.}
+
+\item{network.suid}{suid of the network that you want to get the view for}
+
+\item{base.url}{- cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

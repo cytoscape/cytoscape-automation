@@ -1,19 +1,19 @@
 #' Run post analysis on network
 #'
-#' @param base.url - cyrest base url for communicating with cytoscape
 #' @param pa.name - name to call post analysis dataset
 #' @param pa.gmtFile - path to post analysis gmt file
 #' @param test - post analysis test you want to use - default MANN_WHIT_LESS
 #' (options - NO_FILTER|HYPERGEOM|MANN_WHIT_TWO_SIDED|MANN_WHIT_GREATER|MANN_WHIT_LESS|NUMBER|PERCENT|SPECIFIC)
 #' @param network.name - name of network to perform post analysis on.
 #' @param threshold - post analysis edge threshold
+#' @param base.url - cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 ###################################################################
-runPostAnalysis <- function(base.url='http://localhost:1234/v1',pa.name,pa.gmtFile,test = "MANN_WHIT_LESS",
-                              network.name = "none" , threshold){
+runPostAnalysis <- function(pa.name,pa.gmtFile,test = "MANN_WHIT_LESS",
+                              network.name = "none" , threshold,base.url='http://localhost:1234/v1'){
 
   postanalysis.url <- paste(base.url, "commands","enrichmentmap","pa", sep="/")
 

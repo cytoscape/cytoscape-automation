@@ -22,11 +22,3 @@ mapNodeFillDiscrete <- function(attrName, attrVals,cols) {
 return(node.fill.color)
 }
 
-
-#Deprecated in 0.0.2
-map_NodeFillDiscrete <- function(attrName, attrVals,cols) {
-    .Deprecated("mapNodeFillDiscrete")
-    mapNodeFillDiscrete(attrName, attrVals,cols)
-}
-
-

@@ -4,14 +4,14 @@
 \alias{selectNodes}
 \title{Select nodes}
 \usage{
-selectNodes(base.url = "http://localhost:1234/v1", nodes, network.suid)
+selectNodes(nodes, network.suid, base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{cyrest base url for communicating with cytoscape}
-
 \item{nodes}{a matrix with nodes that you want to select.  The table needs to have a column with SUIDs}
 
 \item{network.suid}{suid of the network that you want to get the view for}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

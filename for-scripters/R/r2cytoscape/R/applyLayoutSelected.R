@@ -2,18 +2,18 @@
 #' @description Apply layout to just the selected nodes (Needs to be one of the layours available through cytoscape commands)
 #' There are tunable parameters for attributes-layout layout
 #'
-#' @param base.url cyrest base url for communicating with cytoscape
 #' @param selected.layout layout to be applied - default ot degree circle
 #' @param max.width parameter used to attribtues circle layout that determines how many circles on x-axis - default to 500
 #' @param node.attribute parameter used to attribtues circle layout that determines which attribute to use for circles
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 #
 #
-applyLayoutSelected <- function(base.url='http://localhost:1234/v1', selected.layout= "degree-circle",
-                                  max.width = 500, node.attribute = "__mclCluster"){
+applyLayoutSelected <- function(selected.layout= "degree-circle",
+                                  max.width = 500, node.attribute = "__mclCluster", base.url='http://localhost:1234/v1'){
   layout.url <- paste(base.url,"commands/layout",selected.layout, sep="/")
 
   if(selected.layout == "attributes-layout"){

@@ -1,20 +1,20 @@
 #' @title Move selected nodes
 #' @description Move all selected nodes x and y position by x.offset and y.offset.
 #'
-#' @param base.url cyrest base url for communicating with cytoscape
-#' @param network.suid suid of the network that you want to get the view for
 #' @param x.offset numeric that you want to add to every selected node x position - default is zero
 #' @param y.offset numeric that you want to add to every selected node y position - default is zero
+#' @param network.suid suid of the network that you want to get the view for
 #' @param network.viewid suid of the network view that you want to get the info for
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 
-moveSelectedNodes <- function(base.url='http://localhost:1234/v1', network.suid,x.offset=0,y.offset=0,network.viewid){
+moveSelectedNodes <- function(x.offset=0, y.offset=0, network.suid, network.viewid, base.url='http://localhost:1234/v1'){
 
   #node selection might have changed since positions were retrieved'
-  node.positions <- getNodeviewTable(base.url,network.suid, network.viewid)
+  node.positions <- getNodeViewTable(network.suid, network.viewid, base.url)
 
   #for the selected nodes, shift the position
   selected.subset <- node.positions[which(node.positions[,'data.selected'] == "TRUE"),1:3]
@@ -46,11 +46,5 @@ moveSelectedNodes <- function(base.url='http://localhost:1234/v1', network.suid,
   }
   return(response)
 
-}
-
-#Deprecated in 0.0.2
-cyMoveSelectedNodes <- function (base.url, network.suid,x.offset=0,y.offset=0,network.viewid){
-    .Deprecated("moveSelectedNodes")
-    moveSelectedNodes(base.url, network.suid,x.offset=0,y.offset=0,network.viewid)
 }
 

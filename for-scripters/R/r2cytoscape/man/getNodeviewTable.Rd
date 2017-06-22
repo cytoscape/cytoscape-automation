@@ -4,15 +4,15 @@
 \alias{getNodeViewTable}
 \title{Get Node View Table}
 \usage{
-getNodeViewTable(base.url = "http://localhost:1234/v1", network.suid,
-  network.viewid)
+getNodeViewTable(network.suid, network.viewid,
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{cyrest base url for communicating with cytoscape}
-
 \item{network.suid}{suid of the network that you want to get the view for}
 
 \item{network.viewid}{suid of the network view that you want to get the info for}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 matrix nodeview parameters x-position, y-position, selected

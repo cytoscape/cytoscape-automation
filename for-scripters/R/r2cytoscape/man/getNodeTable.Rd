@@ -4,12 +4,12 @@
 \alias{getNodeTable}
 \title{Get node table}
 \usage{
-getNodeTable(base.url = "http://localhost:1234/v1", network.suid)
+getNodeTable(network.suid, base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{cyrest base url for communicating with cytoscape}
-
 \item{network.suid}{suid of the network that you want the node table}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 matrix nodetable

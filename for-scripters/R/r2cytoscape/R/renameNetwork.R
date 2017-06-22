@@ -1,13 +1,13 @@
 #' Rename network
 #'
-#' @param base.url cyrest base url for communicating with cytoscape
 #' @param new.name new name of the network
 #' @param network.suid suid of the network that you want to change name
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
-renameNetwork <- function(base.url='http://localhost:1234/v1', new.name, network.suid){
+renameNetwork <- function(new.name, network.suid,base.url='http://localhost:1234/v1'){
 
   #change the name of the network
   key_value_pairs <- c()

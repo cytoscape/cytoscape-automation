@@ -4,13 +4,11 @@
 \alias{createEnrichmentmapGsea}
 \title{Create Enrichment map with gsea results from edb directory}
 \usage{
-createEnrichmentmapGsea(base.url = "http://localhost:1234/v1", name,
-  pvalue_thresh, qvalue_thresh, similarity_thresh, similarity_metric,
-  gmt_gsea_file, gsea_ranks_file, gsea_results_filename, exp_file)
+createEnrichmentmapGsea(name, pvalue_thresh, qvalue_thresh, similarity_thresh,
+  similarity_metric, gmt_gsea_file, gsea_ranks_file, gsea_results_filename,
+  exp_file, base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{- cyrest base url for communicating with cytoscape}
-
 \item{name}{- name to call the new enrichment map network}
 
 \item{pvalue_thresh}{- pvalue threhold}
@@ -26,6 +24,8 @@ createEnrichmentmapGsea(base.url = "http://localhost:1234/v1", name,
 \item{gsea_results_filename}{- path to gsea edb file}
 
 \item{exp_file}{- path to expression file}
+
+\item{base.url}{- cyrest base url for communicating with cytoscape}
 }
 \value{
 suid of created enrichment map

@@ -41,12 +41,11 @@ response <- GET(url=layout.url)
 rawToChar(response$content)
 
 # create style with node attribute-fill mappings and some defaults
-nodeFills <- mapNodeFillDiscrete("GROUP",c("YES","NO"),
-							c("#FF9900","#66AAAA"))
+nodeFills <- mapNodeFillDiscrete("GROUP",c("YES","NO"), c("#FF9900","#66AAAA"))
 defaults <- list("NODE_SHAPE"="diamond",
 		"NODE_SIZE"=12,
 		"EDGE_TRANSPARENCY"=120)
-sty <- createStyle("myStyle", defaults=defaults,mappings=list(nodeFills))
+sty <- createStyle("myStyle", defaults, list(nodeFills))
 
 # now apply to network
 apply.style.url <- sprintf("%s/apply/styles/%s/%i",base.url, "myStyle",network.suid)

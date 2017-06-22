@@ -4,18 +4,18 @@
 \alias{runAutoAnnotate}
 \title{Run autoannotate analysis on network}
 \usage{
-runAutoAnnotate(base.url = "http://localhost:1234/v1", cluster.alg = "MCL",
-  max.words = 3, network.name = "none")
+runAutoAnnotate(cluster.alg = "MCL", max.words = 3, network.name = "none",
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{- cyrest base url for communicating with cytoscape}
-
 \item{cluster.alg}{- cluster algorithm to use - default set to MCL
 (options include - AFFINITY_PROPAGATION|CLUSTER_FIZZIFIER|GLAY|CONNECTED_COMPONENTS|MCL|SCPS)}
 
 \item{max.words}{- max words to be used in each annotation - default set to 3.}
 
 \item{network.name}{- name of network to perform post analysis on.}
+
+\item{base.url}{- cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

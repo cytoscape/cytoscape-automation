@@ -4,12 +4,12 @@
 \alias{formatEnrichmentmap}
 \title{Format Enrichment Map}
 \usage{
-formatEnrichmentmap(base.url = "http://localhost:1234/v1", network.suid)
+formatEnrichmentmap(network.suid, base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{base.url}{cyrest base url for communicating with cytoscape}
-
 \item{network.suid}{suid of the network that you want to get the view for}
+
+\item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
 server response

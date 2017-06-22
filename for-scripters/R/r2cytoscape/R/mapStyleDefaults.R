@@ -22,9 +22,3 @@ mapStyleDefaults <- function(attrList) {
 	return(out)
 }
 
-#Deprecated in 0.0.2
-map_styleDefaults <- function(attrList) {
-    .Deprecated("mapStyleDefaults")
-    mapStyleDefaults(attrList)
-}
-

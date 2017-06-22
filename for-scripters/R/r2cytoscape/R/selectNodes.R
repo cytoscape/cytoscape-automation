@@ -1,15 +1,15 @@
 #' @title Select nodes
 #' @description Select given nodes. Given a table that has a column called 'suids' method selects the nodes with supplied suids in
 #'
-#' @param base.url cyrest base url for communicating with cytoscape
-#' @param network.suid suid of the network that you want to get the view for
 #' @param nodes a matrix with nodes that you want to select.  The table needs to have a column with SUIDs
+#' @param network.suid suid of the network that you want to get the view for
+#' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
-#' @export
+#' @export 
 #' @import RJSONIO
 #' @import httr
 
-selectNodes <- function(base.url='http://localhost:1234/v1', nodes, network.suid){
+selectNodes <- function(nodes, network.suid, base.url='http://localhost:1234/v1'){
   #go through the set of nodes and create key-value pairs
 
   if(!is.null(nodes) && length(nodes) > 0){
@@ -34,10 +34,5 @@ selectNodes <- function(base.url='http://localhost:1234/v1', nodes, network.suid
   }
 }
 
-#Deprecated in 0.0.2
-cySelectNodes <- function(base.url, nodes, network.suid){
-    .Deprecated("selectNodes")
-    selectNodes(base.url, nodes, network.suid)
-}
 
 

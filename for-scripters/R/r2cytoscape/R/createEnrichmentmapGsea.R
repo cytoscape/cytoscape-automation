@@ -1,6 +1,5 @@
 #' Create Enrichment map with gsea results from edb directory
 #'
-#' @param base.url - cyrest base url for communicating with cytoscape
 #' @param name - name to call the new enrichment map network
 #' @param pvalue_thresh - pvalue threhold
 #' @param qvalue_thresh - FDR threshold
@@ -9,15 +8,16 @@
 #' @param gmt_gsea_file - path to gmt file
 #' @param gsea_results_filename - path to gsea edb file
 #' @param exp_file - path to expression file
+#' @param base.url - cyrest base url for communicating with cytoscape
 #' @return suid of created enrichment map
 #' @export
 #' @import RJSONIO
 #' @import httr
 ###################################################################
 
-createEnrichmentmapGsea <- function(base.url='http://localhost:1234/v1', name,
+createEnrichmentmapGsea <- function(name,
                                       pvalue_thresh, qvalue_thresh, similarity_thresh, similarity_metric,
-                                      gmt_gsea_file,gsea_ranks_file,gsea_results_filename,exp_file ){
+                                      gmt_gsea_file,gsea_ranks_file,gsea_results_filename,exp_file,base.url='http://localhost:1234/v1'){
   network_ids <- fromJSON(httr::content(GET(url=paste(base.url,"networks",sep="/")), "text", encoding = "ISO-8859-1"))
 
   enrichmentmap.url <- paste(base.url, "commands","enrichmentmap","build", sep="/")
