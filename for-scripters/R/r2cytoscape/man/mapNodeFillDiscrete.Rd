@@ -2,7 +2,7 @@
 % Please edit documentation in R/mapNodeFillDiscrete.R
 \name{mapNodeFillDiscrete}
 \alias{mapNodeFillDiscrete}
-\title{Creates node fill JSON to map node attribute to}
+\title{Creates node fill JSON for discrete mapping of node attribute}
 \usage{
 mapNodeFillDiscrete(attrName, attrVals, cols)
 }
@@ -17,5 +17,5 @@ mapNodeFillDiscrete(attrName, attrVals, cols)
 (list) ready to convert for JSON style mapping
 }
 \description{
-Creates node fill JSON to map node attribute to
+Creates node fill JSON for discrete mapping of node attribute
 }

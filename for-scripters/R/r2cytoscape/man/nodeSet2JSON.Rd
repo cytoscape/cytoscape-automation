@@ -4,21 +4,19 @@
 \alias{nodeSet2JSON}
 \title{Creates a table of nodes to CyREST JSON}
 \usage{
-nodeSet2JSON(node_set, nodeID_column = "Alias", ...)
+nodeSet2JSON(node.set, node.id.list = "id", ...)
 }
 \arguments{
-\item{node_set}{(data.frame) each row is a node and columns contain node
+\item{node.set}{(data.frame) each row is a node and columns contain node
 attributes}
 
-\item{nodeID_column}{(char) column of table to set for id,name and 
-shared_name}
+\item{node.id.list}{(char) override default list name for node ids}
 }
 \description{
 Creates a table of nodes to CyREST JSON
 }
 \examples{
-mynodes <- data.frame(Alias=c("A","B","C","D"), 
-		GROUP=c("YES","YES","NO","NO"),
+mynodes <- data.frame(name=c("A","B","C","D"), 
+		group=c("1","1","2","2"),
 	stringsAsFactors=FALSE)
-json_nodes <- convert_nodes_tojson(mynodes)
 }

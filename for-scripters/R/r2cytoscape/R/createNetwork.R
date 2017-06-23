@@ -1,5 +1,8 @@
 #' Create a network
 #' 
+#' @description Takes data frames for nodes and edges, as well as naming parameters to
+#' generate the JSON data format required by the "networks" POST operation via CyREST.
+#' Returns the network.suid and applies the perferred layout set in Cytoscape preferences.
 #' @param nodes (data.frame) see nodeSet2JSON() for details
 #' @param edges (data.frame) see edgeSet2JSON() for details
 #' @param netName (char) network name
@@ -10,8 +13,9 @@
 #' @return (int) network ID
 #' @export
 #' @import RJSONIO
-createNetwork <- function(nodes, edges,netName="network",
-	collName="collection",portNum=1234,base.url='http://localhost:1234/v1',...) {
+#' @seealso nodeSet2JSON edgeSet2JSON
+createNetwork <- function(nodes,edges,netName="MyNetwork",
+	collName="myNetworkCollection",portNum=1234,base.url='http://localhost:1234/v1',...) {
     
     #Deprecated in 0.0.2
     if(!missing(portNum)){
@@ -34,6 +38,12 @@ response <- POST(url=url,body=network, encode="json")
 
 network.suid <- unname(fromJSON(rawToChar(response$content)))
 cat(sprintf("Network ID is : %i \n", network.suid))
+
+cat("Applying default style\n")
+commandRun('vizmap apply styles="default"')
+
+cat(sprintf("Applying %s layout\n", commandRun('layout get preferred')))
+commandRun('layout apply preferred networkSelected="current')
 
 return(network.suid)
 }

@@ -1,4 +1,4 @@
-#' Creates node fill JSON to map node attribute to 
+#' Creates node fill JSON for discrete mapping of node attribute 
 #' 
 #' @param attrName (char) name of node attribute for discrete fill
 #' @param attrVals (char) possible values

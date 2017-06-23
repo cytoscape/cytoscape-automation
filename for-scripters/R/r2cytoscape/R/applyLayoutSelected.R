@@ -1,4 +1,5 @@
 #' @title Apply layout on selected nodes
+#' 
 #' @description Apply layout to just the selected nodes (Needs to be one of the layours available through cytoscape commands)
 #' There are tunable parameters for attributes-layout layout
 #'

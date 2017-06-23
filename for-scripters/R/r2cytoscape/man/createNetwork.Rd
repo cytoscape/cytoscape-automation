@@ -4,8 +4,9 @@
 \alias{createNetwork}
 \title{Create a network}
 \usage{
-createNetwork(nodes, edges, netName = "network", collName = "collection",
-  portNum = 1234, base.url = "http://localhost:1234/v1", ...)
+createNetwork(nodes, edges, netName = "MyNetwork",
+  collName = "myNetworkCollection", portNum = 1234,
+  base.url = "http://localhost:1234/v1", ...)
 }
 \arguments{
 \item{nodes}{(data.frame) see nodeSet2JSON() for details}
@@ -26,5 +27,10 @@ createNetwork(nodes, edges, netName = "network", collName = "collection",
 (int) network ID
 }
 \description{
-Create a network
+Takes data frames for nodes and edges, as well as naming parameters to
+generate the JSON data format required by the "networks" POST operation via CyREST.
+Returns the network.suid and applies the perferred layout set in Cytoscape preferences.
+}
+\seealso{
+nodeSet2JSON edgeSet2JSON
 }
