@@ -2,6 +2,7 @@
 
 export(annotateEnrichmentmap)
 export(applyLayoutSelected)
+export(checkCytoscapeVersion)
 export(command2query)
 export(commandHelp)
 export(commandRun)

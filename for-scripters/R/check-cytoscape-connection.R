@@ -38,7 +38,10 @@ if(!is.na(cytoscape.version["cytoscapeVersion"])){
 if("string" %in% commandHelp("")) print("Success: the STRING app is installed") else print("Warning: STRING app is not installed. Please install the STRING app before proceeding.")
 if("diffusion" %in% commandHelp("")) print("Success: the Diffusion app is installed") else print("Warning: Diffusion app is not installed. Please install the Diffusion app before proceeding.")
 
+###############################
 #### Now it gets interesting...
+###############################
+
 # Let's create a Cytoscape network from some basic R objects
 mynodes <- data.frame(id=c("node 0","node 1","node 2","node 3"), 
                       group=c("A","A","B","B"), # optional
@@ -86,5 +89,21 @@ commandHelp("help network")
 
 #List arguments for the **network select** command:
 commandHelp("help network select")  
+
+#### Syntax reference and helper functions
+# Syntax examples. Do not run this chunk of code.
+
+### CyREST direct
+# queryURL = paste(base.url,'arg1','arg2','arg3',sep='/') # refer to Swagger for args
+# res = GET(queryURL) # GET result object
+# res.html = htmlParse(rawToChar(res$content), asText=TRUE)  # parse content as HTML
+
+### Commands via CyREST
+# queryURL = command2query('commands and args') # refer to Swagger or Tools>Command Line Dialog in Cytoscape
+# res = GET(queryURL) # GET result object
+# res.html = htmlParse(rawToChar(res$content), asText=TRUE)  # parse content as HTML
+## ...using helper function
+# res.list = commandRun('commands and args') # parse list from content HTML
+
 
 #### Ok, now you are ready to work with some real data!  See advanced tutorials...
