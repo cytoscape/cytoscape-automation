@@ -5,7 +5,7 @@
 \title{Annotate Enrichment Map}
 \usage{
 annotateEnrichmentmap(cluster.alg = "MCL", max.words = 3,
-  network.name = "none", network.suid,
+  network.name = "none", network.suid = "current",
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
@@ -16,7 +16,7 @@ annotateEnrichmentmap(cluster.alg = "MCL", max.words = 3,
 
 \item{network.name}{- name of network to perform post analysis on.}
 
-\item{network.suid}{suid of the network that you want to get the view for}
+\item{network.suid}{suid of the network that you want to get the view for; default is "current" network}
 
 \item{base.url}{- cyrest base url for communicating with cytoscape}
 }

@@ -1,13 +1,17 @@
 #' @title Get node table
 #' @description Get node information from cytoscape,get the whole node table
 #'
-#' @param network.suid suid of the network that you want the node table
+#' @param network.suid suid of the network that you want the node table; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return matrix nodetable
 #' @export
 #' @import RJSONIO
 #' @import httr
-getNodeTable <- function(network.suid,base.url='http://localhost:1234/v1'){
+getNodeTable <- function(network.suid='current',base.url='http://localhost:1234/v1'){
+    
+    if(network.suid=='current')
+        network.suid = getNetworkSuid(base.url=base.url)
+    
   get.node.column.url <- paste(base.url,"networks",network.suid,"tables/defaultnode/rows/",sep="/")
 
   response <- GET(url=get.node.column.url)

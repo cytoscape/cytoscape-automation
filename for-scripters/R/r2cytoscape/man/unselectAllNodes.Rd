@@ -4,10 +4,11 @@
 \alias{unselectAllNodes}
 \title{Unselect all nodes}
 \usage{
-unselectAllNodes(network.suid, base.url = "http://localhost:1234/v1")
+unselectAllNodes(network.suid = "current",
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.suid}{suid of the network that you want to get the view for}
+\item{network.suid}{suid of the network that you want to get the view for; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

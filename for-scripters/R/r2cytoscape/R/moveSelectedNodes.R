@@ -3,17 +3,21 @@
 #'
 #' @param x.offset numeric that you want to add to every selected node x position - default is zero
 #' @param y.offset numeric that you want to add to every selected node y position - default is zero
-#' @param network.suid suid of the network that you want to get the view for
-#' @param network.viewid suid of the network view that you want to get the info for
+#' @param network.suid suid of the network that you want to get the view for; default is "current" network
+#' @param network.viewid suid of the network view that you want to get the info for; default is "current" network view
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 
-moveSelectedNodes <- function(x.offset=0, y.offset=0, network.suid, network.viewid, base.url='http://localhost:1234/v1'){
+moveSelectedNodes <- function(x.offset=0, y.offset=0, network.suid='current', network.viewid='current', base.url='http://localhost:1234/v1'){
 
   #node selection might have changed since positions were retrieved'
+    if(network.suid=='current')
+        network.suid = getNetworkSuid(base.url=base.url)
+    if(network.viewid=='current')
+        network.viewid = getNetworkViewId(base.url=base.url)
   node.positions <- getNodeViewTable(network.suid, network.viewid, base.url)
 
   #for the selected nodes, shift the position

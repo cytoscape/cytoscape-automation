@@ -2,14 +2,14 @@
 #' @description Select given nodes. Given a table that has a column called 'suids' method selects the nodes with supplied suids in
 #'
 #' @param nodes a matrix with nodes that you want to select.  The table needs to have a column with SUIDs
-#' @param network.suid suid of the network that you want to get the view for
+#' @param network.suid suid of the network that you want to get the view for; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export 
 #' @import RJSONIO
 #' @import httr
 
-selectNodes <- function(nodes, network.suid, base.url='http://localhost:1234/v1'){
+selectNodes <- function(nodes, network.suid='current', base.url='http://localhost:1234/v1'){
   #go through the set of nodes and create key-value pairs
 
   if(!is.null(nodes) && length(nodes) > 0){
@@ -23,6 +23,9 @@ selectNodes <- function(nodes, network.suid, base.url='http://localhost:1234/v1'
     selection <- list( key = "SUID", dataKey="id", data = key_value_pairs)
 
     selection <- toJSON(selection)
+
+    if(network.suid=='current')
+        network.suid = getNetworkSuid(base.url=base.url)
 
     get.node.column.url <- paste(base.url,"networks",network.suid,"tables/defaultnode",sep="/")
 

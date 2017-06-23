@@ -2,15 +2,17 @@
 #' @description Format the Enrichment map - move all red (NES +ve nodes) to the right and
 #' all blue (NES -ve nodes) to the left
 #'
-#' @param network.suid suid of the network that you want to get the view for
+#' @param network.suid suid of the network that you want to get the view for; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
-formatEnrichmentmap <- function(network.suid, base.url='http://localhost:1234/v1'){
+formatEnrichmentmap <- function(network.suid='current', base.url='http://localhost:1234/v1'){
 
   #get the nodes table
+    if(network.suid=='current')
+        network.suid = getNetworkSuid(base.url=base.url)
   nodes_info <- getNodeTable(base.url, network.suid)
 
   #get the column name that has the NES values

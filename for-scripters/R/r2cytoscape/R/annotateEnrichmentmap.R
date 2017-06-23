@@ -5,20 +5,22 @@
 #' (options include - AFFINITY_PROPAGATION|CLUSTER_FIZZIFIER|GLAY|CONNECTED_COMPONENTS|MCL|SCPS)
 #' @param max.words - max words to be used in each annotation - default set to 3.
 #' @param network.name - name of network to perform post analysis on.
-#' @param network.suid suid of the network that you want to get the view for
+#' @param network.suid suid of the network that you want to get the view for; default is "current" network
 #' @param base.url - cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
 #' @import RJSONIO
 #' @import httr
 
-annotateEnrichmentmap <- function(cluster.alg = "MCL",max.words = 3,  network.name = "none", network.suid, base.url='http://localhost:1234/v1'){
+annotateEnrichmentmap <- function(cluster.alg = "MCL",max.words = 3,  network.name = "none", network.suid='current', base.url='http://localhost:1234/v1'){
 
   #annotate the network
   runAutoAnnotate(base.url, cluster.alg ,max.words,network.name)
 
   #layout nodes better
   #get the nodes table
+    if(network.suid=='current')
+        network.suid = getNetworkSuid(base.url=base.url)
   nodes_info <- getNodeTable(base.url, network.suid)
 
   #get the column name that has the NES values
