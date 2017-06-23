@@ -1,7 +1,7 @@
 # r2cytoscape 
 Suite of wrappers for CyREST functions in R
 
-For a quick start, see [basic-r2cytoscape.R](../basic-r2cytoscape.R). This example creates a network from a list of nodes and edges, applies a spring-embedded layout based on edge weight, and then maps node attribute data to a simple visual style.
+For a quick start, see [check-cytoscape-connection.R](../check-cytoscape-connection.R). This example creates a network from a list of nodes and edges, and then maps node and edge attribute data to various visual properties.
 
 #### How to see a list of:
 * Visual properties for node/edge/network changes: http://localhost:1234/v1/styles/visualproperties/
@@ -22,7 +22,7 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 - [X] **getNetworkSuid**(network.name='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **getNetworkName**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **setCurrentNetwork**(network.suid, base.url='http://<span></span>localhost:1234/v1')
-- [ ] **checkCytoscapeVersion**(base.url='http://<span></span>localhost:1234/v1')
+- [X] **checkCytoscapeVersion**(base.url='http://<span></span>localhost:1234/v1')
 - [X] **openCySwagger**(domain='cyrest', base.url='http://<span></span>localhost:1234/v1')
 - [X] **commandHelp**(cmd.string='help', base.url='http://<span></span>localhost:1234/v1')
 - [X] **commandRun**(cmd.string, base.url='http://<span></span>localhost:1234/v1')
