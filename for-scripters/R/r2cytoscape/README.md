@@ -36,3 +36,7 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 - [ ] **loadTableData**(data.frame, data.key.column, table.key.column='shared name', table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **renameTableColumn**(column.name, new.column.name, table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **selectFirstNeighbors**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
+- [X] **mapEdgeWidthPassthrough**
+- [X] **mapNodeBorderColorDiscrete**
+- [X] **mapNodeLabelPassthrough**
+- [X] **mapTargetArrowShapeDiscrete**
