@@ -19,7 +19,7 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 * Refer to the roadmap of functions to be developed to help prioritize your work and choose harmonous function names and args. Thanks!
 
 #### Functions to be developed
-- [ ] **getNetworkSuid**(network.name='current', base.url='http://<span></span>localhost:1234/v1')
+- [X] **getNetworkSuid**(network.name='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **getNetworkName**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
 - [ ] **setCurrentNetwork**(network.suid, base.url='http://<span></span>localhost:1234/v1')
 - [ ] **checkCytoscapeVersion**(base.url='http://<span></span>localhost:1234/v1')
