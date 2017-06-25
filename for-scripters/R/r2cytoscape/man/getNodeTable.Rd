@@ -4,11 +4,10 @@
 \alias{getNodeTable}
 \title{Get node table}
 \usage{
-getNodeTable(network.suid = "current",
-  base.url = "http://localhost:1234/v1")
+getNodeTable(network = "current", base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.suid}{suid of the network that you want the node table; default is "current" network}
+\item{network}{name or suid of the network that you want the node table; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

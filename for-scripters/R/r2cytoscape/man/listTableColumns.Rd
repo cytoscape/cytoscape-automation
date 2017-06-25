@@ -4,7 +4,7 @@
 \alias{listTableColumns}
 \title{List table column names}
 \usage{
-listTableColumns(table, namespace = "default", network.name = "current",
+listTableColumns(table, namespace = "default", network = "current",
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
@@ -12,7 +12,7 @@ listTableColumns(table, namespace = "default", network.name = "current",
 
 \item{namespace}{namespace of table, e.g., default}
 
-\item{network.name}{name of the network; default is "current" network}
+\item{network}{name or suid of the network; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

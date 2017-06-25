@@ -4,11 +4,10 @@
 \alias{getNetworkViewId}
 \title{Get the network view suid}
 \usage{
-getNetworkViewId(network.suid = "current",
-  base.url = "http://localhost:1234/v1")
+getNetworkViewId(network = "current", base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.suid}{suid of the network that you want the network view id; default is "current" network}
+\item{network}{name or suid of the network; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

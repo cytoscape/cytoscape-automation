@@ -4,8 +4,8 @@
 \alias{getTableColumns}
 \title{Get table column values}
 \usage{
-getTableColumns(table, columns, namespace = "default",
-  network.suid = "current", base.url = "http://localhost:1234/v1")
+getTableColumns(table, columns, namespace = "default", network = "current",
+  base.url = "http://localhost:1234/v1")
 }
 \arguments{
 \item{table}{name of table, e.g., node, edge, network}
@@ -14,7 +14,7 @@ getTableColumns(table, columns, namespace = "default",
 
 \item{namespace}{namespace of table, e.g., default}
 
-\item{network.suid}{suid of the network; default is "current" network}
+\item{network}{name or suid of the network; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

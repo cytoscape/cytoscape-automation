@@ -19,24 +19,30 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 * Refer to the roadmap of functions to be developed to help prioritize your work and choose harmonous function names and args. Thanks!
 
 #### Functions to be developed
-- [X] **getNetworkSuid**(network.name='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **getNetworkName**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **setCurrentNetwork**(network.suid, base.url='http://<span></span>localhost:1234/v1')
-- [X] **checkCytoscapeVersion**(base.url='http://<span></span>localhost:1234/v1')
-- [X] **openCySwagger**(domain='cyrest', base.url='http://<span></span>localhost:1234/v1')
-- [X] **commandHelp**(cmd.string='help', base.url='http://<span></span>localhost:1234/v1')
-- [X] **commandRun**(cmd.string, base.url='http://<span></span>localhost:1234/v1')
-- [X] **command2query**(cmd.string, base.url='http://<span></span>localhost:1234/v1')
-- [ ] **createNetworkFromIgraph**(igraph.obj, base.url='http://<span></span>localhost:1234/v1')
-- [ ] **getNetworkAsIgraph**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **createTable**(table.name, network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **getTable**(table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **getTableColumn**(column.name='all', table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **getTableRow**(row.name='all, table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **loadTableData**(data.frame, data.key.column, table.key.column='shared name', table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **renameTableColumn**(column.name, new.column.name, table.name='defaultnode', network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [ ] **selectFirstNeighbors**(network.suid='current', base.url='http://<span></span>localhost:1234/v1')
-- [X] **mapEdgeWidthPassthrough**
-- [X] **mapNodeBorderColorDiscrete**
-- [X] **mapNodeLabelPassthrough**
-- [X] **mapTargetArrowShapeDiscrete**
+- [X] getNetworkSuid
+- [X] getNetworkName
+- [X] setCurrentNetwork
+- [X] checkCytoscapeVersion
+- [X] openCySwagger
+- [X] commandHelp
+- [X] commandRun
+- [X] command2query
+- [ ] createNetworkFromIgraph
+- [ ] getNetworkAsIgraph
+- [ ] createTable
+- [ ] getTable
+- [ ] getTableRow
+- [ ] renameTableColumn
+- [X] listTableColumns
+- [X] setTableColumns
+- [X] getTableColumns
+- [X] selectFirstNeighbors
+- [X] mapEdgeWidthPassthrough
+- [X] mapNodeBorderColorDiscrete
+- [X] mapNodeLabelPassthrough
+- [X] mapTargetArrowShapeDiscrete
+- [X] bundleEdges
+- [X] createSubnetwork
+- [X] getStyleNames
+- [X] setNodeSizeLocked
+- [X] getVisualProperties

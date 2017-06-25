@@ -5,7 +5,7 @@
 #' @param table name of table, e.g., node, edge, network
 #' @param columns names of columns to retrieve values from as list object or comma-separated list
 #' @param namespace namespace of table, e.g., default
-#' @param network.suid suid of the network; default is "current" network
+#' @param network name or suid of the network; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return data frame of column values
 #' @export
@@ -14,21 +14,21 @@
 #' @examples
 #' getTableColumns('score')
 
-getTableColumns<-function(table,columns,namespace='default',network.suid='current',base.url='http://localhost:1234/v1'){
+getTableColumns<-function(table,columns,namespace='default',network='current',base.url='http://localhost:1234/v1'){
 
     #handle comma separated lists and list objects
     col.list = columns
     if(length(col.list)==1)
         col.list = unlist(strsplit(columns, ","))
     
-    if(network.suid=='current')
-        network.suid = getNetworkSuid(base.url=base.url)
+    if(class(network)=='character') # if name...
+        network = getNetworkSuid(network.name=network,base.url=base.url) # then get SUID
     
     
     #get name column first
     
     tbl = paste0(namespace,table)
-    cmd = paste(base.url,'networks',network.suid,'tables',tbl,'columns','name',sep = '/')
+    cmd = paste(base.url,'networks',network,'tables',tbl,'columns','name',sep = '/')
     res = GET(URLencode(cmd))
     res.html = htmlParse(rawToChar(res$content), asText=TRUE)
     res.elem = xpathSApply(res.html, "//p", xmlValue) 
@@ -38,7 +38,7 @@ getTableColumns<-function(table,columns,namespace='default',network.suid='curren
     # then append other requested columns
     for (col in col.list){
         
-        cmd = paste(base.url,'networks',network.suid,'tables',tbl,'columns',col,sep = '/')
+        cmd = paste(base.url,'networks',network,'tables',tbl,'columns',col,sep = '/')
         res = GET(URLencode(cmd))
         res.html = htmlParse(rawToChar(res$content), asText=TRUE)
         res.elem = xpathSApply(res.html, "//p", xmlValue) 

@@ -19,7 +19,8 @@ Using the same syntax as Cytoscape's Command Line Dialog,
 this function returns a list of available commands or args.
 }
 \details{
-Works with or without 'help' command prefix.
+Works with or without 'help' command prefix. Note that if you ask about a command that doesn't
+have any arguments, this function will run the command!
 }
 \examples{
 commandHelp()  

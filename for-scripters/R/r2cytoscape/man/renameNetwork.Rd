@@ -4,13 +4,13 @@
 \alias{renameNetwork}
 \title{Rename network}
 \usage{
-renameNetwork(new.name, network.suid = "current",
+renameNetwork(new.name, network = "current",
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
 \item{new.name}{new name of the network}
 
-\item{network.suid}{suid of the network that you want to change name; default is "current" network}
+\item{network}{name or suid of the network to rename; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }

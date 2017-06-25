@@ -10,7 +10,7 @@
 # if any of these do not load properly, please refer to check-library-installation.R for more details:
 # https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/R
 library(pacman)
-p_load(RJSONIO,httr,stringr,XML,r2cytoscape)
+p_load(RJSONIO,httr,XML,r2cytoscape)
 
 
 #### Next, setup Cytoscape
@@ -22,17 +22,9 @@ p_load(RJSONIO,httr,stringr,XML,r2cytoscape)
 
 #### Test connection to Cytoscape
 # **port.number** needs to match value of Cytoscape property: rest.port (see Edit>Preferences>Properties...); default = 1234
-port.number = 1234
-base.url = paste('http://localhost:',port.number,'/v1',sep="")
-checkversion.url = paste(base.url, "version", sep="/")
-cytoscape.version = GET(checkversion.url)
-cytoscape.version = fromJSON(rawToChar(cytoscape.version$content))
-if(!is.na(cytoscape.version["cytoscapeVersion"])){
-    print("Success:")
-    cytoscape.version
-} else {
-    print("Warning: Not connecting to Cytoscape. Please try again.")
-}
+# port.number = 1234
+# base.url = paste('http://localhost:',port.number,'/v1',sep="")
+checkCytoscapeVersion()
 
 #### Test installed apps for Cytoscape
 if("string" %in% commandHelp("")) print("Success: the STRING app is installed") else print("Warning: STRING app is not installed. Please install the STRING app before proceeding.")
@@ -51,8 +43,8 @@ myedges <- data.frame(source=c("node 0","node 0","node 0","node 2"),
                       interaction=c("inhibits","interacts","activates","interacts"),  # optional
                       weight=c(3,1,3,5), # optional
                       stringsAsFactors=FALSE)
-network.name <- "myNetwork"
-collection.name <- "myCollection"
+network.name = "myNetwork"
+collection.name = "myCollection"
 
 # create network
 network.suid <- createNetwork(mynodes,myedges,network.name,collection.name)
@@ -73,9 +65,15 @@ edgeWidth <- mapEdgeWidthPassthrough("weight")
 sty <- createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
 commandRun('vizmap apply styles="myStyle"')
 
+# list of available visual properties
+getVisualProperties()
+
 ############################################
 #### Browse Available Commands and Arguments
 ############################################
+
+# r2cytoscape helper functions
+ls("package:r2cytoscape")
 
 # Open swagger docs for live instances of CyREST API and CyREST-supported commands:
 openCySwagger()  # CyREST API

@@ -2,13 +2,13 @@
 % Please edit documentation in R/getNetworkSuid.R
 \name{getNetworkSuid}
 \alias{getNetworkSuid}
-\title{Get the network suid}
+\title{Get the SUID of a network}
 \usage{
 getNetworkSuid(network.name = "current",
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.name}{name of the network that you want the suid; default is "current" network}
+\item{network.name}{name of the network; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
@@ -16,5 +16,5 @@ getNetworkSuid(network.name = "current",
 network viewid
 }
 \description{
-Get the network suid
+Get the SUID of a network
 }

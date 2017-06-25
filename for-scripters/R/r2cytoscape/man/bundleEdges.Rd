@@ -4,10 +4,10 @@
 \alias{bundleEdges}
 \title{Bundle edges}
 \usage{
-bundleEdges(network.suid = "current", base.url = "http://localhost:1234/v1")
+bundleEdges(network = "current", base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.suid}{suid of the network to apply edge bundling; default is "current" network}
+\item{network}{name or suid of the network to apply edge bundling; default is "current" network}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
@@ -19,5 +19,5 @@ Bundle edges
 }
 \examples{
 bundleEdges()
-bundleEdges(network.suid="3570")
+bundleEdges(network="3570")
 }

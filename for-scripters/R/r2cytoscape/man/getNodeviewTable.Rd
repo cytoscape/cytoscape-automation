@@ -4,11 +4,11 @@
 \alias{getNodeViewTable}
 \title{Get Node View Table}
 \usage{
-getNodeViewTable(network.suid = "current", network.viewid = "current",
+getNodeViewTable(network = "current", network.viewid = "current",
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
-\item{network.suid}{suid of the network that you want to get the view for; default is "current" network}
+\item{network}{name or suid of the network; default is "current" network}
 
 \item{network.viewid}{suid of the network view that you want to get the info for; default is "current" network view}
 

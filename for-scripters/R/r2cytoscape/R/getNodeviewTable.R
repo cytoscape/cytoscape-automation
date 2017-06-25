@@ -1,7 +1,7 @@
 #' @title Get Node View Table
 #' @description Get node view information from cytoscape, get the node view table - x and y positions
 #'
-#' @param network.suid suid of the network that you want to get the view for; default is "current" network
+#' @param network name or suid of the network; default is "current" network
 #' @param network.viewid suid of the network view that you want to get the info for; default is "current" network view
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return matrix nodeview parameters x-position, y-position, selected
@@ -9,14 +9,14 @@
 #' @import RJSONIO
 #' @import httr
 
-getNodeViewTable <- function(network.suid='current', network.viewid='current', base.url='http://localhost:1234/v1'){
+getNodeViewTable <- function(network='current', network.viewid='current', base.url='http://localhost:1234/v1'){
 
   #get the view node table
-    if(network.suid=='current')
-        network.suid = getNetworkSuid(base.url=base.url)
+    if(class(network)=='character') # if name...
+        network = getNetworkSuid(network.name=network,base.url=base.url) # then get SUID
     if(network.viewid=='current')
         network.viewid = getNetworkViewId(base.url=base.url)
-  get.viewinfo.url <- paste(base.url,"networks",network.suid,"views",network.viewid,sep="/")
+  get.viewinfo.url <- paste(base.url,"networks",network,"views",network.viewid,sep="/")
   response <- GET(url=get.viewinfo.url)
 
   json_file <- fromJSON(rawToChar(response$content))
