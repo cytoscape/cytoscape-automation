@@ -37,12 +37,10 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 - [X] setTableColumns
 - [X] getTableColumns
 - [X] selectFirstNeighbors
-- [X] mapEdgeWidthPassthrough
-- [X] mapNodeBorderColorDiscrete
-- [X] mapNodeLabelPassthrough
-- [X] mapTargetArrowShapeDiscrete
 - [X] bundleEdges
 - [X] createSubnetwork
 - [X] getStyleNames
-- [X] setNodeSizeLocked
+- [ ] setStyleDependencies
+- [X] setStyleMapping
+- [ ] setStyleDefaults
 - [X] getVisualProperties
