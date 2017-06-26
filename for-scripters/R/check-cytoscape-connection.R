@@ -76,7 +76,7 @@ applyStyle('Marquee')
 ############################################
 
 # r2cytoscape helper functions
-ls("package:r2cytoscape")
+help(package=r2cytoscape)
 
 # Open swagger docs for live instances of CyREST API and CyREST-supported commands:
 openCySwagger()  # CyREST API
