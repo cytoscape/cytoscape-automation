@@ -19,28 +19,6 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 * Refer to the roadmap of functions to be developed to help prioritize your work and choose harmonous function names and args. Thanks!
 
 #### Functions to be developed
-- [X] getNetworkSuid
-- [X] getNetworkName
-- [X] setCurrentNetwork
-- [X] checkCytoscapeVersion
-- [X] openCySwagger
-- [X] commandHelp
-- [X] commandRun
-- [X] command2query
 - [ ] createNetworkFromIgraph
 - [ ] getNetworkAsIgraph
-- [ ] createTable
-- [ ] getTable
-- [ ] getTableRow
 - [ ] renameTableColumn
-- [X] listTableColumns
-- [X] setTableColumns
-- [X] getTableColumns
-- [X] selectFirstNeighbors
-- [X] bundleEdges
-- [X] createSubnetwork
-- [X] getStyleNames
-- [ ] setStyleDependencies
-- [X] setStyleMapping
-- [ ] setStyleDefaults
-- [X] getVisualProperties
