@@ -43,7 +43,13 @@ getTableColumns<-function(table,columns,namespace='default',network='current',ba
         res.html = htmlParse(rawToChar(res$content), asText=TRUE)
         res.elem = xpathSApply(res.html, "//p", xmlValue) 
         col.vals <- fromJSON(res.elem[1])
-        df = cbind(df,col.vals$values)
+        if(length(names$values)==length(col.vals$values)){
+            df = cbind(df,col.vals$values)
+        } else {
+            print("Warning: requested column has missing values. Returning single column without row.names...")
+            df2 = data.frame(col=col.vals$values)
+            return(df2)
+        }
     }
     colnames(df)=col.list
 

@@ -41,7 +41,7 @@ mynodes <- data.frame(id=c("node 0","node 1","node 2","node 3"),
 myedges <- data.frame(source=c("node 0","node 0","node 0","node 2"), 
                       target=c("node 1","node 2","node 3","node 3"),
                       interaction=c("inhibits","interacts","activates","interacts"),  # optional
-                      weight=c(3,1,3,5), # optional
+                      weight=c(5,3,5,9), # optional
                       stringsAsFactors=FALSE)
 network.name = "myNetwork"
 collection.name = "myCollection"
@@ -56,17 +56,17 @@ defaults <- list("NODE_SHAPE"="diamond",
                  "NODE_SIZE"=30,
                  "EDGE_TRANSPARENCY"=120,
                  "NODE_LABEL_POSITION"="W,E,c,0.00,0.00")
-nodeLabels <- mapNodeLabelPassthrough("id")
-nodeFills <- mapNodeFillDiscrete("group",c("A","B"), c("#FF9900","#66AAAA"))
-arrowShapes <- mapTargetArrowShapeDiscrete("interaction",c("activates","inhibits","interacts"),c("Arrow","T","None"))
-edgeWidth <- mapEdgeWidthPassthrough("weight")
+nodeLabels <- mapVisualProperty('node label','id','p')
+nodeFills <- mapVisualProperty('node fill color','group','d',c("A","B"), c("#FF9900","#66AAAA"))
+arrowShapes <- mapVisualProperty('Edge Target Arrow Shape','interaction','d',c("activates","inhibits","interacts"),c("Arrow","T","None"))
+edgeWidth <- mapVisualProperty('edge width','weight','p')
 
 #create style
-sty <- createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
+createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
 commandRun('vizmap apply styles="myStyle"')
 
 # list of available visual properties
-getVisualProperties()
+help("mapVisualProperty")
 
 ############################################
 #### Browse Available Commands and Arguments

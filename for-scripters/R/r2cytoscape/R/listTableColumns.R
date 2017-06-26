@@ -1,4 +1,4 @@
-#' List table column names
+#' List names of all columns in a table
 #'
 #' @param table name of table, e.g., node, edge, network
 #' @param namespace namespace of table, e.g., default

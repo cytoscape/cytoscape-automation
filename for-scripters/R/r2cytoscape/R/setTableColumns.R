@@ -3,7 +3,8 @@
 #' @description This function loads data into Cytoscape node/edge/network tables provided a 
 #' common key, e.g., name. Data.frame column names will be used to set Cytoscape table column
 #' names. 
-#' @details Existing columns with the same names will be overwritten.
+#' @details Numeric data columns will be stored as Doubles in Cytosacpe tables. Character or mixed data
+#' columns will be stored as Strings. Existing columns with the same names will be overwritten. 
 #' @param data (data.frame) each row is a node and columns contain node attributes
 #' @param data.key.column (char) name of data.frame column to use as key; default is "row.names"
 #' @param table (char) name of Cytoscape table to load data into, e.g., node, edge or network; default is "node"
@@ -30,20 +31,11 @@ setTableColumns<-function(data, data.key.column='row.names', table='node', table
 
     data.list <- c()
     for(i in 1:dim(data.subset)[1]){  #each rows
-        rest <- c()
+        rest <- list()
         for(j in 1:dim(data.subset)[2]){  #each column
-            rest <-  c(rest,assign(colnames(data.subset)[j] , data.subset[i,j]))
+            rest[[colnames(data.subset)[j]]] = data.subset[i,j]
         }
-        rest = list(unlist(rest))
-        rest <- lapply(rest,FUN=function(x) {
-            names(x) <- colnames(data.subset)
-            return(x)
-        })
-        
-        #get current node
-        #current_node <- list(data=unlist(rest))
-        data.list <- c(data.list,rest )
-        
+        data.list[[i]] <- rest 
     }
     
     table = paste0("default",table) #add prefix

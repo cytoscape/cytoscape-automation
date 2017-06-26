@@ -1,13 +1,13 @@
-#' Get the names and parameters of available Visual Properties
+#' List the names and parameters of available Visual Properties
 #'
-#' @param vis.prop name of visual property to query; default is "all" 
+#' @param vis.prop name of visual property to query (case dependent); default is "all" 
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return visual properties
 #' @export
 #' @import RJSONIO
 #' @import httr
 
-getVisualProperties <- function(vis.prop='all', base.url='http://localhost:1234/v1'){
+listVisualProperties <- function(vis.prop='all', base.url='http://localhost:1234/v1'){
     if(network.suid=='current')
         network.suid = getNetworkSuid(base.url=base.url)
     if(vis.prop=='all')

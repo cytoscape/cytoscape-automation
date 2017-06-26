@@ -27,5 +27,6 @@ common key, e.g., name. Data.frame column names will be used to set Cytoscape ta
 names.
 }
 \details{
-Existing columns with the same names will be overwritten.
+Numeric data columns will be stored as Doubles in Cytosacpe tables. Character or mixed data
+columns will be stored as Strings. Existing columns with the same names will be overwritten.
 }

@@ -1,4 +1,4 @@
-#' Open CySwagger Docs in Browser
+#' Open CySwagger docs in browser
 #'
 #' @description Opens swagger docs in default browser for a live 
 #' instance of CyREST or CyREST-supported operations. 

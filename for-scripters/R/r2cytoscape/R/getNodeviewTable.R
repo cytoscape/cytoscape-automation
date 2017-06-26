@@ -1,4 +1,4 @@
-#' @title Get Node View Table
+#' @title Get node view table
 #' @description Get node view information from cytoscape, get the node view table - x and y positions
 #'
 #' @param network name or suid of the network; default is "current" network

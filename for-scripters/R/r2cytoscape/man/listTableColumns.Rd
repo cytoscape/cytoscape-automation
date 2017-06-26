@@ -2,7 +2,7 @@
 % Please edit documentation in R/listTableColumns.R
 \name{listTableColumns}
 \alias{listTableColumns}
-\title{List table column names}
+\title{List names of all columns in a table}
 \usage{
 listTableColumns(table, namespace = "default", network = "current",
   base.url = "http://localhost:1234/v1")
@@ -20,7 +20,7 @@ listTableColumns(table, namespace = "default", network = "current",
 list of column names
 }
 \description{
-List table column names
+List names of all columns in a table
 }
 \examples{
 listTableColumns('node')
