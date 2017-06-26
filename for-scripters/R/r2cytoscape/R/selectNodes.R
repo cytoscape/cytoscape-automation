@@ -14,7 +14,7 @@
 selectNodes <- function(nodes, by.col='name', keep.selected=F, network='current', base.url='http://localhost:1234/v1'){
     
     if (!keep.selected)
-        deselectAllNodes(network=network,base.url=base.url)
+        clearSelection(network=network,base.url=base.url)
     
     if(class(network)=='numeric') # if SUID...
         network = getNetworkName(network.suid=network,base.url=base.url) # then get name

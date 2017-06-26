@@ -1,4 +1,4 @@
-#' Sets column values keyed by row
+#' Loads data into Cytosacpe tables keyed by row
 #' 
 #' @description This function loads data into Cytoscape node/edge/network tables provided a 
 #' common key, e.g., name. Data.frame column names will be used to set Cytoscape table column
@@ -13,7 +13,7 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @export
 #' 
-setTableColumns<-function(data, data.key.column='row.names', table='node', table.key.column='name', 
+loadTableData<-function(data, data.key.column='row.names', table='node', table.key.column='name', 
                           network='current', base.url='http://localhost:1234/v1') {
 
     table.key.column.values =  getTableColumns(table=table,columns = table.key.column,
