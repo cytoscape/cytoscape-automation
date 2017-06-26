@@ -52,10 +52,10 @@ network.suid <- createNetwork(mynodes,myedges,network.name,collection.name)
 
 # create style with node attribute-fill mappings and some defaults
 style.name = "myStyle"
-defaults <- list("NODE_SHAPE"="diamond",
-                 "NODE_SIZE"=30,
-                 "EDGE_TRANSPARENCY"=120,
-                 "NODE_LABEL_POSITION"="W,E,c,0.00,0.00")
+defaults <- list(NODE_SHAPE="diamond",
+                 NODE_SIZE=30,
+                 EDGE_TRANSPARENCY=120,
+                 NODE_LABEL_POSITION="W,E,c,0.00,0.00")
 nodeLabels <- mapVisualProperty('node label','id','p')
 nodeFills <- mapVisualProperty('node fill color','group','d',c("A","B"), c("#FF9900","#66AAAA"))
 arrowShapes <- mapVisualProperty('Edge Target Arrow Shape','interaction','d',c("activates","inhibits","interacts"),c("Arrow","T","None"))
@@ -63,7 +63,7 @@ edgeWidth <- mapVisualProperty('edge width','weight','p')
 
 #create style
 createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
-commandRun('vizmap apply styles="myStyle"')
+applyStyle(style.name)
 
 # list of available visual properties
 help("mapVisualProperty")

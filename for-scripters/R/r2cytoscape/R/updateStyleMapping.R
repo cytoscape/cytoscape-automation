@@ -9,6 +9,8 @@
 #' @return server response
 #' @export
 #' @seealso mapVisualProperty
+#' @examples
+#' setStyleMapping('myStyle',mapVisualProperty('node label','name','p'))
 #' @import RJSONIO
 #' @import httr
 setStyleMapping <- function(style.name, mapping, base.url='http://localhost:1234/v1') {

@@ -61,8 +61,13 @@ mapVisualProperty <- function(visual.prop, table.column, mapping.type, table.col
     #process mapping type
     mapping.type.name = switch(mapping.type, 'c'='continuous','d'='discrete','p'='passthrough',mapping.type)
     
-    #processs visual property
+    #processs visual property, including common alternatives for vp names :)
     visual.prop.name = toupper(gsub("\\s+","_",visual.prop))
+    visual.prop.name = switch(visual.prop.name, 
+                              'EDGE_COLOR'='EDGE_STROKE_UNSELECTED_PAINT',
+                              'EDGE_THICKNESS'='EDGE_WIDTH',
+                              'NODE_BORDER_COLOR'='NODE_BORDER_PAINT',
+                              visual.prop.name)
     
     #check mapping column and get type
     tp = tolower(strsplit(visual.prop.name,"_")[[1]][1])

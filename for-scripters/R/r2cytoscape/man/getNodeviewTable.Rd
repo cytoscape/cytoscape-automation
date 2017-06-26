@@ -2,7 +2,7 @@
 % Please edit documentation in R/getNodeViewTable.R
 \name{getNodeViewTable}
 \alias{getNodeViewTable}
-\title{Get Node View Table}
+\title{Get node view table}
 \usage{
 getNodeViewTable(network = "current", network.viewid = "current",
   base.url = "http://localhost:1234/v1")

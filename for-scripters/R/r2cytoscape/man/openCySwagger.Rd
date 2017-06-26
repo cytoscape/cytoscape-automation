@@ -2,7 +2,7 @@
 % Please edit documentation in R/openCySwagger.R
 \name{openCySwagger}
 \alias{openCySwagger}
-\title{Open CySwagger Docs in Browser}
+\title{Open CySwagger docs in browser}
 \usage{
 openCySwagger(domain = "cyrest", base.url = "http://localhost:1234/v1")
 }
