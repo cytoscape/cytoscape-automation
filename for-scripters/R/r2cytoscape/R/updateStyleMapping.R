@@ -1,7 +1,7 @@
-#' Adds or updates a visual property mapping in a style
+#' Updates a visual property mapping in a style
 #' 
-#' @description Creates a visual property mapping if it doesn't already exist in the style. Otherwise,
-#' updates the visual property mapping, overriding any prior mapping.
+#' @description Updates the visual property mapping, overriding any prior mapping. Creates a 
+#' visual property mapping if it doesn't already exist in the style. 
 #' @details Requires visual property mappings to be previously created, see mapVisualProperty.
 #' @param style.name (char) name for style
 #' @param mapping a single visual property mapping, see mapVisualProperty
@@ -10,10 +10,10 @@
 #' @export
 #' @seealso mapVisualProperty
 #' @examples
-#' setStyleMapping('myStyle',mapVisualProperty('node label','name','p'))
+#' updateStyleMapping('myStyle',mapVisualProperty('node label','name','p'))
 #' @import RJSONIO
 #' @import httr
-setStyleMapping <- function(style.name, mapping, base.url='http://localhost:1234/v1') {
+updateStyleMapping <- function(style.name, mapping, base.url='http://localhost:1234/v1') {
     
     visual.prop.name = mapping$visualProperty
     

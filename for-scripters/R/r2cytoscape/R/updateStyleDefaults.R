@@ -7,11 +7,11 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @examples 
-#' setStyleDefaults('myStyle',list('node fill color'='#0000FF','node size'=50))
+#' updateStyleDefaults('myStyle',list('node fill color'='#0000FF','node size'=50))
 #' @export
 #' @seealso mapVisualProperty 
 
-setStyleDefaults <- function(style.name,defaults,base.url='http://localhost:1234/v1') {
+updateStyleDefaults <- function(style.name,defaults,base.url='http://localhost:1234/v1') {
 		def.list <- list()
 		for (i in 1:length(defaults)) {
 		    visual.prop.name <- names(defaults)[i]

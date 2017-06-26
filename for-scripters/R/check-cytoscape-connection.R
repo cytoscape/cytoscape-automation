@@ -65,8 +65,11 @@ edgeWidth <- mapVisualProperty('edge width','weight','p')
 createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
 applyStyle(style.name)
 
+#check out the marquee style!
+applyStyle('Marquee')
+
 # list of available visual properties
-help("mapVisualProperty")
+?mapVisualProperty
 
 ############################################
 #### Browse Available Commands and Arguments

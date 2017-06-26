@@ -7,14 +7,14 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @examples 
-#' setStyleDependencies("myStyle",list(nodeSizeLocked=TRUE))
+#' updateStyleDependencies("myStyle",list(nodeSizeLocked=TRUE))
 #' @export
 #' @section List of Dependencies:
 #' arrowColorMatchesEdge
 #' nodeCustomGraphicsSizeSync
 #' nodeSizeLocked
 
-setStyleDependencies <- function(style.name,dependencies,base.url='http://localhost:1234/v1') {
+updateStyleDependencies <- function(style.name,dependencies,base.url='http://localhost:1234/v1') {
 
     dep.list <- list()
     for (i in 1:length(dependencies)) {
