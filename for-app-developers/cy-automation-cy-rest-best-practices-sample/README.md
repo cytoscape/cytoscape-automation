@@ -26,15 +26,7 @@ public interface ClassroomResource {
 
 This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of it's subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
 
-These paths above were chosen according to the following best practices:
-
-#### Path Uniqueness
-
-The paths you choose for your resources should be unique in the CyREST API; a path to any of your resources should not map to any existing path in CyREST. Violating this requirement could result in resources not being registered, or throwing runtime errors. A simple way to satisfy the uniqueness requirement is to use the best practice of making your App's namespace unique (in our app, it's ```cyrestbestpractices```).
-
-#### Versioning
-
-Since REST APIs may change in future implementations, it is good practice to ensure that future versions of your REST resources can co-exist with the resources you've implemented in the present day. A best practice for ensuring this is to include a version number in your resource (```v1``` in our example). This way, you can add new resources under a new version (```v2``` for example) and still use the same path elements without breaking existing API contracts (a resource ```v2/classroom/teacher``` can change its functionality without impacting ```v1/classroom/teacher```).
+Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [App Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-App-Best-Practices#app-resource-paths). 
 
 ### Swagger Documentation
 
