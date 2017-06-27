@@ -38,7 +38,7 @@ Loading and mapping data onto networks is a bit complicated in Cytoscape.  Let's
 
 ```{r}
 # Read network from edge list file
-df <- read.table("../../data/ecoli_ppi_Hu_etal_2009.txt")
+df <- read.table("data/ecoli_ppi_Hu_etal_2009.txt")
 
 # Create undirected igraph object from data frame
 g <- graph.data.frame(df, directed=F)
@@ -46,7 +46,7 @@ g <- graph.data.frame(df, directed=F)
 # Make this network a bit more biologist-friendly by adding some more annotations.
 #   Original table is from: http://www.ecogene.org/?q=ecodownload/dbtable
 
-annotations <-read.delim("../../data/EcoData061715-172714.txt",header=T,  quote = NULL)
+annotations <-read.delim("data/EcoData061715-172714.txt",header=T,  quote = NULL)
 column.names <- colnames(annotations)
 filtered <- annotations[1:(length(column.names)-1)]
 
@@ -58,7 +58,7 @@ V(g)$eg <- as.character(filtered$EG[match(V(g)$name, filtered$b.)])
 V(g)$sp <- as.character(filtered$SP[match(V(g)$name, filtered$b.)])
 
 # Read essentiality table
-ess<-read.table("../../data/ecoli_proteins_essentiality_Baba2006MSB.txt", header=T)
+ess<-read.table("data/ecoli_proteins_essentiality_Baba2006MSB.txt", header=T)
 
 # Basic graph analysis: Calculate degree of nodes
 degrees <- degree(g)

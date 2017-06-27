@@ -18,7 +18,7 @@ source("utility-functions.R")
 # Step 1: Network Data Preparation
 
 # Load yeast network SIF file as Data Frame
-yeast.table <- read.table("../../data/yeastHighQuality.sif")
+yeast.table <- read.table("data/yeastHighQuality.sif")
 
 # Convert it to simple edge list
 yeast.table.edgelist <- yeast.table[c(1,3)]

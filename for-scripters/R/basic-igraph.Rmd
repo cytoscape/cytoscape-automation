@@ -44,7 +44,7 @@ There are many ways to import network data into igraph.  In this example, let's 
 
 ```{r}
 # Load list of edges as Data Frame
-network.df <- read.table("../../data/eco_EM+TCA.txt")
+network.df <- read.table("data/eco_EM+TCA.txt")
 
 # Convert it into igraph object
 network <- graph.data.frame(network.df,directed=T)
