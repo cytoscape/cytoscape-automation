@@ -13,9 +13,9 @@ library(pacman)
 p_load(RJSONIO,igraph,httr,stringr,XML,RColorBrewer,devtools)
 
 # NOTE: RCy3 requires R v3.2 or higher, available at: https://cloud.r-project.org/
-source("http://bioconductor.org/biocLite.R")
-biocLite("RCy3")
-library(RCy3)  # respond with 'a' to update all, if prompted
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("RCy3")
+#library(RCy3)  # respond with 'a' to update all, if prompted
 
 # CyREST helper functions
 install_github('cytoscape/cytoscape-automation/for-scripters/R/r2cytoscape')
