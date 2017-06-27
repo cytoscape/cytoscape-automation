@@ -168,8 +168,17 @@ In order to reflect your exploration back onto the network, let's generate subne
 top.quart <- quantile(disease.score.table[,1], 0.75)
 top.nodes <- row.names(disease.score.table)[which(disease.score.table[,1]>top.quart)]
 createSubnetwork(top.nodes)
+```
+### Wait for network to finish loading
+```{r}
 renameNetwork('top disease quartile')
+```
+
+```{r}
 createSubnetwork(edges='all')  #handy way to exclude unconnected nodes!
+```
+### Wait for network to finish loading
+```{r}
 renameNetwork('top disease quartile connected')
 ```
 ...from first neighbors of top 3 genes, using the network connectivity together with the data to direct discovery.
@@ -179,6 +188,9 @@ top.nodes <- row.names(disease.score.table)[tail(order(disease.score.table[,1]),
 selectNodes(top.nodes)
 selectFirstNeighbors()
 createSubnetwork('selected') # selected nodes, all connecting edges (default)
+```
+### Wait for network to finish loading
+```{r}
 renameNetwork('top disease neighbors')
 ```
 ...from diffusion algorithm starting with top 3 genes, using the network connectivity in a more subtle way than just first-degree neighbors.
@@ -187,8 +199,11 @@ setCurrentNetwork("String Network - ovarian cancer")
 selectNodes(top.nodes)
 commandRun('diffusion diffuse') # diffusion!
 createSubnetwork('selected')
-renameNetwork('top disease diffusion')
+```
+### Wait for network to finish loading
+```{r}
 applyLayout('force-directed')
+renameNetwork('top disease diffusion')
 ```
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc4.png){height=100%} 
