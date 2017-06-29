@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadTableData.R
 \name{loadTableData}
 \alias{loadTableData}
-\title{Loads data into Cytosacpe tables keyed by row}
+\title{Loads data into Cytoscape tables keyed by row}
 \usage{
 loadTableData(data, data.key.column = "row.names", table = "node",
   table.key.column = "name", network = "current",
@@ -27,6 +27,6 @@ common key, e.g., name. Data.frame column names will be used to set Cytoscape ta
 names.
 }
 \details{
-Numeric data columns will be stored as Doubles in Cytosacpe tables. Character or mixed data
+Numeric data columns will be stored as Doubles in Cytoscape tables. Character or mixed data
 columns will be stored as Strings. Existing columns with the same names will be overwritten.
 }

@@ -1,9 +1,9 @@
-#' Loads data into Cytosacpe tables keyed by row
+#' Loads data into Cytoscape tables keyed by row
 #' 
 #' @description This function loads data into Cytoscape node/edge/network tables provided a 
 #' common key, e.g., name. Data.frame column names will be used to set Cytoscape table column
 #' names. 
-#' @details Numeric data columns will be stored as Doubles in Cytosacpe tables. Character or mixed data
+#' @details Numeric data columns will be stored as Doubles in Cytoscape tables. Character or mixed data
 #' columns will be stored as Strings. Existing columns with the same names will be overwritten. 
 #' @param data (data.frame) each row is a node and columns contain node attributes
 #' @param data.key.column (char) name of data.frame column to use as key; default is "row.names"
