@@ -4,7 +4,7 @@ This is a simple App intended to demonstrate best practices in registering endpo
 
 ## Prerequisites
 
-It is recommended to be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-basic-sample).
+It is recommended to be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](./../for-app-developers/cy-automation-cy-rest-basic-sample).
 
 ## Notes
 
@@ -26,7 +26,7 @@ public interface ClassroomResource {
 
 This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of it's subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
 
-Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [App Best Practices Wiki Page](./../../../../wiki/App-Developers:-JAX-RS-Best-Practices#app-resource-paths). 
+Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [JAX-RS Best Practices Wiki Page](./../../../../wiki/App-Developers:-JAX-RS-Best-Practices#app-resource-paths). 
 
 ### Swagger Documentation
 
@@ -52,7 +52,7 @@ public Person putTeacher(
     );
 ```
 
-This App provides many examples of best practices for documenting an App using Swagger, with in-code comments describing them. More information about these can be found in the [Swagger Best Practices Wiki Page](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices).
+This App provides many examples of best practices for documenting an App using Swagger, with in-code comments describing them. More information about these can be found in the [Swagger Best Practices Wiki Page](./../../../../wiki/App-Developers:-Swagger-Best-Practices).
 
 ## Next Steps
 
@@ -62,4 +62,4 @@ JAX-RS and Swagger annotations provide functionality well beyond their use in th
 
 [Swagger Annotations](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X)
 
-[Cytoscape Automation: Swagger Best Practices](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Swagger-Best-Practices)
+[Cytoscape Automation: Swagger Best Practices](./../../../../wiki/App-Developers:-Swagger-Best-Practices)
