@@ -26,7 +26,7 @@ public interface ClassroomResource {
 
 This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of it's subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
 
-Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [App Best Practices Wiki Page](./../../wiki/App-Developers:-JAX-RS-Best-Practices#app-resource-paths). 
+Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [App Best Practices Wiki Page](./../../../../wiki/App-Developers:-JAX-RS-Best-Practices#app-resource-paths). 
 
 ### Swagger Documentation
 
