@@ -4,7 +4,7 @@
 #' as row names in the returned data frame. Note that this function fails on columns with missing values.
 #' @param table name of table, e.g., node, edge, network
 #' @param columns names of columns to retrieve values from as list object or comma-separated list
-#' @param namespace namespace of table, e.g., default
+#' @param namespace namespace of table; default is "default"
 #' @param network name or suid of the network; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return data frame of column values
@@ -12,7 +12,7 @@
 #' @import httr
 #' @import RJSONIO
 #' @examples
-#' getTableColumns('score')
+#' getTableColumns('node','score')
 
 getTableColumns<-function(table,columns,namespace='default',network='current',base.url='http://localhost:1234/v1'){
 
@@ -43,15 +43,18 @@ getTableColumns<-function(table,columns,namespace='default',network='current',ba
         res.html = htmlParse(rawToChar(res$content), asText=TRUE)
         res.elem = xpathSApply(res.html, "//p", xmlValue) 
         col.vals <- fromJSON(res.elem[1])
-        if(length(names$values)==length(col.vals$values)){
-            df = cbind(df,col.vals$values)
+        #convert NULL to NA, then unlist
+        cvv <- unlist(lapply(col.vals$values, function(x) ifelse(is.null(x),NA,x)))
+        if(length(names$values)==length(cvv)){
+            for(i in 1:length(names$values)){
+                df[i,col] <- cvv[i]
+            }
         } else {
             print("Warning: requested column has missing values. Returning single column without row.names...")
-            df2 = data.frame(col=col.vals$values)
+            df2 = data.frame(col=unlist(col.vals$values))
             return(df2)
         }
     }
-    colnames(df)=col.list
 
     return(df)
 }
