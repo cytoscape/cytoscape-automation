@@ -63,7 +63,7 @@ This is the dependency for Swagger annotations:
 
 To add your app's endpoints to CyREST, you must register instances of Java Objects annotated using JAX-RS.
 
-In this Sample App, all the necessary classes to illustrate this, with inline documentation explaining the annotations used, can be found in the package ```org.cytoscape.cyrestswaggersample.internal```.
+In this Sample App, all of the necessary classes to illustrate this (with inline documentation explaining the annotations used) can be found in the package ```org.cytoscape.cyrestswaggersample.internal```.
 
 The ```GreetingResource``` interface contains our JAX-RS annotations, which its implementation, ```GreetingResourceImpl```, inherits.
 
