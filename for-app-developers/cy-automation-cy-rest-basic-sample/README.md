@@ -83,7 +83,7 @@ You can see the output of this endpoint by entering this address into a web brow
 
 Note that this JSON is automatically generated from the ```SimpleMessage``` our method returned. One of the key advantages of using JAX-RS is that serialization of Java objects to JSON and other formats can be handled automatically in many cases.
 
-Note that for the purposes of this simple demo, the app returned only a simple output message. Ideally, an app would return an instance of the [CIResponse structure](./App-Developers:-JAX-RS-Best-Practices#ciresponse).
+Note that for the purposes of this simple demo, the app returned only a simple output message. Ideally, an app would return an instance of the [CIResponse structure](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-JAX-RS-Best-Practices#ciresponse).
 
 ### Adding Swagger Documentation
 
