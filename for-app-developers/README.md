@@ -1,14 +1,14 @@
 # Cytoscape Automation for App Developers
-Collection of sample apps that provide support for automation.
+Collection of sample Cytoscape apps that provide support for automation.
 
 ## [cy-automation-cy-rest-basic-sample](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-basic-sample) 
 
-A basic introduction on how to add REST automation to a Cytoscape App with minimal JAX-RS and Swagger annotations.
+A basic introduction to adding Functions by using minimal JAX-RS and Swagger annotations.
 
 ## [cy-automation-cy-rest-best-practices-sample](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-best-practices-sample)
 
-A detailed example on adding REST automation to a Cytoscape App with comprehensive JAX-RS and Swagger annotations. This also contains example of best practices that can make REST automation in your Cytoscape Apps more effective and easy to use.
+A detailed example of adding Functions by using comprehensive JAX-RS and Swagger annotations. This is also an example of best practices for making Cytoscape Automation effective and easy to use.
 
 ## [cy-automation-taskfactory-sample](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-taskfactory-sample)
 
-A basic introduction on how to add Command Line commands and GUI Elements using Cytoscape Tasks and TaskFactories.
+A basic introduction to adding Commands and GUI elements using Cytoscape Tasks and TaskFactories.
