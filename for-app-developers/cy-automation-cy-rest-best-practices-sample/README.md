@@ -4,7 +4,7 @@ This is a simple App intended to demonstrate best practices in registering Funct
 
 ## Prerequisites
 
-Sd recommended that you be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](./../../for-app-developers/cy-automation-cy-rest-basic-sample).
+We recommended that you be familiar with concepts in [Cytoscape 3.0 App Development](http://wiki.cytoscape.org/Cytoscape_3/AppDeveloper) as well the [CyREST Basic Sample App](./../../for-app-developers/cy-automation-cy-rest-basic-sample).
 
 ## Notes
 
