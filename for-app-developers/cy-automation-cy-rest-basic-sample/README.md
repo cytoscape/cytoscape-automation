@@ -1,6 +1,6 @@
 # CyREST Basic Sample App
 
-This is a simple 'Hello World' style app intended to demonstrate registering endpoints with CyREST, te Cytoscape component most responsible for Cytoscape Automation. It provides only a basic overview of registration; users interested in implementing REST endpoints via CyREST are **strongly urged** to follow up this sample by exploring the [Next Steps](#next-steps) portion of this document.
+This is a simple 'Hello World' style app intended to demonstrate registering endpoints with CyREST, the Cytoscape component most responsible for Cytoscape Automation. It provides only a basic overview of registration; users interested in implementing REST endpoints via CyREST are **strongly urged** to follow up this sample by exploring the [Next Steps](#next-steps) portion of this document.
 
 ## Prerequisites
 
