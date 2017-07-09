@@ -95,7 +95,7 @@ To see the resulting Swagger document, follow the steps outlined in [Accessing A
 
 ## Next Steps
 
-It is **strongly recommended** to follow up this Sample with the [CyREST Best Practices Sample App](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-best-practices-sample), which demonstrates ways to avoid errors and make your CyREST app easier to use and maintain.
+We **strongly recommended** that you follow up this sample by studying the [CyREST Best Practices Sample App](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-cy-rest-best-practices-sample), which demonstrates ways to avoid errors and make your CyREST app easier to use and maintain.
 
 JAX-RS and Swagger annotations provide functionality well beyond their use in this app. Additional documentation on these can be found below:
 
