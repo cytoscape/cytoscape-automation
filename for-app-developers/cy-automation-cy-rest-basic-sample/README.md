@@ -87,7 +87,7 @@ Note that for the purposes of this simple demo, the app returned only a simple o
 
 ### Adding Swagger Documentation
 
-Swagger is a framework for documenting and developing in the REST world. CyREST uses Swagger annotations to generate a description of the CyREST API and all recognized App resources, such as our sample app.
+Swagger is a framework for documenting and developing in the REST world. CyREST uses Swagger annotations to generate a description of the CyREST API and all recognized app resources, such as our sample app.
 
 GreetingResource includes a single Swagger tag ```@Api```. This is the minimum requirement for including a class and its methods in Swagger.
 
