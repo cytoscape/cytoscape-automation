@@ -36,7 +36,7 @@ Windows
 
 CyREST uses two related annotation packages to describe endpoints: [JAX-RS](https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU) and [Swagger](https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X).
 
-Within your POM files, you will need to add these two dependencies. It is important that you set the scope for these dependencies to 'provided'. This ensures that CyREST and your app are using the same annotations; using a scope aside from 'provided' could cause your app to import annotations that CyREST cannot recognize.
+Within your app's POM files, you will need to add these two dependencies. It is important that you set the scope for these dependencies to 'provided'. This ensures that CyREST and your app are using the same annotations; using a scope aside from 'provided' could cause your app to import annotations that CyREST cannot recognize.
 
 This is the dependency for JAX-RS annotations:
 ```
