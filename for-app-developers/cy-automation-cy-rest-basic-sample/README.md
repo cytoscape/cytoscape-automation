@@ -69,7 +69,7 @@ The ```GreetingResource``` interface contains our JAX-RS annotations, which its 
 
 We register an instance of ```GreetingResourceImpl``` in ```CyActivator```. This exposes the resource to Cytoscape's OSGi infrastructure, where it can be recognized by CyREST.
 
-When we deploy our app to Cytoscape by installing it (via App Manager), CyREST will automatically recognize the GreetingResource service as an endpoint, and it will become available at the URL below:
+When we deploy our app to Cytoscape (by installing it via App Manager), CyREST will automatically recognize the GreetingResource service as an endpoint, and it will become available at the URL below:
 
 ```
 http://localhost:1234/swaggergreeting
