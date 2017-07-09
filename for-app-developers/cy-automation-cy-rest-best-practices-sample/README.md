@@ -52,7 +52,7 @@ public Person putTeacher(
     );
 ```
 
-This App provides many examples of best practices for documenting an App using Swagger, with in-code comments describing them. More information about these can be found in the [Swagger Best Practices Wiki Page](./../../../../wiki/App-Developers:-Swagger-Best-Practices).
+This app provides many examples of best practices for documenting an app using Swagger, with in-code comments describing them. More information about these can be found in the [Swagger Best Practices Wiki Page](./../../../../wiki/App-Developers:-Swagger-Best-Practices).
 
 ## Next Steps
 
