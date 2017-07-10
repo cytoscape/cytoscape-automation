@@ -12,7 +12,7 @@ This sample app uses Java comments to describe particular details in-code. Gener
 
 ### Recommended Resource Path Structure
 
-Choosing paths for your resources is not a trivial task. Bad naming practices can cause problems when locating resources via REST. Below is a description of this app's resources and their REST paths. 
+Choosing paths for your resources is not a trivial task. Bad naming practices can cause problems when locating resources via REST. Below is a description of this app's resources and their REST paths. More detail on paths and other practices can be found in the [Cytoscape Function Best Practices Wiki Page](./../../../../wiki/App-Developers:-Cytoscape-Function-Best-Practices#app-resource-paths).
 
 The main resource in this app, defined in the ```ClassroomResource``` interface, is located on the path ```/cyrestbestpractices/v1/classroom/```.  The way it is set is demonstrated in the code snippet below:
 
@@ -26,7 +26,7 @@ public interface ClassroomResource {
 
 This resource will be registered as a root resource in CyREST and will be available at ```http://localhost:1234/cyrestbestpractices/v1/classroom/```. All of its subresources will be visible as children of this path (for example, ```teacher``` will be registered with the path ```http://localhost:1234/cyrestbestpractices/v1/classroom/teacher```).
 
-Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs. More detail on these practices can be found in the [Cytoscape Function Best Practices Wiki Page](./../../../../wiki/App-Developers:-Cytoscape-Function-Best-Practices#app-resource-paths). 
+Note that the root of every resource is ```cyrestbestpractices/v1/```. This path is both unique, keeping it from colliding with the paths of other apps, and versioned, which allows the developer to maintain backward compatibility while developing new APIs.  
 
 ### Swagger Documentation
 
