@@ -12,7 +12,7 @@ This sample app uses Java comments to describe particular details in-code. Gener
 
 ### Recommended Resource Path Structure
 
-Choosing paths for your resources is not a trivial task. Bad naming practices can cause problems when locating resources via REST. Below is a description of this app's resources and their REST paths. (In REST terminology, a _resource_ corresponds roughly to a Java function, and a REST path is added to a base URL to create a full URL for the resource. You can understand more about resources via a [REST resource book](https://www.safaribooksonline.com/library/view/rest-api-design/9781449317904/) or by inspecting the existing Cytoscape Swagger document accessible via Cytoscape's _Help --> Automation --> CyREST API_ menu item.)
+Choosing paths for your resources is not a trivial task. Bad naming practices can cause problems when locating resources via REST. Below is a description of this app's resources and their REST paths. 
 
 The main resource in this app, defined in the ```ClassroomResource``` interface, is located on the path ```/cyrestbestpractices/v1/classroom/```.  The way it is set is demonstrated in the code snippet below:
 
