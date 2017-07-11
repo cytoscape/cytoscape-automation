@@ -16,10 +16,10 @@ public class ReturnAValueTask extends AbstractTask implements ObservableTask {
 	@ProvidesTitle
 	public String getTitle() { return "TaskFactory Return Value Sample Input"; }
 
-	@Tunable (description="Value a:")
+	@Tunable (description="Value A")
 	public Double a = 0.1;
 	
-	@Tunable (description="Value b:")
+	@Tunable (description="Value B")
 	public Double b = 0.1;
 	
 	private Double value;
