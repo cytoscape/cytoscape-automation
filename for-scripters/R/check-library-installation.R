@@ -30,7 +30,7 @@ if("stringr" %in% ip) print("Success: the stringr lib is installed") else print(
 if("XML" %in% ip) print("Success: the XML lib is installed") else print("Warning: XML lib is not installed. Please install this lib before proceeding.")
 if("RColorBrewer" %in% ip) print("Success: the RColorBrewer lib is installed") else print("Warning: RColorBrewer lib is not installed. Please install this lib before proceeding.")
 if("devtools" %in% ip) print("Success: the devtools lib is installed") else print("Warning: devtools lib is not installed. Please install this lib before proceeding.")
-if("RCy3" %in% ip) print("Success: the RCy3 lib is installed") else print("Warning: RCy3 lib is not installed. Please install this lib before proceeding.")
+#if("RCy3" %in% ip) print("Success: the RCy3 lib is installed") else print("Warning: RCy3 lib is not installed. Please install this lib before proceeding.")
 if(exists('command2query',mode='function')) print("Success: r2cytoscape is installed") else print("Warning: r2cytoscape is not installed. Please source this script before proceeding.")
 
 #### If all messages report "Success", then you are ready to go! Proceed to other modules...
