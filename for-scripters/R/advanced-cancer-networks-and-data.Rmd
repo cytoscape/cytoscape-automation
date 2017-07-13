@@ -95,6 +95,12 @@ Here we are using Cytoscape's command line syntax, converting it to a CyREST url
 
 ### Wait for network to finish loading
 
+**Hold up! Why are we running this as a script when we could just do it in Cytoscape?***
+* For things you want to do multiple times, e.g., loops 
+* For things you want to repeat in the future
+* For things you want to share with colleagues or publish
+* For things you are already working on in R or Python, etc
+
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc.png){height=100%}  
 
 #### Ovarian cancer
@@ -279,6 +285,8 @@ node.fill.map <- mapVisualProperty('node fill color', 'expr.mean','c',data.value
 updateStyleMapping(style.name, node.fill.map) 
 ```
 
+**Pro-tip: depending on your data, it may be better to balance your color range over negative and positive values bounded by the largest min or max data value, so that color intensity scales similarly in both directions.**
+
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc2.png){height=100%} 
 
 OK, now let's update with a mapping for mutation. Here are all the same steps, but this time mapping mutation counts to *both* node border width and color. 
@@ -314,6 +322,8 @@ applyLayout('force-directed')
 The top mutated genes are based on TCGA data and the diffusion algorithm is operating based on the network connectivity from STRING data, leading to a focused subnetwork view of critical Breast Cancer genes with mean patient expression data mapped to fill color. Now *that's* data integration!
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc4.png){height=100%} 
+
+**Pro-tip: You can generate a legend for this in Cytoscape Style tab > Options > Create style...  This is no yet available as a command. Coming soon!**
 
 ### Ovarian Cancer Datset
 But what about the other network and datasets? Do we have to repeat *all* of those steps again?  Actually, no!
@@ -390,6 +400,13 @@ And in Cytoscape, you can File>Export as Web Page... to produce a folder of cyto
 * Merge two (or more) networks
     * copyCytoscapeNetwork() or 'network clone'; then addGraphToGraph() (Union only)
     * using igraph: intersection(g1,g2), union(), difference(); followed by toCytoscape() and send2cy()
+    
+#### Resources for all available functions and commands
+```{r}
+help(package=r2cytoscape) # r2cytoscape helper functions
+openCySwagger()  # CyREST API
+openCySwagger("commands")  # CyREST Commands API
+```
 
 ##########################################
 # Step 5: Wrapping up
