@@ -100,6 +100,7 @@ Here we are using Cytoscape's command line syntax, converting it to a CyREST url
 * For things you want to repeat in the future
 * For things you want to share with colleagues or publish
 * For things you are already working on in R or Python, etc
+* Note: full automation support coming soon; these "wait" steps are due to a bug
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc.png){height=100%}  
 
