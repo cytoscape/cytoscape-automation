@@ -261,7 +261,7 @@ applyStyle(style.name)
 
 Now let's update the style with a mapping for mean expression. The first step is to grab the column data from Cytoscape and pull out the min and max to define our data mapping range of values.
 ```{r}
-brc.expr.network = getTableColumns('node','expr.mean')  # warning is expected here because not all nodes have data values
+brc.expr.network = getTableColumns('node','expr.mean')  
 min.brc.expr = min(brc.expr.network[,1],na.rm=TRUE)
 max.brc.expr = max(brc.expr.network[,1],na.rm=TRUE)
 data.values = c(min.brc.expr,0,max.brc.expr)
@@ -283,7 +283,7 @@ updateStyleMapping(style.name, node.fill.map)
 
 OK, now let's update with a mapping for mutation. Here are all the same steps, but this time mapping mutation counts to *both* node border width and color. 
 ```{r}
-brc.mut.network = getTableColumns('node','mut_count')  # warning is expected here
+brc.mut.network = getTableColumns('node','mut_count')
 min.brc.mut = min(brc.mut.network[,1],na.rm=TRUE)
 max.brc.mut = max(brc.mut.network[,1],na.rm=TRUE)
 data.values = c(min.brc.mut,20,max.brc.mut)
@@ -373,6 +373,8 @@ exportStyle(paste(getwd(),'tutorial_style',sep='/'),'json') #.json; current styl
 
 More details in Cytoscape manual chapter on [Interactive Web Applications](http://manual.cytoscape.org/en/stable/Export_Your_Data.html#as-an-interactive-web-application-new-in-3-2-0)
 
+
+And in Cytoscape, you can File>Export as Web Page... to produce a folder of cytoscape.js files and html.
 
 
 ### Additional network analysis and visualization options
