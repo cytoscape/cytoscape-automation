@@ -95,7 +95,8 @@ Here we are using Cytoscape's command line syntax, converting it to a CyREST url
 
 ### Wait for network to finish loading
 
-**Hold up! Why are we running this as a script when we could just do it in Cytoscape?***
+**Hold up! Why are we running this as a script when we could just do it in Cytoscape?**
+
 * For things you want to do multiple times, e.g., loops 
 * For things you want to repeat in the future
 * For things you want to share with colleagues or publish
