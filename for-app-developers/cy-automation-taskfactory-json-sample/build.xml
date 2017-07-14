@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="CyREST Resource App - Cytoscape 3" basedir="." default="install">
+    
+    <!-- 
+         This file should be created by each user when he/she needs to override particular values. 
+         Do NOT place it under version control.
+    -->
+    <property file="local.properties"/>
+	<!-- 
+	     This file should be placed under version control.
+	-->
+    <property file="default.properties"/>
+    
+    <property environment="env"/>
+    
+    <property name="build.dir" value="target"/>
+    <property name="cytoscape.app.dir" value="${cytoscape.home}/apps/"/>
+
+    <target name="install">
+        <copy todir="${cytoscape.app.dir}" overwrite="true">
+            <fileset dir="${build.dir}" includes="*.jar"/>
+        </copy>
+    </target>
+    
+    <target name="info">
+        <echo>*******************************************************************</echo>
+        <echo>*   This script installs the CyREST Resource Cytoscape app        *</echo>
+        <echo>*******************************************************************</echo>
+    </target>
+    
+</project>
