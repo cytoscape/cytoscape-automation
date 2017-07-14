@@ -9,6 +9,6 @@ A basic introduction to adding Functions by using minimal JAX-RS and Swagger ann
 
 A detailed example of adding Functions by using comprehensive JAX-RS and Swagger annotations. This is also an example of best practices for making Cytoscape Automation effective and easy to use.
 
-## [cy-automation-taskfactory-sample](https://github.com/cytoscape/cytoscape-automation/tree/master/for-app-developers/cy-automation-taskfactory-sample)
+## [cy-automation-taskfactory-sample](./cy-automation-taskfactory-sample)
 
 A basic introduction to adding Commands and GUI elements using Cytoscape Tasks and TaskFactories.
