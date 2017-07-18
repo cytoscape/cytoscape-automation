@@ -84,11 +84,19 @@ public List<Class<?>> getResultClasses() {
 
 ## Accessing JSON through automation
 
-Using the path ```POST /v1/commands/sample_app/return_json``` you can examine the output of ```ReturnJSONTask``` through some of the methods defined in [Accessing Automation](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Accessing-Automation).
+Using the path ```POST /v1/commands/sample_app/return_json``` you can examine the execution of ```ReturnJSONTask``` through some of the methods defined in [Accessing Automation](https://github.com/cytoscape/cytoscape-automation/wiki/App-Developers:-Accessing-Automation).
 
-After executing the command, you can examine the JSON it has produced. Details about how it is presented are contained below.
+### Parameters
 
-### CIResponse Wrapping
+All Tunables intended for input in a Task are passed to CyREST as a JSON list of Strings in the request message body. The value of each String is processed in the same manner as in the Command line. The Tunable field ```name``` in ```ReturnJSONTask``` will be set using JSON similar to that below:
+
+```json
+{
+  "name": "Rick"
+}
+```
+
+### Output CIResponse Wrapping
 
 Any JSON returned by a Command is contained in the data field of a CIResponse wrapper. The JSON produced by ```SampleJSONResult``` can be seen in this CIResponse returned by this sample app:
 
