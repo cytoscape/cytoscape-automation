@@ -16,6 +16,6 @@ The winners were:
 * [Matthias Konig](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/cyrest-challenge.ipynb) (Python)  [teaser](https://github.com/matthiaskoenig/cyrest-challenge)
   - Uses SBML and time simulation to produce animated pathway
   
-* [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R)
+* [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R) [teaser](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Example_ppi_network_pipeline.html)
   - Extensive cell-cell interaction calculations in Python followed by simple but elegant styling and layout
   
