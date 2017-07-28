@@ -13,8 +13,8 @@ The winners were:
 * Mark Grimes (R)
   - Shows how derive multiple results from a valuable biological network, to compose visualizations and get them into a standalone browser display
   
-* [Matthias Konig](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/cyrest-challenge.ipynb) (Python)  [teaser](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/README.md)
-  - Uses SBML and time simulation to produce animated pathway
+* [Matthias König](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/cyrest-challenge.ipynb) (Python)  [teaser](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/README.md)
+  - Uses SBML and time course simulation to produce animated pathway (using [cy3sbml](https://github.com/matthiaskoenig/cy3sbml) & [roadrunner](https://github.com/sys-bio/roadrunner))
   
 * [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R) 
   - Extensive cell-cell interaction calculations in Python followed by simple but elegant styling and layout
