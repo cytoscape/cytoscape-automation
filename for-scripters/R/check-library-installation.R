@@ -12,11 +12,6 @@ if(!("pacman" %in% installed.packages())) install.packages("pacman")
 library(pacman)
 p_load(RJSONIO,igraph,httr,stringr,XML,RColorBrewer,devtools)
 
-# NOTE: RCy3 requires R v3.2 or higher, available at: https://cloud.r-project.org/
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("RCy3")
-#library(RCy3)  # respond with 'a' to update all, if prompted
-
 # CyREST helper functions
 install_github('cytoscape/cytoscape-automation/for-scripters/R/r2cytoscape')
 library(r2cytoscape)
@@ -30,7 +25,6 @@ if("stringr" %in% ip) print("Success: the stringr lib is installed") else print(
 if("XML" %in% ip) print("Success: the XML lib is installed") else print("Warning: XML lib is not installed. Please install this lib before proceeding.")
 if("RColorBrewer" %in% ip) print("Success: the RColorBrewer lib is installed") else print("Warning: RColorBrewer lib is not installed. Please install this lib before proceeding.")
 if("devtools" %in% ip) print("Success: the devtools lib is installed") else print("Warning: devtools lib is not installed. Please install this lib before proceeding.")
-#if("RCy3" %in% ip) print("Success: the RCy3 lib is installed") else print("Warning: RCy3 lib is not installed. Please install this lib before proceeding.")
 if(exists('command2query',mode='function')) print("Success: r2cytoscape is installed") else print("Warning: r2cytoscape is not installed. Please source this script before proceeding.")
 
 #### If all messages report "Success", then you are ready to go! Proceed to other modules...
