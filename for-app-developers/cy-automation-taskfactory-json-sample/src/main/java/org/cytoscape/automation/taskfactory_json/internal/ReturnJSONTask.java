@@ -19,7 +19,7 @@ public class ReturnJSONTask extends AbstractTask implements ObservableTask {
 	@ProvidesTitle
 	public String getTitle() { return "TaskFactory Return JSON Sample"; }
 
-	@Tunable (description="Name", longDescription="The name to pass in the name field")
+	@Tunable (description="Name", longDescription="The value to return in the result's name field")
 	public String name = "";
 	
 	private SampleResult result;
@@ -27,6 +27,12 @@ public class ReturnJSONTask extends AbstractTask implements ObservableTask {
 	@Override
 	public void run(TaskMonitor arg0) throws Exception {
 		result = new SampleResult();
+		
+		if (name == null || name.length() == 0) {
+			Exception e = new Exception("Name parameter cannot be empty.");
+			throw e;
+		}
+		
 		result.name = name;
 		result.values = new ArrayList<Integer>();
 		result.values.add(1);

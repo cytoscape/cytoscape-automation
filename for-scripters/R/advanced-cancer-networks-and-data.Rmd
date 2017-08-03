@@ -38,10 +38,11 @@ We will retrieve disease networks from a public database and apply gene expressi
 ################################################
 # Step 0: Are You Ready?
 ################################################
+
 This section will load the appropriate libraries and ensure they are functional. 
 
 ### Install libs and utils 
-If any of these do not load properly, please refer to check-library-installation.R for more details:
+Please run check-library-installation.R for libs and tests:
 
 https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/check-library-installation.R
 
@@ -59,7 +60,7 @@ p_load(RJSONIO,igraph,httr,XML,RColorBrewer,r2cytoscape)
     * Diffusion app: http://apps.cytoscape.org/apps/diffusion 
 * Leave Cytoscape running in the background during the remainder of the tutorial.
 
-If any of these checks fail, please refer to check-cytoscape-connection.R for more details: 
+Please run check-cytoscape-connection.R for tests and initial demo: 
 
 https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/check-cytoscape-connection.R
 
