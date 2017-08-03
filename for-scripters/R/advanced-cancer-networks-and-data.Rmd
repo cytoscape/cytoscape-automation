@@ -81,6 +81,7 @@ applyStyle('default') # cleanse the palette before importing new networks and st
 ################################################
 # Step 1: Getting Disease Networks
 ################################################
+
 Use Cytoscape to query the STRING database for networks of genes associated with breast cancer and ovarian cancer.
 
 **If the STRING app is not installed, no error is reported, but your network  will be empty**
@@ -109,6 +110,7 @@ This time, we skipped a step and used the helper function *commandRun* to make t
 ################################################
 # Step 2: Interacting with Cytoscape 
 ################################################
+
 Now that we've got a couple networks into Cytoscape, let's see what we can go with them from R...
 
 ### Get list of networks 
@@ -196,9 +198,10 @@ renameNetwork('top disease diffusion')
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc4.png){height=100%} 
 
-#####################################
-#Step 3: Visualizing data on networks
-#####################################
+################################################
+# Step 3: Visualizing data on networks
+################################################
+
 ### Load datasets
 Downloaded TCGA data from https://portal.gdc.cancer.gov/ and preprocessed as R objects. Also available via each TCGA publication, e.g.:
  
@@ -334,6 +337,7 @@ For example, notice in the case of ovarian cancer: **decreased** range of mean e
 ##########################################
 # Step 4: Saving, sharing and publishing
 ##########################################
+
 ### Saving a Cytoscape session file
 Session files save *everything*. As with most project software, we recommend saving often!
 ```{r}
@@ -393,6 +397,7 @@ openCySwagger("commands")  # CyREST Commands API
 ##########################################
 # Step 5: Wrapping up
 ##########################################
+
 You should now know how to...
 
 * Connect to Cytoscape from R
