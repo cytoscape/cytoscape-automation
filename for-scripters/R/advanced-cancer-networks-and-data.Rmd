@@ -27,12 +27,12 @@ We will retrieve disease networks from a public database and apply gene expressi
 ### Tested with the following versions:
 *  R 3.3.3
 * RStudio 1.0.143
-* Cytoscape 3.5.1+
-* CyREST 3.5.0
-* stringApp 1.1.0+
+* Cytoscape 3.6.0
+* CyREST 3.5.2
+* stringApp 1.2.0
 * Operating Systems tested: 
     * Mac 10.10.5
-    * Win ???
+    * Windows 10
     * Linux (may need to install R-devel)
 
 ################################################
@@ -93,10 +93,6 @@ GET(string.query.url)
 ```
 Here we are using Cytoscape's command line syntax, converting it to a CyREST url, and then making a GET request. 
 
-### Wait for network to finish loading
-
-*Note: full automation support coming soon; these "wait" steps are due to a bug*
-
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc.png){height=100%}  
 
 #### Ovarian cancer
@@ -106,8 +102,6 @@ commandRun(string.cmd)
 ?commandRun
 ```
 This time, we skipped a step and used the helper function *commandRun* to make the GET request from the command string.
-
-### Wait for network to finish loading
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc.png){height=100%}
 
@@ -170,19 +164,15 @@ In order to reflect your exploration back onto the network, let's generate subne
 top.quart <- quantile(disease.score.table[,1], 0.75)
 top.nodes <- row.names(disease.score.table)[which(disease.score.table[,1]>top.quart)]
 createSubnetwork(top.nodes)
-```
-### Wait for network to finish loading
-```{r}
 renameNetwork('top disease quartile')
 ```
 
+...of connected nodes only
 ```{r}
 createSubnetwork(edges='all')  #handy way to exclude unconnected nodes!
-```
-### Wait for network to finish loading
-```{r}
 renameNetwork('top disease quartile connected')
 ```
+
 ...from first neighbors of top 3 genes, using the network connectivity together with the data to direct discovery.
 ```{r}
 setCurrentNetwork("String Network - ovarian cancer")
@@ -190,20 +180,15 @@ top.nodes <- row.names(disease.score.table)[tail(order(disease.score.table[,1]),
 selectNodes(top.nodes)
 selectFirstNeighbors()
 createSubnetwork('selected') # selected nodes, all connecting edges (default)
-```
-### Wait for network to finish loading
-```{r}
 renameNetwork('top disease neighbors')
 ```
+
 ...from diffusion algorithm starting with top 3 genes, using the network connectivity in a more subtle way than just first-degree neighbors.
 ```{r}
 setCurrentNetwork("String Network - ovarian cancer")
 selectNodes(top.nodes)
 commandRun('diffusion diffuse') # diffusion!
 createSubnetwork('selected')
-```
-### Wait for network to finish loading
-```{r}
 applyLayout('force-directed')
 renameNetwork('top disease diffusion')
 ```
