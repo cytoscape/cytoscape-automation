@@ -19,7 +19,7 @@ public class ReturnJSONTask extends AbstractTask implements ObservableTask {
 	@ProvidesTitle
 	public String getTitle() { return "TaskFactory Return JSON Sample"; }
 
-	@Tunable (description="Name", longDescription="The value to return in the result's name field", exampleStringValue="Mort")
+	@Tunable (description="Name", longDescription="The value to return in the result's ```name``` field", exampleStringValue="Mort")
 	public String name = "";
 	
 	private SampleResult result;
