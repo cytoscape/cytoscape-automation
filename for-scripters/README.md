@@ -7,7 +7,7 @@ Collection of sample scripts that provide support for automation.
 There were four winners of the 2017 CyREST Competition, all demonstrating solved problems using R and Python combined with Cytoscape Automation.
 
 The winners were:
-* [Leandro Lima](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Lima%20data%20mining%20%26%20visualization%20-%202017%20CyREST%20Challenge)  (Python)   [teaser](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/Lima%20data%20mining%20%26%20visualization%20-%202017%20CyREST%20Challenge/network.html)
+* [Leandro Lima](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Lima%20data%20mining%20%26%20visualization%20-%202017%20CyREST%20Challenge)  (Python)   [teaser](https://www.ime.usp.br/~llima/batb/network.html)
   - Mined skateboarding data and produced simple visualization ... shows data acquisition and basic CyREST usage
 
 * Mark Grimes (R)
