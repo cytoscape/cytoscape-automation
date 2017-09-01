@@ -16,7 +16,7 @@ to the python category.
 <img src="./results/cytoscape-repressilator.gif" width="500"></img>
 
 The workflow for creation is described and documented in the following Jupyter Notebook  
-https://github.com/matthiaskoenig/cyrest-challenge/blob/master/cyrest-challenge.ipynb
+https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge/cyrest-challenge.ipynbb
  
 ## Installation
 In the following section the setup of the python environment for executing the workflow is described.
@@ -25,11 +25,11 @@ In the following section the setup of the python environment for executing the w
 The simplest way to run the cyrest workflow is via cloning the repository and setting up a python virtual environment. 
 The virtual environment is used to execute the workflow notebook.
 The requirements for execution listed in
-see [`./requirements.txt`](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/requirements.txt).
+see [`./requirements.txt`](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge/requirements.txt).
 ```
 # clone repository
-git clone https://github.com/matthiaskoenig/cyrest-challenge.git
-cd cyrest-challenge
+git clone https://github.com/cytoscape/cytoscape-automation.git
+cd cytoscape-automation/for-scripters/Python/König SBML Time Course - 2017 CyREST Challenge
 
 # setup virtual environment
 mkvirtualenv cyrest-challenge
