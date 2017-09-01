@@ -13,7 +13,7 @@ The winners were:
 * Mark Grimes (R)
   - Shows how derive multiple results from a valuable biological network, to compose visualizations and get them into a standalone browser display
   
-* [Matthias König](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge) (Python)  [teaser](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge/README.md)
+* [Matthias König](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge) (Python)  [teaser](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge/README.md)
   - Uses SBML and time course simulation to produce animated pathway (using [cy3sbml](https://github.com/matthiaskoenig/cy3sbml) & [roadrunner](https://github.com/sys-bio/roadrunner))
   
 * [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R) 
