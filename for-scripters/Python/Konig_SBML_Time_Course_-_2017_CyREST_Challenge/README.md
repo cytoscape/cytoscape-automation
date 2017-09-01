@@ -16,6 +16,8 @@ to the python category.
 <img src="./results/cytoscape-repressilator.gif" width="500"></img>
 
 The workflow for creation is described and documented in this [Jupyter Notebook](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge/cyrest-challenge.ipynb).  
+
+The original submission is here: https://github.com/matthiaskoenig/cyrest-challenge.git
  
 ## Installation
 In the following section the setup of the python environment for executing the workflow is described.
