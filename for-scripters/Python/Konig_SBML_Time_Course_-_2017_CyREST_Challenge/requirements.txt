@@ -1,0 +1,8 @@
+numpy
+pandas
+matplotlib
+py2cytoscape>=0.6.2
+sbmlutils>=0.1.7a0
+ipykernel
+imageio
+Pillow
