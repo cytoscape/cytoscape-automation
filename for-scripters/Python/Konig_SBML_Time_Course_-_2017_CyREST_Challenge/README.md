@@ -26,7 +26,7 @@ In the following section the setup of the python environment for executing the w
 The simplest way to run the cyrest workflow is via cloning the repository and setting up a python virtual environment. 
 The virtual environment is used to execute the workflow notebook.
 The requirements for execution listed in
-see [`./requirements.txt`](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge/requirements.txt).
+see [`./requirements.txt`](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge/requirements.txt).
 ```
 # clone repository
 git clone https://github.com/cytoscape/cytoscape-automation.git
