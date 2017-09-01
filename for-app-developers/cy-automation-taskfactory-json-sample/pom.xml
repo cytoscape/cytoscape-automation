@@ -5,7 +5,7 @@
 		<bundle.symbolicName>cy-automation-taskfactory-json-sample</bundle.symbolicName>
 		<bundle.namespace>org.cytoscape.automation.taskfactory_json</bundle.namespace>
 		<cytoscape.api.version>3.6.0-SNAPSHOT</cytoscape.api.version>
-		<maven-bundle-plugin.version>2.3.4</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>3.2.0</maven-bundle-plugin.version>
 		<osgi.api.version>4.2.0</osgi.api.version>
 	</properties>
 
