@@ -7,13 +7,13 @@ Collection of sample scripts that provide support for automation.
 There were four winners of the 2017 CyREST Competition, all demonstrating solved problems using R and Python combined with Cytoscape Automation.
 
 The winners were:
-* [Leandro Lima](https://github.com/lelimat/cyrest_competition)  (Python)   [teaser](https://www.ime.usp.br/~llima/batb/network.html)
+* [Leandro Lima](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Lima%20data%20mining%20%26%20visualization%20-%202017%20CyREST%20Challenge)  (Python)   [teaser](https://www.ime.usp.br/~llima/batb/network.html)
   - Mined skateboarding data and produced simple visualization ... shows data acquisition and basic CyREST usage
 
 * Mark Grimes (R)
   - Shows how derive multiple results from a valuable biological network, to compose visualizations and get them into a standalone browser display
   
-* [Matthias König](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/cyrest-challenge.ipynb) (Python)  [teaser](https://github.com/matthiaskoenig/cyrest-challenge/blob/master/README.md)
+* [Matthias König](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge) (Python)  [teaser](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/Python/K%C3%B6nig%20SBML%20Time%20Course%20-%202017%20CyREST%20Challenge/README.md)
   - Uses SBML and time course simulation to produce animated pathway (using [cy3sbml](https://github.com/matthiaskoenig/cy3sbml) & [roadrunner](https://github.com/sys-bio/roadrunner))
   
 * [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R) 
