@@ -43,18 +43,20 @@ public class ReturnJSONTask extends AbstractTask implements ObservableTask {
 		result.values.add(3);
 	}
 	
+	public static final String getJson(SampleResult result) {
+		return new Gson().toJson(result);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <R> R getResults(Class<? extends R> type) {
-		if (type.equals(String.class)) {
-			String json = (new Gson()).toJson(result);
-			
-			return (R)(new Gson()).toJson(result);
+		if (type.equals(String.class)) {	
+			return (R) getJson(result);
 		} 
 		/* This is where we return JSON from this Task. 
 		 */
 		else if (type.equals(JSONResult.class)) {
-			JSONResult res = () -> {return (new Gson()).toJson(result);};
+			JSONResult res = () -> {return getJson(result);};
 			return (R)(res);
 		} else {
 			return null;

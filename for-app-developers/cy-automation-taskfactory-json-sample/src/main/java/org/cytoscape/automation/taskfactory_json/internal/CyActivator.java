@@ -32,7 +32,7 @@ public class CyActivator extends AbstractCyActivator {
 	}
 
 	public static final String getExample() {
-		return (new Gson()).toJson(new SampleResult("Hodor", Arrays.asList(1, 2, 3)));
+		return ReturnJSONTask.getJson(new SampleResult("Hodor", Arrays.asList(1, 2, 3)));
 	}
 	
 	public void start(BundleContext bc) throws InvalidSyntaxException 
