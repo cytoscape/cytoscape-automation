@@ -1,0 +1,1288 @@
+---
+title: "Creating Cell Cell interaction network"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+# Cell Cell interactions
+
+Using a set of proteins designated as receptors, and ligands defined with a set of GO terms calculate the set of interactions that represent cell-cell interactions (for example Ligand-receptor, receptor-receptor, ...). This analysis is not limited to Cell-Cell interactions.  You can define your own protein types, either manually or by choosing different go terms, and create your customized protein-protein interaction network.  
+
+Once you have defined the set of protein of interest restrict your dataset to include only proteins found in your protein of interest set.  Your dataset can be any type of data.  For this example we have downloaded data from GEO representing the expression of different stages of hematopoiesis (originally from [this publication](https://www.ncbi.nlm.nih.gov/pubmed/23708252)).
+
+![**Data analysis flow chart**](./LigandReceptorflowChart_cyrest_pipline.png)
+
+For this analysis the user supplies a dataset (condition A vs condition B or cell type A vs cell type B).  One can start with GEO id or alternately supply a scored dataset.
+
+The result of the analysis is a ligand receptor interaction network generated in cytoscape which depicts all interactions.  In order for an interaction to be included both proteins do not need to be significant.  The rationale is that we want to see the potential interactions.  If both members are present it might be sufficient for the interaction to occur.  They don't necessarily need to be differentially expressed in order for the interaction to occur. 
+
+There are different configuarble parameters that the users can tweak listed below:
+
+## configurable parameters
+
+User configurable Parameters:
+
+ * celltype_column - the name of the column in the table that specifies which cell type the gene is associate with.
+ * genename_column - The name of the column in the dataset table that contains the gene symbol. This is dependant on where the data is coming from.  Using GEO2R to convert probe ids to gene names use this column name
+ * FC_thresh - Foldchange threshold - How differential does the gene need to be in order to classify it as cell type A or cell type B
+ * significance_filter - TRUE/FALSE, set filter to true if you would like to filter the dataset by p-value and fdr thresholds. Even if you choose not to filter the dataset keep these thresholds at desired numbers as in the resulting network any gene that passes these thresholds will be highlighted as a significant gene. 
+ * fdr_thresh - false discovery threhold - (optional) used to filter the dataset.
+ * pval_thresh - p-value threshold - (optional) used to filter the dataset
+ * cell_typeA - name of cell type A
+ * cell_typeB - name of cell type B
+ * collection - name of resulting cytoscape network collection
+ * name -  name of resulting cytoscape network
+ * style_name - name of cytoscape style
+
+```{r}
+
+#The name of the column in the table that specifies which cell type the gene is associate with.
+celltype_column <- "Type"
+#The name of the column in the table that contains the gene symbol
+#This is dependant on where the data is coming from.  Using GEO2R to convert probe ids to gene names use this column name
+genename_column <- "Symbol" 
+
+#Foldchange threshold - How differential does the gene need to be in order to classify it as cell type A or cell type B
+FC_thresh <- 1 
+
+#set filter to true if you would like to filter the dataset by p-value and fdr thresholds
+# Even if you choose not to filter the dataset keep these thresholds at desired numbers as in the resulting network any gene that
+# passes these thresholds will be highlighted as a significant gene.
+significance_filter <- FALSE
+#False discovery threhold - (optional) used to filter the dataset. 
+fdr_thresh <- 1 
+#p-value threshold - (optional) used to filter the dataset
+pval_thresh <- 0.05
+
+#name of resulting cytoscape network collection
+collection = paste("ligand_receptor_network",FC_thresh,sep="_") # name of cytoscape collection
+
+#definition of cell types - can be any number of cell-types.  
+cell_typeA <- "celltypeA"
+cell_typeB <- "celltypeB"
+celltype_names <- c(cell_typeA,cell_typeB)
+
+#name of resulting cytoscape network
+name = paste(cell_typeA,cell_typeB,"interactions","pval",pval_thresh, "fdr",fdr_thresh,"FC",FC_thresh,sep="_") #network name
+
+#name of cytoscape style
+style_name <- "cellcell_style"
+
+# flag whether to compute iref complex interactions
+compute_iref_complexes <- FALSE
+
+#install an R library that has functions which make it easier to communicate with cytoscape
+#use easy cyRest library to communicate with cytoscape.
+tryCatch(expr = { library(devtools)}, 
+         error = function(e) { install.packages("devtools")}, finally = library(devtools))
+tryCatch(expr = { library(EasycyRest)}, 
+         error = function(e) { install_github("BaderLab/EasycyRest/EasycyRest")}, finally = library(EasycyRest))
+
+
+#source ("./R_code/CellCellInteractions_utility_functions.R")
+
+```
+
+
+## Define the ligands and receptors
+
+Receptors are defined as any gene annotated to the following GO terms:
+
+ * GO CC - GO:0043235 - receptor complex, GO:0008305 - integrin complex
+ * GO BP - GO:0072657 - protein localized to membrane, GO:0043113 - receptor clustering
+ * GO MF - GO:0004872 -receptor activity 
+ 
+Ligands are defined as any gene annotated to the following GO terms:
+
+ *  GO MF - GO:0005102 - receptor binding
+ 
+ To modify or customize what is defined as a receptor or ligand add/delete any of the GO terms below.
+
+```{r}
+goterms_receptors <- c("GO:0043235","GO:0008305","GO:0072657","GO:0043113","GO:0004872")
+goterms_ligands <- c("GO:0005102")
+```
+
+```{r,, message=FALSE, warning=FALSE}
+  
+tryCatch(expr = { library("biomaRt")}, 
+         error = function(e) { source("http://bioconductor.org/biocLite.R");biocLite("biomaRt")}, finally = library("biomaRt"))
+
+  ensembl=useMart("ensembl",dataset="hsapiens_gene_ensembl")
+
+  #filter for the set of goterms
+  attribs = c('entrezgene','hgnc_symbol','go_id','name_1006','go_linkage_type','namespace_1003');
+  
+  genes_recep <- getBM(attributes = attribs,filters = 'go_parent_term', values = goterms_receptors, mart = ensembl)
+  genes_ligand <- getBM(attributes = attribs,filters = 'go_parent_term', values = goterms_ligands, mart = ensembl)
+
+```
+
+## Number of Receptors and Ligands
+Biomart returned `r length(unique(genes_recep$hgnc_symbol))` unique genes annotated to the one of the Receptor go term queries `r goterms_receptors` or one their `r length(unique(genes_recep$go_id))` child terms. 
+
+Biomart returned `r length(unique(genes_ligand$hgnc_symbol))` unique genes annotated to the one of the Receptor go term queries `r goterms_ligands` or one their `r length(unique(genes_ligand$go_id))` child terms. 
+
+Go terms are assigned with different [evidence codes](http://www.geneontology.org/page/guide-go-evidence-codes).  We can use these codes to help refine our subset of genes. for example, If we want to restrict our set of genes to a higher confidence set we can exclude any annotaions that are "inferred from electronic annoations".
+
+```{r, message=FALSE}
+library(ggplot2)
+evidence_code_dist_ligands <- aggregate(genes_ligand$go_linkage_type, by=list(genes_ligand$go_linkage_type), FUN=length)
+colnames(evidence_code_dist_ligands) <- c("evidence_code","num_annotations")
+
+evidence_code_dist_ligands <- evidence_code_dist_ligands[order(evidence_code_dist_ligands[,2]),] 
+
+evidence_codes <- factor(evidence_code_dist_ligands[,"evidence_code"], levels = evidence_code_dist_ligands[,"evidence_code"])
+num_annots <- evidence_code_dist_ligands[,"num_annotations"]
+
+figures_directory <- paste(getwd(),"Figures",sep="/")
+dir.create(figures_directory ,showWarnings = FALSE)
+
+evidence_codes_ligands_file <- paste(figures_directory,"evidence_codes_ligands.png", sep="/")
+png(evidence_codes_ligands_file,width = 800)
+
+ggplot(evidence_code_dist_ligands, aes(x="", y=num_annots, fill=evidence_codes)) + geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0) + ggtitle("distribution of evidence codes of ligand GO annotations")
+
+dev.off()
+```
+![**Evidence codes - Ligands**](`r evidence_codes_ligands_file`)
+```{r}
+evidence_code_dist_receptors <- aggregate(genes_recep$go_linkage_type, by=list(genes_recep$go_linkage_type), FUN=length)
+colnames(evidence_code_dist_receptors) <- c("evidence_code","num_annotations")
+
+evidence_code_dist_receptors <- evidence_code_dist_receptors[order(evidence_code_dist_receptors[,2]),] 
+
+evidence_codes <- factor(evidence_code_dist_receptors[,"evidence_code"], levels = evidence_code_dist_receptors[,"evidence_code"])
+num_annots <- evidence_code_dist_receptors[,"num_annotations"]
+
+evidence_codes_receptors_file <- paste(figures_directory,"evidence_Codes_receptors.png", sep="/")
+png(evidence_codes_receptors_file,width = 800)
+  ggplot(evidence_code_dist_receptors, aes(x="", y=num_annots, fill=evidence_codes)) + geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0) + ggtitle("distribution of evidence codes of receptors GO annotations")
+
+dev.off()
+```
+
+![**Evidence codes - Receptors**](`r evidence_codes_receptors_file`)
+
+Given the large set of genes returned for the specified GO terms plus the large percentage of annotations that have "inferred from electronic annotation" evidence code we can narrow the set by excluding those annotations. 
+```{r}
+genes_recep_filtered <- data.frame(genes_recep[which(genes_recep$go_linkage_type != "IEA"),], protein_type = "Receptor")
+genes_ligand_filtered <- data.frame(genes_ligand[which(genes_ligand$go_linkage_type != "IEA"),],protein_type = "Ligand")
+all_types <- rbind(genes_recep_filtered, genes_ligand_filtered)
+func_paste <- function(x) paste(unique(x), collapse = ',')
+protein_types_attribs <- aggregate(all_types, by=list(all_types[,"hgnc_symbol"]), func_paste)[,2:8]
+
+```
+
+```{r}
+#This is the set of genes/proteins we are going to filter our interaction by.  If you have your own set of genes/proteins of interest you can definge them here and skip the GO calculation.  
+#prteins_of_interest is a vector of gene symobls
+proteins_of_interest <- unique(c(genes_recep_filtered[,2],genes_ligand_filtered[,2]))
+```
+
+
+This results in:
+ * `r length(unique(genes_recep_filtered[,2]))` unique genes classified as receptors
+ * `r length(unique(genes_ligand_filtered[,2]))` unique genes classified as ligands
+ * There are `r length(intersect(unique(genes_recep_filtered[,2]),unique(genes_ligand_filtered[,2])))` genes that are classified as both receptors and ligands
+
+prior to filtering to exclude IEA annotations there were:
+ * `r length(unique(genes_recep[,2]))` unique genes classified as receptors
+ * `r length(unique(genes_ligand[,2]))` unique genes classified as ligands
+ * There are `r length(intersect(unique(genes_recep[,2]),unique(genes_ligand[,2])))` genes that are classified as both receptors and ligands
+ 
+## Sources of interactions:
+ 1.  [IRefIndex](http://irefindex.org/wiki/index.php?title=README_MITAB2.6_for_iRefIndex) - Originally, interactions were obtained from IRefIndex.  Irefindex was last updated in April 2015 but when we tried to use it the latest release had less interactions than the previous version so we kept using the older version which is from August 2013. 
+ 1.  [Biogrid](https://thebiogrid.org/download.php) - an updated resource but it doesn't include all database like irefindex.  
+   * To get the latest version of biogrid use latest version links (for example https://thebiogrid.org/downloads/archives/Latest%20Release/BIOGRID-ALL-LATEST.mitab.zip).  It is different depending on the type of file you want to download.
+ 1.  [Pathway Commons](http://www.pathwaycommons.org) - although pathway commons is primarily a pathway database there are a lot of interactions that make up pathways.  Pahtway commons currently (April 2016) collates data from 22 data sources and has a restful API. For the purpose of this analysis we are going to download the entire set of interactions in sif format that is available on there download site as opposed to using their restul-API.  Rest is good for accessing small to medium amounts of data but given we want the entire set it is more effecient to use the bulk download. 
+
+### Biogrid
+
+Interactions in mitab format are translated into genesymbol - genesymbol interactions.  Each database uses their own base identifiers but users most often look at their results on the gene symbol level.  The base identifier for Biogrid is entrez gene id and gene symbols are placed in alternate id columns.
+
+```{r}
+inter_directory = "InteractionSrc_files"
+src_directory = "Biogrid"
+biogrid_dir = paste(getwd(),inter_directory,src_directory,sep="/")
+dir.create(paste(getwd(),inter_directory,sep="/"), showWarnings = FALSE)
+dir.create(biogrid_dir, showWarnings = FALSE)
+
+biogrid_url = "https://thebiogrid.org/downloads/archives/Latest%20Release/BIOGRID-ORGANISM-LATEST.mitab.zip"
+biogrid_interaction_zipfile = paste(biogrid_dir ,"/biogrid_",format(Sys.time(), "%b_%d_%Y"),".mitab.zip",sep="")
+biogrid_interaction_file = paste(biogrid_dir ,"//biogrid_",format(Sys.time(), "%b_%d_%Y"),".mitab",sep="")
+
+## download the latest version of biogrid.
+download.file(
+    biogrid_url,
+    destfile=biogrid_interaction_zipfile
+)
+```
+
+
+```{r}
+#unzip the new file
+files_in_zip = unzip(biogrid_interaction_zipfile,exdir=inter_directory, list=TRUE)
+human_file = files_in_zip[grep(files_in_zip[,1], pattern="Homo_sapiens"),1]
+unzip(biogrid_interaction_zipfile,exdir=inter_directory, files=human_file)
+
+#load in the mitab file
+biogrid_mitab = read.delim(paste(inter_directory,"/",human_file,sep=""), as.is=T, check.names=F, na.strings=c(NA,""))
+
+```
+
+Biogrid contains `r dim(biogrid_mitab)[1]` records.
+
+The distribution of the different types of interactions:
+
+```{r}
+
+intertypes_dist_biogrid <- aggregate(biogrid_mitab$`Interaction Types`, by=list(biogrid_mitab$`Interaction Types`), FUN=length)
+colnames(intertypes_dist_biogrid) <- c("Interaction Type","num_interactions")
+
+intertypes_dist_biogrid<- intertypes_dist_biogrid[order(intertypes_dist_biogrid[,2],decreasing = TRUE),] 
+
+inter_types <- factor(intertypes_dist_biogrid[,"Interaction Type"], levels = intertypes_dist_biogrid[,"Interaction Type"])
+num_inter <- intertypes_dist_biogrid[,"num_interactions"]
+
+biogrid_intertype_file <- paste(figures_directory,"biogrid_intertypes.png", sep="/")
+png(biogrid_intertype_file,width = 800)
+
+ggplot(intertypes_dist_biogrid, aes(x="", y=num_inter, fill=inter_types)) + geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0) + ggtitle("distribution of interaction types in Biogrid") +  theme(axis.text = element_blank())
+
+dev.off()
+```
+
+![**Biogrid - interaction types**](`r biogrid_intertype_file`)
+
+Filter biogrid by the set of ligands and receptors.  For an interaction to be retained in the final set both protein A and protein B must be in our proteins of interest set.  We are looking for interactions between Receptors and ligands (or ligands and ligands, or receptors and receptors)
+
+Gene symbols are found in the alternate id column (column 3 and 4 in the biogrid mitab file)
+
+```{r}
+
+# Filter mitab set of interactions by proteins of interest
+#
+# all_interactions - table of the interactions to filter
+# protein_Set - a vector of genes to limit the interaction set by
+# pattern - if the fields that we are searching in actualy contains multiple ids then extract the symbols of interest based on this pattern.
+# column_alias1 - the column name to find the alias of gene/protein1
+# column_alias2 - the column name to find the alias of gene/protein2
+
+filter_mitab_interactions_byproteinset <- function(all_interactions, protein_set,pattern, column_alias1, column_alias2){
+  
+  #pull out all the hgnc symbols from the interactions in interaction file
+  #extract the HGNC symbols from AliasA and AliasB
+  #AliasA is the 3rd column
+  temp1 <-strsplit(all_interactions[,column_alias1],pattern)
+  AliasA <- unlist(lapply(temp1, function(dat){unlist(strsplit(dat[2],"\\|"))[1]}))
+  AliasA<- unlist(lapply(AliasA,as.character))
+  
+  #AliasA is the 4th column
+  temp1 <-strsplit(all_interactions[,column_alias2],pattern)
+  AliasB <- unlist(lapply(temp1, function(dat){unlist(strsplit(dat[2],"\\|"))[1]}))
+  AliasB<- unlist(lapply(AliasB,as.character))
+  
+  #add AliasA and AliasB to the original iref matrix
+  all_interactions <- cbind(AliasA, AliasB, all_interactions)
+  
+  interaction_set <- all_interactions[which(AliasA %in% protein_set & AliasB %in% protein_set),]
+  
+  return(interaction_set)
+}
+
+
+biogrid_ligand_recep_inter <- filter_mitab_interactions_byproteinset(biogrid_mitab,proteins_of_interest,
+                                                                     pattern="entrez gene/locuslink:",
+                                                                    column_alias1=3,column_alias2=4)
+```
+After filtering biogrid by our set of proteins of interest there are `r dim(biogrid_ligand_recep_inter)[1]` records where protein A and protein B are in our set of protein of interest.
+
+```{r}
+
+intertypes_dist_biogrid <- aggregate(biogrid_ligand_recep_inter$`Interaction Types`, by=list(biogrid_ligand_recep_inter$`Interaction Types`), FUN=length)
+colnames(intertypes_dist_biogrid) <- c("Interaction Type","num_interactions")
+
+intertypes_dist_biogrid<- intertypes_dist_biogrid[order(intertypes_dist_biogrid[,2],decreasing = TRUE),] 
+
+inter_types <- factor(intertypes_dist_biogrid[,"Interaction Type"], levels = intertypes_dist_biogrid[,"Interaction Type"])
+num_inter <- intertypes_dist_biogrid[,"num_interactions"]
+
+biogrid_intertype_file_filtered <- paste(figures_directory,"biogrid_intertypes_filtered.png", sep="/")
+png(biogrid_intertype_file_filtered,width = 800)
+
+ggplot(intertypes_dist_biogrid, aes(x="", y=num_inter, fill=inter_types)) + geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0) + ggtitle("distribution of interaction types in Biogrid") +  theme(axis.text = element_blank())
+
+dev.off()
+```
+![**Biogrid - interaction types [Filtered]**](`r biogrid_intertype_file_filtered`)
+
+```{r}
+#compute the unique number of interactions
+keys_biogrid<- unique(paste(biogrid_ligand_recep_inter[,1],biogrid_ligand_recep_inter[,2],sep="") )
+
+```
+In order to decrease some of the redundancy in the interaction set from each interaction create a key consisting of proteinA and protein B.  (key = genenameA_genenameB)  With the key we can collapse interactions that are identified in multiple publications or by multiple methods.  If the same interaction is described in the database as protein B interacts with protein A it would be retained as a different interaction as this basic method doesn't account for that.  This can be handled in the results PPI network that we generate in cytoscape as we can remove duplicated edges. 
+
+There are `r length(keys_biogrid)` unique interactions with our proteins of interest in the biogrid set.
+
+### Pathway commons
+
+
+```{r, include=FALSE}
+library(RCurl)
+pc_directory = "PC2"
+pc_dir = paste(getwd(),inter_directory,pc_directory,sep="/")
+dir.create(paste(getwd(),inter_directory,sep="/"), showWarnings = FALSE)
+dir.create(pc_dir, showWarnings = FALSE)
+
+pc_url = "http://download.baderlab.org/PathwayCommons/PC2/current/"
+
+filenames = getURL(pc_url)
+tc = textConnection(filenames)
+contents = readLines(tc)
+close(tc)
+```
+
+
+```{r}
+#only get the file that contains all sources
+rx = gregexpr("(?<=<a href=\")(PathwayCommons.*.All.EXTENDED_BINARY_SIF.hgnc)(.txt.gz)(?=\">)",
+  contents, perl = TRUE)
+pc_file = unlist(regmatches(contents, rx))
+pc_interaction_zipfile <- pc_file
+dest_pc_interaction_zipfile <- paste(pc_dir,pc_interaction_zipfile,sep="/")
+
+download.file(
+    paste(pc_url,pc_interaction_zipfile,sep="/"),
+    destfile=dest_pc_interaction_zipfile
+)
+```
+```{r, include=FALSE}
+tryCatch(expr = { library("R.utils")}, 
+         error = function(e) { install.packages("R.utils")}, finally = library("R.utils"))
+
+```
+
+```{r}
+
+pc_interaction_file = gsub(pattern = ".gz",replacement = "",pc_interaction_zipfile)
+if (file.exists(paste(pc_dir,pc_interaction_file,sep="/"))) {
+  response = file.remove(paste(pc_dir,pc_interaction_file,sep="/"))
+  }
+
+gunzip(paste(pc_dir,pc_interaction_zipfile,sep="/"))
+
+#load in the extended binary sif file (there are actually two files contained in this individual file)
+pc_data = read.delim(paste(pc_dir,"/",pc_interaction_file,sep=""), as.is=T, check.names=F, na.strings=c(NA,""))
+
+pc_protein_data_colnames <- pc_data[which(pc_data[,1]=="PARTICIPANT"),which(!is.na(pc_data[which(pc_data[,1]=="PARTICIPANT"),]))]
+pc_protein_data <- pc_data[(which(pc_data[,1]=="PARTICIPANT")+1):dim(pc_data)[1],1:length(which(!is.na(pc_data[which(pc_data[,1]=="PARTICIPANT"),])))]
+colnames(pc_protein_data) <- pc_protein_data_colnames
+
+pc_data <- pc_data[1:(which(pc_data[,1]=="PARTICIPANT")-1),]
+
+```
+
+
+```{r}
+
+protein_set <- proteins_of_interest
+AliasA <- pc_data[,1]
+AliasB <- pc_data[,3]
+pc_RL_interaction_set <- pc_data[which(AliasA %in% protein_set & AliasB %in% protein_set),]
+num_pc2_inter <- dim(pc_RL_interaction_set)[1]
+
+#compute the unique number of interactions
+keys_pc2<- paste(pc_RL_interaction_set[,1],pc_RL_interaction_set[,3],sep="") 
+num_pc2_uniq_interactions <- length(unique(keys_pc2))
+```
+There are a total of `r num_pc2_inter` interactions in the pathway commons set (`r num_pc2_uniq_interactions` unique interactions).
+
+
+### IRefindex
+
+```{r}
+
+inter_directory = "InteractionSrc_files"
+src_directory = "irefindex"
+iref_dir = paste(getwd(),inter_directory,src_directory,sep="/")
+dir.create(paste(getwd(),inter_directory,sep="/"), showWarnings = FALSE)
+dir.create(iref_dir, showWarnings = FALSE)
+
+iref_url <- "http://irefindex.org/download/irefindex/data/archive/release_13.0/psi_mitab/MITAB2.6/9606.mitab.08122013.txt.zip"
+
+iref_interaction_zipfile = paste(iref_dir, "9606.mitab.08122013.txt.zip",sep="/")
+iref_interaction_file = paste(iref_dir, "9606.mitab.08122013.txt",sep="/")
+
+## download the latest version of biogrid.
+download.file(
+    iref_url,
+    destfile=iref_interaction_zipfile
+)
+
+
+```
+
+
+```{r}
+
+unzip(iref_interaction_zipfile,exdir=iref_dir )
+
+iref_2013 = read.delim(iref_interaction_file, 
+                       as.is=T, check.names=F, na.strings=c(NA,""))
+
+dim(iref_2013)
+
+```
+
+
+#### Remove biogrid from the iref set because we are getting them from the source
+
+Biogrid and Iref represent complexes very differently. Instead of taking the iref interpretation of the interaction take it directly from the source.  Remove all interaction from Iref set that have sourcedb == "MI:0463(biogrid)"
+
+
+```{r}
+num_to_remove <- dim(iref_2013[which(iref_2013[,"sourcedb"] == "MI:0463(biogrid)"),])[1]
+paste("Removed ",num_to_remove ,
+      "interactions from iref set.  (interactions in iref that are from biogrid)")
+iref_2013_nobiogrid <- iref_2013[which(iref_2013[,"sourcedb"] != "MI:0463(biogrid)"),]
+```
+
+
+#### Compute Receptor - ligand interactions
+
+```{r}
+iref_ligand_recep_inter <- filter_mitab_interactions_byproteinset(
+                                iref_2013_nobiogrid,proteins_of_interest,
+                                pattern="hgnc:",
+                                column_alias1=5,column_alias2=6)
+```
+
+
+#### Compute interactions from IRef complex interaction representation and filter by receptor ligand interactions
+translate mitab irefIndex complex records into pair-wise interactions. Complexes are stored in iref as a set of interactions where each pairwise interaction is between one member of the complex and the complex record itself.  **This step takes quite a bit of time.**  
+
+By default we don't compute this.
+```{r}
+#this method converts the complexes into a matrix representation.
+#Iref has a different way or represening complex membership. Instead of representing them in matrix or spoke instead a fake entity called complexA 
+# is created and all genes/proteins that are a part of that complex interact with this fake entity.  This representation would translate in to 
+# zero interactions when comparing to our protein set of interest.
+# Therefore, translate all irefindex complex interactions into matrix representation.
+#
+# Given:
+# iref_mitab - irefindex expanded mitab representation (from 2013 release) - given that the expanded format is not as stable as compact mitab format
+#  if you wish to change to a later release of irefindex (we tried the 2015 release but found that it had significantly less interactions than
+#  the 2013 release) it is imporatant that you verify that the expanded mitab fields have not changed. 
+# protein_set - vector of genes/proteins to filter the compex interactions by.
+compute_complex_interactions_irefindex <- function(iref_mitab,protein_set){
+  
+  #add the aliases
+  #pull out all the hgnc symbols from the interactions in iref
+  #extract the HGNC symbols from AliasA and AliasB
+  temp1 <-strsplit(iref_mitab[,'aliasA'],'hgnc:')
+  AliasA <- unlist(lapply(temp1, function(dat){unlist(strsplit(dat[2],"\\|"))[1]}))
+  AliasA<- unlist(lapply(AliasA,as.character))
+  
+  temp1 <-strsplit(iref_mitab[,'aliasB'],'hgnc:')
+  AliasB <- unlist(lapply(temp1, function(dat){unlist(strsplit(dat[2],"\\|"))[1]}))
+  AliasB<- unlist(lapply(AliasB,as.character))
+  
+  #add AliasA and AliasB to the original iref matrix
+  iref_mitab <- cbind(AliasA, AliasB, iref_mitab)
+  
+  #compute edges from complexes
+  irefcomplexes  <- iref_mitab[which(iref_mitab['edgetype'] =="C"),]
+  
+  irefcomplexes <- data.frame(lapply(irefcomplexes, as.character), stringsAsFactors=FALSE)
+  
+  #some weirdness on windows systems.  uidA column is coming up as x.uidA 
+  #if there is a column name x.uidA then change it to uidA
+  if(length(which(colnames(irefcomplexes) == "X.uidA")) > 0){
+    colnames(irefcomplexes)[which(colnames(irefcomplexes) == "X.uidA")] <- "uidA"
+  }
+  
+  #go through all the unique complexes
+  unique_complexes <- unique(irefcomplexes[,'uidA']) 
+  
+  complex_Data_to_add <- c()
+  for(j in 1:length(unique_complexes)){
+    complex_rows <- which(irefcomplexes[,'uidA'] == unique_complexes[j])
+    subset <- irefcomplexes[complex_rows,];
+    
+    ids_in_complex <- unique(subset[,'AliasB'])
+    FoundInComplex <- which(ids_in_complex %in% protein_set)
+    if(length(FoundInComplex) > 1){
+      
+      for(k in 1:length(FoundInComplex)){
+        current_receptor_row <- subset[which(subset[,'AliasB'] == ids_in_complex[FoundInComplex[k]]),][1,]  
+        for(l in 1:length(FoundInComplex)){
+          if(k != l){
+            current_ligand_row <- subset[which(subset[,'AliasB'] == ids_in_complex[FoundInComplex[l]]),][1,]
+            #create new row with 56 columns
+            new_row <- vector(mode="character", length = 56)
+            #receptor is always A
+            new_row[c(1,3,5,7,9,14,21,23,25,27,30,37,41,43,45,47,50,53)] <- current_receptor_row[1,c(2,4,6,8,10,15,22,24,26,28,31,38,42,46,44,48,51,54)]
+            #ligand is always B
+            new_row[c(2,4,6,8,10,15,22,24,26,28,31,38,42,46,44,48,51,54)] <- current_ligand_row[1,c(2,4,6,8,10,15,22,24,26,28,31,38,42,46,44,48,51,54)]
+            
+            #rest is the same for both so doesn't matter.
+            new_row[c(11,12,13,16,17,18,19,20,29,32,33,34,35,36,39,40,49,52,55,56)] <- current_ligand_row[1,c(11,12,13,16,17,18,19,20,29,32,33,34,35,36,39,40,49,52,55,56)]
+            complex_Data_to_add <- rbind(complex_Data_to_add , unlist(new_row));
+          }        
+        }     
+      }
+    }
+  }
+  colnames(complex_Data_to_add) <- colnames(iref_mitab)
+  return(complex_Data_to_add)
+}
+
+
+if(compute_iref_complexes){
+  iref_ligand_recep_complexes <- compute_complex_interactions_irefindex(
+    iref_2013_nobiogrid,proteins_of_interest)
+}
+```
+#### Create the final set of receptor ligand interactions from interaction and complexes set
+```{r}
+num_iref_complex_inter <- 0
+
+#get rid of any interactions that have one molecule specified as NA
+  iref_ligand_recep_inter <- iref_ligand_recep_inter[which(!is.na(iref_ligand_recep_inter[,2]) & !is.na(iref_ligand_recep_inter[,1]) ),]
+  num_iref_inter <- dim(iref_ligand_recep_inter)[1]
+
+#get rid of any interactions that have one molecule specified as NA
+if(compute_iref_complexes){
+  iref_ligand_recep_complexes <- iref_ligand_recep_complexes[which(!is.na(iref_ligand_recep_complexes[,2]) & !is.na(iref_ligand_recep_complexes[,1]) ),]
+  num_iref_complex_inter <- dim(iref_ligand_recep_complexes)[1]
+
+  iref_ligand_recep_inter_all <- rbind(iref_ligand_recep_inter, iref_ligand_recep_complexes)
+} else{
+  
+  iref_ligand_recep_inter_all <- iref_ligand_recep_inter
+}
+
+
+num_iref_inter_all <- dim(iref_ligand_recep_inter_all)[1]
+
+#compute the unique number of interactions
+keys_iref_2013 <- unique(paste(iref_ligand_recep_inter_all[,1],iref_ligand_recep_inter_all[,2],sep="") )
+
+```
+Iref consists of `r num_iref_inter_all` ligand-receptor interactions, `r num_iref_complex_inter` from complexes and `r num_iref_inter` from interaction records.  Of the `r num_iref_inter_all` there are `r length(keys_iref_2013)` "unique interactions" (unique interactions is in quotes as it is not strictly unique.  We have not excluded interactions that have records specifying the interaction of A-B and another record that specifies the interaction B-A)
+
+## Merge the three different interaction sources
+
+### How many interactions do they have in common
+
+```{r}
+tryCatch(expr = { library("VennDiagram")}, 
+         error = function(e) { install.packages("VennDiagram")}, finally = library("VennDiagram"))
+
+three_db_overlap = paste(".","3_db_RL_inter_overlap.png",sep="/")
+png(three_db_overlap)
+
+draw.triple.venn(area1 = length(keys_iref_2013), 
+                 area2 = length(keys_biogrid), 
+                 area3 = length(keys_pc2), 
+                 n12 = length(intersect(keys_iref_2013,keys_biogrid)), 
+                 n23 = length(intersect(keys_biogrid, keys_pc2)), 
+                 n13 = length(intersect(keys_iref_2013,keys_pc2)), 
+                 n123 = length(intersect(keys_iref_2013, intersect(keys_biogrid, keys_pc2 ))), 
+                 category = c("iref_2013\n (no biogrid)", "biogrid", "pc2"), lty = "blank", 
+    fill = c("skyblue", "pink1", "mediumorchid"))
+dev.off()
+
+```
+![Figure:Overlap of 3 different db (iref, biogrid, pc2) receptor ligand sets ](`r three_db_overlap`)
+
+The above venn diagram shows that although iref has a lot of interactions there are significantly more interactions that we can get from the pathway interaction databases in pathway commons.
+
+## Output the final interaction file to be used by other notebooks and processes.
+
+Both iref and biogrid were downloaded in mitab so the interaction structures is very similiar.  Unfortunately pathway commons data is not available in mitab format so we downloaded the data in sif file which has comparable data but it is not the exact same as the mitab.  
+
+The mitab file contains:
+
+ * **uidA** - main identifier of protein A
+ * **uidB** - main identifier of protein B
+ * **altA** - list of the alternate identifiers for protein A
+ * **altB** - list of the alternate identifiers for protein B
+ * **aliasA** - list of alternate aliases for protein A
+ * **aliasB** - list of alternate aliases for protein B
+ * **method** - psimi controlled vocabulary term indicating the method the interaction was discovered using (for example (`r paste(unique(iref_2013_nobiogrid[,"method"])[1:10], collapse=",")`))
+ * **author**
+ * **pmids** - list of pmids this interaction is associated with
+ * **taxa** - taxonomy of protein A
+ * **taxb** - taxonomy of protein B
+ * **interactionType** - for mitab file this is psimi controlled vocabulary term indicating the interactions type (one of, for example, [`r paste(unique(biogrid_mitab[,"Interaction Types"]), collapse=",")`] for biogrid data and one of, for example, [`r paste(unique(iref_2013_nobiogrid[,"interactionType"])[1:10], collapse=",")`] for iref data.
+ * **sourcedb** - source database of interaction (iref has a large collection of interactions so although the interaction might be downloaded from iref this column will specify the source database)
+ * **interactionIdentifier** - the identifier in the source database
+ * **confidence** - calculated metric indicating the confidence of the interaction (each database or interaction detection method might have a different scale and system.)
+
+we added two columns to the front of the above format:
+
+ * **AliasA** - gene symbol extracted from the list of aliases for protein A
+ * **AliasB** - gene symbol extracted from the list of aliases for protein B
+
+The binary sif file (supplied by pathway commons) contains:
+
+ * **PARTICIPANT_A** - gene symbol of protein A
+ * **INTERACTION_TYPE** - interaction type (one of: controls-state-change-of, controls-transport-of,controls-phosphorylation-of, controls-expression-of,catalysis-precedes, in-complex-with, interact-with, neighbor-of,consumption-controled-by, controls-production-of, controls-transport-of-chemical, chemical-affects, reacts-with, used-to-produce)
+ * **PARTICIPANT_B** - gene symbol of protein B
+ * **INTERACTION_DATA_SOURCE** - source of intearction
+ * **INTERACTION_PUBMED_ID** - publications associated with interaction
+ * **PATHWAY_NAMES** - names of pathways the interaction is associated with.
+ * **MEDIATOR_IDS** - 
+
+There is also additional information in extended sif file that we could add:
+
+ * **PARTICIPANT** - same as participant A / B above
+ * **PARTICIPANT_TYPE**
+ * **PARTICIPANT_NAME**
+ * **UNIFICATION_XREF**
+ * **RELATIONSHIP_XREF**
+
+## Merge biogrid and iref
+Given that they are in the same format it is straight forward to merge the two sets.  The only difference between them is that iref has more information than biogrid but the first 15 columns are exactly the same. 
+```{r}
+ligandrecep_dir <- paste(getwd(),inter_directory,"./Ligand_Receptor_InteractionSets/",sep="/")
+dir.create(ligandrecep_dir, showWarnings = FALSE)
+base_name  <- "LigandReceptorInteractions"
+
+#give biogrid the same column names as Iref
+colnames(biogrid_ligand_recep_inter) <- colnames(iref_ligand_recep_inter_all)[1:dim(biogrid_ligand_recep_inter)[2]]
+
+#only grab the first set of columns from iref as they have a lot more info
+complete_interaction_set <- rbind(
+                    iref_ligand_recep_inter_all[,1:dim(biogrid_ligand_recep_inter)[2]], 
+                     biogrid_ligand_recep_inter)
+
+key <- do.call(paste, c(complete_interaction_set[c('AliasA','AliasB')],sep="_") )
+complete_interaction_set_withkey <- cbind(key,complete_interaction_set)
+
+```
+
+## Add the pathway commons data
+Because the pathway commons data is not in the same format as iref and biogrid we will have to create empty columns
+```{r}
+#add the protein information for participant A
+added_protA <- merge(pc_RL_interaction_set,pc_protein_data,by.x=1,by.y=1,all.x = TRUE)
+colnames(added_protA)[(dim(pc_RL_interaction_set)[2]+1):dim(added_protA)[2]] <- paste( colnames(added_protA)[(dim(pc_RL_interaction_set)[2]+1):dim(added_protA)[2]], "A",sep="_")
+
+#add the protein information for participant A
+added_protB <- merge(added_protA,pc_protein_data,by.x=1,by.y=1,all.x = TRUE)
+colnames(added_protB)[(dim(added_protA)[2]+1):dim(added_protB)[2]] <- paste( colnames(added_protB)[(dim(added_protA)[2]+1):dim(added_protB)[2]], "B",sep="_")
+
+pc_RL_interaction_set_annot <- added_protB
+
+pc_fake_mitab_ligand_receptor_inter <- data.frame(AliasA = pc_RL_interaction_set_annot["PARTICIPANT_A"],
+                                                  AliasB = pc_RL_interaction_set_annot["PARTICIPANT_B"], 
+                                                  uidA = pc_RL_interaction_set_annot["UNIFICATION_XREF_A"],
+                                                  uidb = pc_RL_interaction_set_annot["UNIFICATION_XREF_B"],
+                                                  alta = "", altb="",
+                                                  aliasA = "", aliasB = "", method ="", author = "", 
+                                                  pmids =  pc_RL_interaction_set_annot["INTERACTION_PUBMED_ID"],
+                                                  taxa = "",
+                                                  taxb = "",
+                                                  ineractionType = pc_RL_interaction_set_annot["INTERACTION_TYPE"],
+                                                  sourcedb = pc_RL_interaction_set_annot["INTERACTION_DATA_SOURCE"],
+                                                  interactionIdentifier = pc_RL_interaction_set_annot["PATHWAY_NAMES"],
+                                                  confidence = ""
+                                                  )
+
+
+#give biogrid the same column names as Iref
+colnames(pc_fake_mitab_ligand_receptor_inter) <- colnames(iref_ligand_recep_inter_all)[1:dim(pc_fake_mitab_ligand_receptor_inter)[2]]
+
+key <- do.call(paste, c(pc_fake_mitab_ligand_receptor_inter[c('AliasA','AliasB')],sep="_") )
+pc_fake_mitab_ligand_receptor_inter_withkey <- cbind(key,pc_fake_mitab_ligand_receptor_inter)
+
+#only grab the first set of columns from iref as they have a lot more info
+complete_interaction_set_withkey <- rbind(
+                    complete_interaction_set_withkey, 
+                     pc_fake_mitab_ligand_receptor_inter_withkey)
+
+interaction_set <- complete_interaction_set_withkey
+
+##add a version of the file that has the date that it was created
+write.table(complete_interaction_set_withkey,
+            paste(ligandrecep_dir, base_name,"withkeys",format(Sys.time(), "%b_%d_%Y"),
+                  ".txt", sep=""),
+            col.name=TRUE,sep="\t",
+            row.names=FALSE,quote=FALSE)
+
+```
+
+
+# Load dataset
+YOu can use any expression between different cell types for this analysis.  To demonstrate we have used the data from [this publication]().  The study measured expression of neural presucor cells and newborn neurons using microarray expression.  The data was deposited in GEO [Series GSE42414](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42414) and through the GEO2R interface we extracted the code below from the interface
+
+** Periodically the script doesn't successfully download the required files from GEO.  If this occurs just re-run this section.  It rarely fails on consecutive tries **
+
+```{r, include=FALSE}
+tryCatch(expr = { library("Biobase")}, 
+         error = function(e) { source("http://bioconductor.org/biocLite.R");biocLite("Biobase")}, finally = library("Biobase"))
+tryCatch(expr = { library("GEOquery")}, 
+         error = function(e) { source("http://bioconductor.org/biocLite.R");biocLite("GEOquery")}, finally = library("GEOquery"))
+tryCatch(expr = { library("limma")}, 
+         error = function(e) { source("http://bioconductor.org/biocLite.R");biocLite("limma")}, finally = library("limma"))
+library("Biobase")
+library("GEOquery")
+library("limma")
+```
+
+```{r}
+################################################################
+#   Differential expression analysis with limma
+
+# load series and platform data from GEO
+
+gset <- getGEO("GSE42414", GSEMatrix =TRUE, AnnotGPL=FALSE)
+if (length(gset) > 1) idx <- grep("featureNames(gse)[1:10]", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# make proper column names to match toptable 
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+# group names for all samples
+gsms <- "000000000011111XXXXXXXXXXXXXXXXXXXXXXXXXX"
+sml <- c()
+for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
+
+# eliminate samples marked as "X"
+sel <- which(sml != "X")
+sml <- sml[sel]
+gset <- gset[ ,sel]
+
+# log2 transform
+ex <- exprs(gset)
+qx <- as.numeric(quantile(ex, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
+LogC <- (qx[5] > 100) ||
+          (qx[6]-qx[1] > 50 && qx[2] > 0) ||
+          (qx[2] > 0 && qx[2] < 1 && qx[4] > 1 && qx[4] < 2)
+if (LogC) { ex[which(ex <= 0)] <- NaN
+  exprs(gset) <- log2(ex) }
+
+# set up the data and proceed with analysis
+sml <- paste("G", sml, sep="")    # set group names
+fl <- as.factor(sml)
+gset$description <- fl
+design <- model.matrix(~ description + 0, gset)
+colnames(design) <- levels(fl)
+fit <- lmFit(gset, design)
+cont.matrix <- makeContrasts(G1-G0, levels=design)
+fit2 <- contrasts.fit(fit, cont.matrix)
+fit2 <- eBayes(fit2, 0.01)
+tT <- topTable(fit2, adjust="fdr", sort.by="B",n=Inf)
+
+tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","GI","SEQUENCE","GB_ACC"))
+#write.table(tT, file=stdout(), row.names=F, sep="\t")
+
+
+################################################################
+#   Boxplot for selected GEO samples
+
+# load series and platform data from GEO
+
+gset <- getGEO("GSE42414", GSEMatrix =TRUE, getGPL=FALSE)
+if (length(gset) > 1) idx <- grep("GPL14951", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]]
+
+# group names for all samples in a series
+gsms <- "000000000011111XXXXXXXXXXXXXXXXXXXXXXXXXX"
+sml <- c()
+for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
+sml <- paste("G", sml, sep="")  #set group names
+
+# eliminate samples marked as "X"
+sel <- which(sml != "GX")
+sml <- sml[sel]
+gset <- gset[ ,sel]
+
+# order samples by group
+ex <- exprs(gset)[ , order(sml)]
+sml <- sml[order(sml)]
+fl <- as.factor(sml)
+labels <- c("group1","group2")
+
+# set parameters and draw the plot
+palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
+dev.new(width=4+dim(gset)[[2]]/5, height=6)
+par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
+title <- paste ("GSE42414", '/', annotation(gset), " selected samples", sep ='')
+boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
+legend("topleft", labels, fill=palette(), bty="n")
+
+
+```
+
+Add gene names to the scored GEO data.
+
+```{r}
+#add gene symbols to the expression values
+chip_annotation_type  <- annotation(gset)
+
+platf <- getGEO(chip_annotation_type , AnnotGPL=TRUE)
+
+IDs2genesymbol <- attr(dataTable(platf), "table")[,c("ID","Symbol")]
+
+```
+
+```{r}
+scored_data <- merge(IDs2genesymbol, tT, by.x = 1,by.y = 1, all.y = TRUE)
+scored_data <- scored_data[order(scored_data$t,decreasing = TRUE),]
+```
+
+
+We now have a scored data set that represents the differential expression between two different cell types.  There are different ways we can define which genes are which cell type.  
+
+Data has duplicate gene symbols as it is probe level data
+```{r}
+#order the data by symbol and pvalue making sure the lowest p-value is the first occurence for a given gene
+scored_data<- scored_data[order(scored_data[,genename_column], scored_data$P.Value,decreasing = FALSE),]
+
+#get rid of duplicates
+data <- scored_data[!duplicated(scored_data[,genename_column]),] 
+```
+
+## Calculate the cell types
+In this analysis the expression of a set of genes between two cell types are compared.  Associate a gene with cell type based on foldchange.
+
+This section can be modified to account for multiple cell types and conditions.  Depending on the structure of the data being used any number of celltypes and conditions can be handled.  Users just need to make sure that each gene is associated with an individual celltype/condition, and each cell type/condition is part of the celltypes variable.
+
+```{r}
+data <- data.frame(data, Type = "noType",significant = "not significant",stringsAsFactors = FALSE)
+```
+If a gene has Foldchange > `r FC_thresh` associated it with the cell type A
+If a gene has pvalue < `r pval_thresh` and fdr < `r fdr_thresh` then mark it as significant 
+
+```{r}
+
+#If you want a more stringent set of interaction uncomment the line below.
+if(significance_filter){
+  data <- data[which(data[,"pvalue"]<pval_thresh & data[,"fdr"] < fdr_thresh),]
+}
+
+data[which(data$logFC > FC_thresh),celltype_column] <- cell_typeA
+data[which(data$logFC < (-1 * FC_thresh)),celltype_column] <- cell_typeB
+data[which((data$P.Value <pval_thresh & data$adj.P.Val < fdr_thresh) ),"significant"] <- "significant"
+
+data[1:5,]
+data[which(data[,celltype_column] == "noType"),celltype_column] <- ""
+write.table(data,file = paste("node_attribes_",fdr_thresh,".txt",sep=""),col.name=TRUE,sep="\t",row.names=FALSE,quote=FALSE,fileEncoding="")
+
+```
+
+
+## Create an interaction set filtered based on the two different cell types
+
+```{r}
+interaction_indices <- c()
+for(i in 1:length(celltype_names)){
+
+    #get the current set of genes_A
+    genesA <- data[which(data[,celltype_column] == celltype_names[i]),
+                             genename_column]
+    for(k in 1:length(celltype_names)){
+
+    #get the current set of genes_A
+        genesB <- data[which(data[,celltype_column] == celltype_names[k]),
+                             genename_column]
+        interaction_indices <- union(interaction_indices, which(
+    (interaction_set[,'AliasA'] %in% genesA & interaction_set[,'AliasB'] %in% genesB ) |
+    (interaction_set[,'AliasA'] %in% genesB & interaction_set[,'AliasB'] %in% genesA)))
+    }
+    
+}
+
+ligand_receptor_network <-interaction_set[interaction_indices ,]
+dim(ligand_receptor_network)
+```
+### Get rid of duplicate interactions
+
+```{r}
+key_AB <- apply(ligand_receptor_network,1,
+      function(x){paste(x['AliasA'],x['AliasB'],sep = "_")})
+key_BA <- apply(ligand_receptor_network,1,
+      function(x){paste(x['AliasB'],x['AliasA'],sep = "_")})
+
+#aggregate according to keyAB
+temp_AB <- cbind(key_AB,ligand_receptor_network)
+temp_BA <- cbind(key_BA,ligand_receptor_network)
+
+temp_AB_2 <- aggregate(temp_AB, by=list(key_AB),function(x){ paste0(unique(x),collapse="|")})
+temp_BA_2 <- aggregate(temp_BA, by=list(key_BA), function(x){ paste0(unique(x),collapse="|")})
+
+## get rid of the two new key columns and just use the group.1 as the key
+temp_AB_2 <- temp_AB_2[,c(1,4:dim(temp_AB_2)[2])]
+colnames(temp_AB_2)[1] <- "key"
+temp_BA_2 <- temp_BA_2[,c(1,4:dim(temp_BA_2)[2])]
+colnames(temp_BA_2)[1] <- "key"
+#need to change the order of all A and B proteins in the rest of the table
+temp_BA_2 <- temp_BA_2[,c(1,3,2,5,4,7,6,9,8,10:12,14,13,15:18)]
+colnames(temp_BA_2) <- colnames(temp_AB_2)
+
+all_interactions <- rbind(temp_AB_2, temp_BA_2)
+all_interactions <- aggregate(all_interactions, by=list(all_interactions$key), 
+                              function(x){ paste0(unique(x),collapse="|")})
+
+ligand_receptor_network <- all_interactions
+             
+```
+
+### Convert interaction data into JSON and load it into cytoscape directly
+Although it can be tricky to get the JSON formatting correct the benefit of it is that you can encode all the node and edge propoerties easily.
+
+```{r}
+library(RJSONIO)
+
+#get the unique set of nodes - each interaction has A - B.  Collapse to just the set of 
+# interactors.
+set_of_nodes <- ligand_receptor_network[,c("AliasA","#uidA", "altA", "aliasA", "taxa")]
+colnames(set_of_nodes) <- c("AliasB","uidB", "altB", "aliasB", "taxb")
+set_of_nodes <- rbind(set_of_nodes, ligand_receptor_network[,c("AliasB","uidB", "altB", "aliasB", "taxb")])
+colnames(set_of_nodes) <- c("Alias","uid", "alt", "aliases", "tax")
+
+#reduce set of nodes to unique set of genes
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+unique_nodes <- aggregate(set_of_nodes, list(set_of_nodes[,"Alias"]),Mode)
+dim(unique_nodes)
+```
+
+### Annotate the interators with protein and cell type
+Each gene can be of type celltypeA, celltypeB or both
+
+```{r}
+# add the protin_types
+unique_nodes_withprottype <- merge(unique_nodes,protein_types_attribs,by.x=2,
+                                   by.y=2, all.x=TRUE)
+dim(unique_nodes_withprottype)
+```
+
+```{r}
+#merge the celltypes to main node table
+celltypes <- data
+colnames(celltypes)[11] <- 'celltypes' 
+temp <- merge(unique_nodes_withprottype,celltypes,
+                                   by.x=2,by.y=2, 
+                                   all.x=TRUE)
+unique_nodes_withprottype_withcelltypes <- aggregate(temp, by=list(temp[,'Group.1']),
+                                        function(x){ paste0(unique(x),collapse="|")})
+
+unique_nodes_withprottype_withcelltypes <- unique_nodes_withprottype_withcelltypes[,3:dim(unique_nodes_withprottype_withcelltypes)[2]] 
+
+dim(unique_nodes_withprottype_withcelltypes)
+```
+
+```{r}
+unique_nodes_withprottype_withcelltypes[1:5,c(1,(dim(unique_nodes_withprottype_withcelltypes)[2]-5):dim(unique_nodes_withprottype_withcelltypes)[2])]
+```
+
+```{r}
+# If a node has been classified as multi type then group them together as muli-class to 
+# reduce the number of molecule types we have
+unique_nodes_withprottype_withcelltypes[which(unique_nodes_withprottype_withcelltypes[,'protein_type'] != "Receptor" &
+      unique_nodes_withprottype_withcelltypes[,'protein_type'] != 'Ligand'),
+                                        'protein_type'] <- "Multiple_classifications"
+```
+
+### Connect to cytoscape
+
+```{r}
+library(RJSONIO)
+library(httr)
+
+# Basic settings
+port.number = 1234
+base.url = paste("http://localhost:", toString(port.number), "/v1", sep="")
+
+print(base.url)
+
+version.url = paste(base.url, "version", sep="/")
+cytoscape.version = GET(version.url)
+cy.version = fromJSON(rawToChar(cytoscape.version$content))
+print(cy.version)
+```
+
+### Convert the nodes and edges table to JSON
+JSON expects the data in a key = value format.  For every attribute we wish to include in the network convert to key = value pair where the key is the name of the column and value is the value in the table.  
+
+Create two different tables, one for the node and their attributes and one for the edges and their attributes.  
+
+```{r}
+#use easy cyRest library to communicate with cytoscape.
+tryCatch(expr = { library(devtools)}, 
+         error = function(e) { install.packages("devtools")}, finally = library(devtools))
+tryCatch(expr = { library(EasycyRest)}, 
+         error = function(e) { install_github("BaderLab/EasycyRest/EasycyRest")}, finally = library(EasycyRest))
+
+
+json_nodes <- nodeSet2JSON(unique_nodes_withprottype_withcelltypes,nodeID_column = "Alias") 
+
+json_edges <- edgeSet2JSON(ligand_receptor_network[,c("AliasA","AliasB","key","method","pmids","interactionType",
+                                                             "sourcedb","interactionIdentifier","confidence")], 
+                                   interA = "AliasA", interB="AliasB",inter_type="method") 
+```
+
+### Create JSON network
+A network consists of nodes and edges.  Add the nodes and edges, represented in JSON to the new network. 
+
+```{r}
+json_network <- list(
+    data=list(name="ligand_recep_network"), 
+    elements = c(nodes=list(json_nodes),edges = list(json_edges )))
+
+network = toJSON(json_network)
+```
+
+```{r}
+create.url <- paste(base.url,"networks", sep="/") 
+urlparam = paste(create.url, "?title=", name, "&collection=", collection, sep="")
+paste(urlparam)
+
+response <- POST(url=urlparam, 
+                 body=network, encode="json")
+network.suid = unname(fromJSON(rawToChar(response$content)))
+network.suid
+```
+
+### Layout the network
+Layout the network using force-driected layout.
+```{r}
+layout.url <- paste(base.url,"apply/layouts/force-directed",network.suid, sep="/")
+response <- GET(url=layout.url) 
+rawToChar(response$content)
+```
+
+### Get node info table
+
+In order to lay out the network specifically for the different cell types we first need to get the node and edge info.  Although we already created the node and edge table once the network is created by cytoscape it adds additional information (for example SUIDs) that we need when selecging specific nodes and edges.
+
+```{r}
+#get the nodes table
+nodes_info <- getNodeTable(base.url, network.suid)
+
+#the table should have colnames : celltypes and protein_type
+if(length(which(colnames(nodes_info) == 'celltypes')) == 0 ){
+    paste("Node table is missing column: celltypes")
+}
+
+if(length(which(colnames(nodes_info) == 'protein_type')) == 0 ){
+    paste("Node table is missing column: protein_type")
+}
+
+```
+
+```{r}
+all_celltypes <- unique(nodes_info[,'celltypes'])
+all_prottypes <- unique(nodes_info[,'protein_type'])
+```
+
+
+### Lay out the network according to celltype and protein type
+Lay out each cell type separately, dividing all the proteins specific to each cell type to different areas depending on the their type.  This will help to visualize and separte the different cell types and protein types.  
+
+```{r}
+for(i in 1:length(celltype_names)){
+
+        nodes_to_select <- nodes_info[which(nodes_info[,'celltypes'] == celltype_names[i]),]
+        
+        if(!is.null(nodes_to_select) & length(nodes_to_select) > 0){
+            #select nodes
+            response <- cySelectNodes(base.url, nodes = nodes_to_select,network.suid)
+        
+            #apply layout on just the selected nodes. 
+            layout.url <- paste(base.url,"commands/layout/attributes-layout", sep="/")
+            layout_params = list(network = "current", nodeList ="selected",
+                                 NodeAttribute="protein_type")
+            response <- GET(url=layout.url, query =layout_params) 
+            
+            #move selected nodes so they don't overlap other groups
+            response <- cyMoveSelectedNodes(base.url, network.suid,y.offset=750*i, network.viewid = getNodeviewId(base.url, network.suid))
+        
+            #unselect all the nodes
+            response <- cyUnselectAllNodes(base.url, network.suid) 
+        }
+}
+
+```
+
+
+### create a new visual style
+Map the different cell type:  
+
+ * blue nodes are cell type A
+ * green nodes are cell type B.
+
+Map the different protein types to shape:
+
+ * Ligands are trianlges.
+ * Receptors are diamonds.
+ * genes/proteins that are both ligands and receptors are hexagons.
+ 
+The border of nodes are outlined in yellow if the gene/protein is significant(as defined by the user specified thresholds pvalue < `r pval_thresh` and fdr < `r fdr_thresh`) in the dataset
+
+The visual style is defined in the function create_cellinteraction_style found in CellCellInteractions_utility_function.R file.  To modify the visual style you can either do it manually in cytoscape after the network has been generated or you can modify the above mentioned function to better fit your needs. 
+
+Function to define the above style:
+```{r}
+#Create visual style for cell cell interaction network
+create_cellinteraction_style <- function(style.name, celltypes) {
+  # Preepare Defaults
+  def.node.border.width <- list(
+    visualProperty = "NODE_BORDER_WIDTH",
+    value = 0
+  )
+  
+  def.node.transparency <- list(
+    visualProperty="NODE_TRANSPARENCY",
+    value=230
+  )
+  
+  def.edge.transparency <- list(
+    visualProperty="EDGE_TRANSPARENCY",
+    value=120
+  )
+  
+  def.edge.width <- list(
+    visualProperty="EDGE_WIDTH",
+    value=2
+  )
+  
+  def.network.background <- list(
+    visualProperty = "NETWORK_BACKGROUND_PAINT",
+    value = "white"
+  )
+  
+  defaults <- list(
+    def.node.border.width,
+    def.edge.width,
+    def.node.transparency,
+    def.edge.transparency,
+    def.network.background
+  )
+  
+  # Mappings
+  mappings = list()
+  
+  colors = c( "rgb(51,0,204)","rgb(0,255,51)", "rgb(204,0,255)","orange","pink","rgb(218,165,32)","rgb(135,206,250)")
+  
+  celltypes_colors <- c()
+  for(i in 1:length(celltypes)){
+    current <- list(key = celltypes[i], value = colors[i])
+    celltypes_colors = c(celltypes_colors, list(current)) 
+  }
+  
+  # Color mappings
+  node.fill.color = list(
+    mappingType="discrete",
+    mappingColumn="celltypes",
+    mappingColumnType="String",
+    visualProperty="NODE_FILL_COLOR",
+    map=celltypes_colors
+  )
+  
+  #color border orange for significant genes
+  border_colors <- c()
+  current <- list(key = "significant", value = "orange")
+  border_colors = c(border_colors, list(current)) 
+  
+  # border color
+  border.paint = list(
+    mappingType="discrete",
+    mappingColumn="significant",
+    mappingColumnType="String",
+    visualProperty="NODE_BORDER_PAINT",
+    map=border_colors
+  )
+  
+  #color border orange for significant genes
+  border_widths <- c()
+  current <- list(key = "significant", value = "10")
+  border_widths = c(border_widths, list(current)) 
+  
+  # border color
+  border.widths = list(
+    mappingType="discrete",
+    mappingColumn="significant",
+    mappingColumnType="String",
+    visualProperty="NODE_BORDER_WIDTH",
+    map=border_widths
+  )
+  
+  prot_shapes <- c()
+  current <- list(key = "Ligand", value =  "triangle")
+  prot_shapes = c(prot_shapes, list(current)) 
+  current <- list(key = "Receptor", value =  "diamond")
+  prot_shapes = c(prot_shapes, list(current)) 
+  current <- list(key = "Multiple_classifications", value =  "hexagon")
+  prot_shapes = c(prot_shapes, list(current))
+  
+  #node shape mappings
+  node.shape = list(
+    mappingType="discrete",
+    mappingColumn= "protein_type",
+    mappingColumnType="String",
+    visualProperty="NODE_SHAPE",
+    map=prot_shapes
+  )
+  
+  #name mapping
+  node.label = list(
+    mappingType="passthrough",
+    mappingColumn="name",
+    mappingColumnType="String",
+    visualProperty="NODE_LABEL"
+  )
+  
+  mappings = list(node.label, node.fill.color,node.shape,border.paint,border.widths)
+  
+  style <- list(title=style.name, defaults = defaults, mappings = mappings)
+  return(toJSON(style))
+  
+}
+```
+
+
+```{r}
+#fit the network to the current frame 
+fit.network = paste(base.url, "apply/fit",  toString(network.suid), sep="/")
+GET(fit.network)
+
+#create style
+style.cellcellinter <- create_cellinteraction_style(style_name, celltype_names)
+
+style.url = paste(base.url, "styles", sep="/")
+POST(url=style.url, body=style.cellcellinter, encode = "json")
+
+# Apply a Style
+apply.style.url = paste(base.url, "apply/styles",style_name, toString(network.suid), sep="/")
+GET(apply.style.url)
+
+#fit the network to the current frame 
+fit.network = paste(base.url, "apply/fit",  toString(network.suid), sep="/")
+GET(fit.network)
+```
+
+### Get a screen shot of the resulting network
+
+```{r}
+output_network_file <- paste(figures_directory,"screenshot_networ.png",sep="/")
+
+url_png <- paste(base.url,"networks",network.suid,"views/first.png", sep="/")
+response <- GET(url=url_png)
+writeBin(response$content, output_network_file)
+```
+
+![Base Receptor- Ligand interaction network](`r output_network_file`)
+
+
+
