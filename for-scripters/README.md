@@ -16,6 +16,6 @@ The winners were:
 * [Matthias König](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge) (Python)  [teaser](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/Python/Konig_SBML_Time_Course_-_2017_CyREST_Challenge/README.md)
   - Uses SBML and time course simulation to produce animated pathway (using [cy3sbml](https://github.com/matthiaskoenig/cy3sbml) & [roadrunner](https://github.com/sys-bio/roadrunner))
   
-* [Ruth Isserlin](https://github.com/BaderLab/Cytoscape_workflows/tree/master/CellCellInteractions) (R) 
+* [Ruth Isserlin](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/R/Isserlin_Cell_Interactions_-_2017_CyREST_Challenge) (R) 
   - Extensive cell-cell interaction calculations in Python followed by simple but elegant styling and layout
   
