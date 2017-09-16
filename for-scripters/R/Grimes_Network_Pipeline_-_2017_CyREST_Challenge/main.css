@@ -1,0 +1,31 @@
+/*body {
+	margin: 0px;
+}
+
+#cyViewport {
+  width: 100%;
+  height: 500px;
+  background-color: rgb(60, 60, 60);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#partialTemplates{
+	display: none;
+}
+
+.colorController{
+	display: block;
+	padding: 15px;
+	float: left;
+}*/
+
+.cytoscapeViewport{
+  border: 1px solid lightgray;
+  width: 100%;
+  height: 500px;
+  margin-bottom: 10px;
+  display: none;
+  background-color: rgb(150, 170, 180);
+}
