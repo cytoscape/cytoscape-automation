@@ -46,7 +46,7 @@ public interface ClassroomResource {
 	 */
 	@ApiOperation(value = "Replace the teacher",
 	notes = "Replaces the classes teacher.\n\nYou can use this to 'edit' the teacher's information by replacing their "
-			+ " entire record with a newer one.", 
+			+ " entire record with a newer one.\n\nBest not to do this before a holiday.", 
 			response=Person.class)
     @Path("teacher")
     @PUT
