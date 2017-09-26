@@ -51,4 +51,4 @@ public class CyActivator extends AbstractCyActivator {
 }
 ```
 
-The implementation for the service listener is demonstated in [ViewWriterFactoryManager](./src/main/java/org/cytoscape/cyrestjsonutilsampleinternal/ViewWriterFactoryManager.java).
+The implementation for the service listener is demonstated in [ViewWriterFactoryManager](./src/main/java/org/cytoscape/cyrestjsonutilsample/internal/ViewWriterFactoryManager.java).
