@@ -3,6 +3,7 @@ Collection of sample scripts that provide support for automation.
 
 ![cytoscape automation](CytoscapeAutomation_3.png)
 
+
 # 2017 CyREST Competition
 There were four winners of the 2017 CyREST Competition, all demonstrating solved problems using R and Python combined with Cytoscape Automation.
 
