@@ -132,7 +132,7 @@ commandHelp('layout')
 
 #### Layout with parameters!
 ```{r}
-applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=100')
+applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=5')
 commandHelp('layout force-directed')
 ```
 These *commandHelp* calls will allow you to interrogate the layouts and parameters available in your active Cytoscape session. This includes any layouts added by apps you've installed!
@@ -226,7 +226,7 @@ str(brc.mut)  # gene names in column named 'Hugo_Symbol'
 Let's return to the Breast Cancer network...
 ```{r}
 setCurrentNetwork("String Network - breast cancer")
-applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=100')
+applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=5')
 ```
 
 ...and use the helper function from r2cytoscape called *loadTableData*
