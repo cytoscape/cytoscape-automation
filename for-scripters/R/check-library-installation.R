@@ -15,6 +15,11 @@ p_load(RJSONIO,igraph,httr,stringr,XML,RColorBrewer,devtools)
 # CyREST helper functions
 install_github('cytoscape/cytoscape-automation/for-scripters/R/r2cytoscape')
 library(r2cytoscape)
+#Note: if install_github() fails, try cloning or downloading the repo and installing a local copy
+#1. download or clone the cytoscape-automation repo
+#2. set working directory to new cytoscape-automation dir
+#3. install_git(url = ".",subdir = "for-scripters/R/r2cytoscape")
+#4. library(r2cytoscape)
 
 #### Test successful installations 
 ip = installed.packages()
