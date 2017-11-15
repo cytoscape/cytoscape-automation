@@ -25,7 +25,7 @@ We will retrieve disease networks from a public database and apply gene expressi
 ![Cytoscape automation resource diagram](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/CytoscapeAutomation_3.png)
 
 ### Tested with the following versions:
-*  R 3.3.3
+* R 3.3.3
 * RStudio 1.0.143
 * Cytoscape 3.6.0
 * CyREST 3.5.2
