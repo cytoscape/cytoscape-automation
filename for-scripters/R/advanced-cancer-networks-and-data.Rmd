@@ -55,9 +55,7 @@ p_load(RJSONIO,igraph,httr,XML,RColorBrewer,r2cytoscape)
  
 ### Setup Cytoscape
 * Launch Cytoscape on your local machine. If you haven't already installed Cytoscape, then download the latest version from http://cytoscape.org.
-* Install the following apps, if you haven't already:
-    * STRING app: http://apps.cytoscape.org/apps/stringapp
-    * Diffusion app: http://apps.cytoscape.org/apps/diffusion 
+* Install the STRING app, if you haven't already: http://apps.cytoscape.org/apps/stringapp
 * Leave Cytoscape running in the background during the remainder of the tutorial.
 
 Please run check-cytoscape-connection.R for tests and initial demo: 
