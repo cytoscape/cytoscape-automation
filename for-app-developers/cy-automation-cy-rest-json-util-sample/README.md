@@ -1,7 +1,5 @@
 # Cytoscape JSON Utilities Sample
 
-__This Sample App uses Cytoscape 3.6.0-SNAPSHOT API bundles. Until the release of Cytoscape 3.6, this App will ONLY work if you are building the develop branch of Cytoscape yourself, as well as using the develop branch of the CyREST plugin.__
-
 This sample app provides examples of using two of Cytoscape's services, CyJSONUtil and CXIO, to provide standardized JSON representations of Cytoscape data models.
 
 ## Prerequisites
