@@ -4,7 +4,7 @@
 	<properties>
 		<bundle.symbolicName>org.cytoscape.rest.cy-rest-json-util-sample</bundle.symbolicName>
 		<bundle.namespace>org.cytoscape.cyrestjsonutilsample</bundle.namespace>
-		<cytoscape.api.version>3.6.0-SNAPSHOT</cytoscape.api.version>
+		<cytoscape.api.version>3.6.0</cytoscape.api.version>
 		
 		 <!-- Change jax-rs connector versions as you like, see available versions here: http://search.maven.org/#search%7Cga%7C1%7Ccom.eclipsesource.jaxrs --> 
 		
