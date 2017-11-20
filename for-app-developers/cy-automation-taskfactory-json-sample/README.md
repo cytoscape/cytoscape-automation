@@ -1,7 +1,5 @@
 # TaskFactory JSON Result Sample
 
-__This Sample App uses Cytoscape 3.6.0-SNAPSHOT API bundles. Until the release of Cytoscape 3.6, this App will ONLY work if you are building the develop branch of Cytoscape yourself, as well as using the develop branch of the CyREST plugin.__
-
 This sample creates a TaskFactory instance that provides JSON results. When added to the OSGi context, this TaskFactory can then be executed outside of Cytoscape through REST, and it's JSON result can be extracted.
 
 ## Prerequisites
