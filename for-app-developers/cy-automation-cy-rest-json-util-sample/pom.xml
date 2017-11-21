@@ -49,7 +49,7 @@
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-							<Cytoscape-App-Dependencies>cyREST;3.6.0-SNAPSHOT</Cytoscape-App-Dependencies>
+							<Cytoscape-App-Dependencies>cyREST;3.6.0</Cytoscape-App-Dependencies>
 						<Import-Package>
 								*
 						</Import-Package>
