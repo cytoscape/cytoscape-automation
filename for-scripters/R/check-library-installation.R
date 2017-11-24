@@ -10,15 +10,15 @@
 ### Install libs and utils 
 if(!("pacman" %in% installed.packages())) install.packages("pacman")
 library(pacman)
-p_load(RJSONIO,igraph,httr,stringr,XML,RColorBrewer,devtools)
+p_load(RJSONIO,igraph,httr,stringr,XML,RColorBrewer,devtools,rmarkdown)
 
 # CyREST helper functions
 install_github('cytoscape/cytoscape-automation/for-scripters/R/r2cytoscape')
 library(r2cytoscape)
 #Note: if install_github() fails, try cloning or downloading the repo and installing a local copy
 #1. download or clone the cytoscape-automation repo
-#2. set working directory to new cytoscape-automation dir
-#3. install_git(url = ".",subdir = "for-scripters/R/r2cytoscape")
+#2. set working directory to the "for-scripters/R/r2cytoscape" dir in your local copy of cytoscape-automation
+#3. install()
 #4. library(r2cytoscape)
 
 #### Test successful installations 
@@ -30,6 +30,7 @@ if("stringr" %in% ip) print("Success: the stringr lib is installed") else print(
 if("XML" %in% ip) print("Success: the XML lib is installed") else print("Warning: XML lib is not installed. Please install this lib before proceeding.")
 if("RColorBrewer" %in% ip) print("Success: the RColorBrewer lib is installed") else print("Warning: RColorBrewer lib is not installed. Please install this lib before proceeding.")
 if("devtools" %in% ip) print("Success: the devtools lib is installed") else print("Warning: devtools lib is not installed. Please install this lib before proceeding.")
+if("devtools" %in% ip) print("Success: the rmarkdown lib is installed") else print("Warning: rmarkdown lib is not installed. Please install this lib before proceeding.")
 if(exists('command2query',mode='function')) print("Success: r2cytoscape is installed") else print("Warning: r2cytoscape is not installed. Please source this script before proceeding.")
 
 #### If all messages report "Success", then you are ready to go! Proceed to other modules...
