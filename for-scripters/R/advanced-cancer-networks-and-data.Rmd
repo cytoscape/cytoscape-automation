@@ -28,7 +28,7 @@ We will retrieve disease networks from a public database and apply gene expressi
 * R 3.3.3
 * RStudio 1.0.143
 * Cytoscape 3.6.0
-* CyREST 3.5.2
+* CyREST 3.6.0
 * stringApp 1.2.0
 * Operating Systems tested: 
     * Mac 10.10.5
@@ -116,6 +116,9 @@ Now that we've got a couple networks into Cytoscape, let's see what we can go wi
 listNetworks()
 ```
 
+#### CHALLENGE
+If the **listNetworks()** helper function didn't exist, how could you get the list of networks in R? *Hint:* the command is **network list**.
+
 ### Layout network
 ```{r echo=T}
 applyLayout('circular') 
@@ -127,6 +130,9 @@ applyLayout('circular')
 ```{r}
 commandHelp('layout')
 ```
+
+#### CHALLENGE
+Pick a different layout algorithm and execute **applyLayout()**.
 
 #### Layout with parameters!
 ```{r}
@@ -196,6 +202,9 @@ renameNetwork('top disease diffusion')
 
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc4.png){height=100%} 
 
+#### CHALLENGE
+Okay, now for a real challenge... pull in a new column of data from Cytoscape (provided by STRING) and use it to make a new selection. Optionally, expand on that selection. Then create a new subnetwork and rename it. *Pro-tip:* don't forget to **setCurrentNetwork()** the correct parent network before getting table column data and making selections.
+
 ################################################
 # Step 3: Visualizing data on networks
 ################################################
@@ -247,6 +256,12 @@ node.label.map <- mapVisualProperty('node label','name','p') # p for passthrough
 createStyle(style.name, defaults.list, list(node.label.map))
 applyStyle(style.name)
 ```
+
+#### CHALLENGE
+```{r}
+?createStyle
+```
+What is the difference between *defaults* and *mappings*?
 
 Now let's update the style with a mapping for mean expression. The first step is to grab the column data from Cytoscape and pull out the min and max to define our data mapping range of values.
 ```{r}
