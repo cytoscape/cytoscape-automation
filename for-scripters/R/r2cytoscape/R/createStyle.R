@@ -3,8 +3,7 @@
 #' @description Creates a style from defaults and predefined mappings.
 #' @details Requires attribute mappings to be previously created, see mapVisualProperty.
 #' @param style.name (char) name for style
-#' @param defaults (list) key-value pairs for default mappings. See
-#' mapStyleDefaults() for details on formatting of this variable
+#' @param defaults (list) key-value pairs for default mappings. 
 #' @param mappings (list) visual property mappings, see mapVisualProperty
 #' @param portNum (int) port number for cytoscape (Deprecated)
 #' @param base.url cyrest base url for communicating with cytoscape
