@@ -239,8 +239,8 @@ applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength
 ...and use the helper function from r2cytoscape called *loadTableData*
 ```{r}
 ?loadTableData
-loadTableData(brc.expr)  #default data.frame key is row.names
-loadTableData(brc.mut,'Hugo_Symbol')  #specify column name if not default
+loadTableData(brc.expr, table.key.column = 'display name')  #default data.frame key is row.names
+loadTableData(brc.mut,'Hugo_Symbol',table.key.column = 'display name')  #specify column name if not default
 ```
 
 #### Visual styles
@@ -338,8 +338,8 @@ clearSelection()
 str(ovc.expr)  # gene names in row.names of data.frame
 str(ovc.mut)  # gene names in column named 'Hugo_Symbol'
 
-loadTableData(ovc.expr)
-loadTableData(ovc.mut,'Hugo_Symbol')
+loadTableData(ovc.expr,table.key.column = 'display name')
+loadTableData(ovc.mut,'Hugo_Symbol',table.key.column = 'display name')
 ```
 
 **Because we used the same column names in our original data frames, now we can simply apply the *same* visual style created above!**
