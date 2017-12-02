@@ -10,8 +10,8 @@
 #' are loaded as edge attributes. The 'interaction' list can contain a single
 #' value to apply to all rows; and if excluded altogether, the interaction type
 #' wiil be set to "interacts with".
-#' @param nodes (data.frame) see details
-#' @param edges (data.frame) see details
+#' @param nodes (data.frame) see details and examples below
+#' @param edges (data.frame) see details and examples below
 #' @param network.name (char) network name
 #' @param collection.name (char) network collection name
 #' @param portNum (int) port number for cytoscape (Deprecated)
@@ -32,8 +32,8 @@
 #' network.name <- "myNetwork"
 #' collection.name <- "myCollection"
 #'
-createNetwork <- function(nodes,edges,network.name="MyNetwork",
-	collection.name="myNetworkCollection",portNum=1234,base.url='http://localhost:1234/v1',...) {
+createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
+                          collection.name="myNetworkCollection",portNum=1234,base.url='http://localhost:1234/v1',...) {
 
     #Deprecated in 0.0.2
     if(!missing(portNum)){
@@ -41,36 +41,57 @@ createNetwork <- function(nodes,edges,network.name="MyNetwork",
         base.url=sprintf("http://localhost:%i/v1", portNum)
     }
 
-json_nodes <- nodeSet2JSON(nodes,...)
-json_edges <- edgeSet2JSON(edges,...) ##TODO allow no edges
 
-json_network <- list(
-    data=list(name=network.name),
-    elements=c(nodes=list(json_nodes),edges = list(json_edges))
-)
-network <- toJSON(json_network)
+    json_nodes<-c()
+    json_edges<-c()
 
-cat("* Create network URL\n")
-url<- sprintf("%s/networks?title=%s&collection=%s",
-	base.url,network.name,collection.name,sep="")
+    if (!is.null(nodes)){
+        json_nodes <- nodeSet2JSON(nodes,...)
+        # cleanup global environment variables (which can be quite large)
+        remove(CreateNetwork.global.counter, envir = globalenv())
+        remove(CreateNetwork.global.size, envir = globalenv())
+        remove(CreateNetwork.global.json_set, envir = globalenv())
+    }
 
-response <- POST(url=url,body=network, encode="json",content_type_json())
+    if(!is.null(edges)){
+        json_edges <- edgeSet2JSON(edges,...) ##TODO allow no edges
+        # cleanup global environment variables (which can be quite large)
+        remove(CreateNetwork.global.counter, envir = globalenv())
+        remove(CreateNetwork.global.size, envir = globalenv())
+        remove(CreateNetwork.global.json_set, envir = globalenv())
+    }
 
-network.suid <- unname(fromJSON(rawToChar(response$content)))
-cat(sprintf("Network SUID is : %i \n", network.suid))
+    els<-NULL
+    if(length(json_nodes)>0)
+        els$nodes<-json_nodes
+    if(length(json_edges)>0)
+        els$edges<-json_edges
 
-cat("Applying default style\n")
-commandRun('vizmap apply styles="default"')
+    json_network <- list(
+        data=list(name=network.name),
+        elements=els
+    )
 
-cat(sprintf("Applying %s layout\n", invisible(commandRun('layout get preferred network="current"'))))
-commandRun('layout apply preferred networkSelected="current')
+    network <- toJSON(json_network)
 
-# cleanup global environment variables (which can be quite large)
-remove(edgeSet2JSONcounter, envir = globalenv())
-remove(edgeSet2JSONsize, envir = globalenv())
-remove(edgeSet2JSONjson_edges, envir = globalenv())
+    url<- sprintf("%s/networks?title=%s&collection=%s",
+                  base.url,network.name,collection.name,sep="")
 
-return(network.suid)
+    response <- POST(url=url,body=network, encode="json",content_type_json())
+
+    network.suid <- unname(fromJSON(rawToChar(response$content)))
+    if(is.numeric(network.suid))
+        cat(sprintf("Network SUID is : %i \n", network.suid))
+    else
+        return(response)
+
+    cat("Applying default style\n")
+    commandRun('vizmap apply styles="default"')
+
+    cat(sprintf("Applying %s layout\n", invisible(commandRun('layout get preferred network="current"'))))
+    commandRun('layout apply preferred networkSelected="current')
+
+    return(network.suid)
 }
 
 # Convert edges to JSON format needed for CyRest network creation
@@ -83,9 +104,10 @@ return(network.suid)
 edgeSet2JSON <- function(edge_set, source.id.list = 'source',
                          target.id.list = 'target', interaction.type.list='interaction',...){
 
-    .GlobalEnv$edgeSet2JSONcounter<-0
-    .GlobalEnv$edgeSet2JSONsize<-1
-    .GlobalEnv$edgeSet2JSONjson_edges<-c()
+    #using global environment variables for performance
+    .GlobalEnv$CreateNetwork.global.counter<-0
+    .GlobalEnv$CreateNetwork.global.size<-1
+    .GlobalEnv$CreateNetwork.global.json_set<-c()
 
     if(!(interaction.type.list %in% names(edge_set)))
         edge_set[,interaction.type.list] = rep('interacts with')
@@ -109,21 +131,7 @@ edgeSet2JSON <- function(edge_set, source.id.list = 'source',
         FastAppendListGlobal(current_edge)
         #json_edges <- c(json_edges,   list(current_edge))
     }
-    return(.GlobalEnv$edgeSet2JSONjson_edges[1:.GlobalEnv$edgeSet2JSONcounter])
-}
-
-# FastAppendListGlobal
-# Function to append lists at high performance using global variables explictly
-#  Note: relies on defining gloval environment variables
-#  https://stackoverflow.com/questions/17046336/here-we-go-again-append-an-element-to-a-list-in-r
-#
-FastAppendListGlobal <- function(item)
-{
-    if( .GlobalEnv$edgeSet2JSONcounter == .GlobalEnv$edgeSet2JSONsize )
-        length(.GlobalEnv$edgeSet2JSONjson_edges) <- .GlobalEnv$edgeSet2JSONsize <- .GlobalEnv$edgeSet2JSONsize * 2
-
-    .GlobalEnv$edgeSet2JSONcounter <- .GlobalEnv$edgeSet2JSONcounter + 1
-    .GlobalEnv$edgeSet2JSONjson_edges[[.GlobalEnv$edgeSet2JSONcounter]] <- item
+    return(.GlobalEnv$CreateNetwork.global.json_set[1:.GlobalEnv$CreateNetwork.global.counter])
 }
 
 # Creates a table of nodes to CyREST JSON
@@ -132,9 +140,11 @@ FastAppendListGlobal <- function(item)
 # @param node.id.list (char) override default list name for node ids
 # Adapted from Ruth Isserlin's CellCellINteractions_utility_functions.R
 nodeSet2JSON <- function(node.set, node.id.list='id',...){
-    json_nodes <- c()
 
-    ##TODO check character type
+    #using global environment variables for performance
+    .GlobalEnv$CreateNetwork.global.counter<-0
+    .GlobalEnv$CreateNetwork.global.size<-1
+    .GlobalEnv$CreateNetwork.global.json_set<-c()
 
     for(i in 1:dim(node.set)[1]){
         #the all column info - translate all the columns into node attributes
@@ -151,10 +161,24 @@ nodeSet2JSON <- function(node.set, node.id.list='id',...){
 
         #get current node
         current_node <- list(data =  unlist(rest))
-        json_nodes <- c(json_nodes,list(current_node) )
+        FastAppendListGlobal(current_node)
+        #json_nodes <- c(json_nodes,list(current_node) )
     }
-    return(json_nodes)
+    return(.GlobalEnv$CreateNetwork.global.json_set[1:.GlobalEnv$CreateNetwork.global.counter])
 }
 
+# FastAppendListGlobal
+# Appends lists at high performance using global variables explictly
+#  Note: relies on managing gloval environment variables: initializing and removing
+#  https://stackoverflow.com/questions/17046336/here-we-go-again-append-an-element-to-a-list-in-r
+#
+FastAppendListGlobal <- function(item)
+{
+    if( .GlobalEnv$CreateNetwork.global.counter == .GlobalEnv$CreateNetwork.global.size )
+        length(.GlobalEnv$CreateNetwork.global.json_set) <- .GlobalEnv$CreateNetwork.global.size <- .GlobalEnv$CreateNetwork.global.size * 2
+
+    .GlobalEnv$CreateNetwork.global.counter <- .GlobalEnv$CreateNetwork.global.counter + 1
+    .GlobalEnv$CreateNetwork.global.json_set[[.GlobalEnv$CreateNetwork.global.counter]] <- item
+}
 
 
