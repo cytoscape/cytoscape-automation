@@ -5,8 +5,7 @@
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
 #' @export
-#' @examples
-#' exportStyle('style-1','JSON')
+#' @section Example: exportStyle('myStyle','JSON')
 
 exportStyle<-function(filename,type,base.url='http://localhost:1234/v1'){
     commandRun(paste0('vizmap export options=',type,' OutputFile="',filename,'"'))

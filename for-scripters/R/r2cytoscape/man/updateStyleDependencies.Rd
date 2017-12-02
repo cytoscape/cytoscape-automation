@@ -10,7 +10,7 @@ updateStyleDependencies(style.name, dependencies,
 \arguments{
 \item{style.name}{(char) name for style}
 
-\item{dependencies}{(list) a list of style dependencies, see list below. Note: 
+\item{dependencies}{(list) a list of style dependencies, see list below. Note:
 each dependency is set by a boolean, TRUE or FALSE (T or F)}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
@@ -21,6 +21,10 @@ server response
 \description{
 Updates style dependencies, overriding any prior settings.
 }
+\section{Example}{
+ updateStyleDependencies("myStyle",list(nodeSizeLocked=TRUE))
+}
+
 \section{List of Dependencies}{
 
 arrowColorMatchesEdge
@@ -28,6 +32,3 @@ nodeCustomGraphicsSizeSync
 nodeSizeLocked
 }
 
-\examples{
-updateStyleDependencies("myStyle",list(nodeSizeLocked=TRUE))
-}

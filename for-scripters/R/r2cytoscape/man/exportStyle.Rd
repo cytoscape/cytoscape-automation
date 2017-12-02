@@ -19,6 +19,7 @@ server response
 \description{
 Exports the current visual style as a data file
 }
-\examples{
-exportStyle('style-1','JSON')
+\section{Example}{
+ exportStyle('myStyle','JSON')
 }
+

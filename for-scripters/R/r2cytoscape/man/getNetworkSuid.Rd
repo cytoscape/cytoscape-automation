@@ -18,3 +18,8 @@ network viewid
 \description{
 Get the SUID of a network
 }
+\section{Examples}{
+ getNetworkSuid() \cr
+getNetworkSuid("myNetwork")
+}
+

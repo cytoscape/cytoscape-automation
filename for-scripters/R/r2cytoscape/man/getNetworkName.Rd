@@ -18,3 +18,8 @@ network viewid
 \description{
 Get the name of a network
 }
+\section{Examples}{
+ getNetworkName() \cr
+getNetworkName(1111)
+}
+

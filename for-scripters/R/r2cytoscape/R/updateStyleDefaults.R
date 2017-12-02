@@ -6,8 +6,7 @@
 #' @param defaults (list) a list of visual property default settings, see mapVisualProperty
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return server response
-#' @examples
-#' updateStyleDefaults('myStyle',list('node fill color'='#0000FF','node size'=50))
+#' @section Example: updateStyleDefaults('myStyle',list('node fill color'='#0000FF','node size'=50))
 #' @export
 #' @seealso mapVisualProperty
 

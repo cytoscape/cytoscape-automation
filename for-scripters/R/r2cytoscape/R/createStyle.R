@@ -5,20 +5,28 @@
 #' @param style.name (char) name for style
 #' @param defaults (list) key-value pairs for default mappings.
 #' @param mappings (list) visual property mappings, see mapVisualProperty
-#' @param portNum (int) port number for cytoscape (Deprecated)
 #' @param base.url cyrest base url for communicating with cytoscape
-#' @return server response
+#' @return None
 #' @export
 #' @seealso mapVisualProperty
 #' @import RJSONIO
 #' @import httr
-createStyle <- function(style.name, defaults, mappings, portNum=1234,base.url='http://localhost:1234/v1') {
+#' @section Example construction:
+#' \preformatted{
+#' style.name = "myStyle"
+#' defaults <- list(NODE_SHAPE="diamond",
+#'                  NODE_SIZE=30,
+#'                  EDGE_TRANSPARENCY=120,
+#'                  NODE_LABEL_POSITION="W,E,c,0.00,0.00")
+#' nodeLabels <- mapVisualProperty('node label','id','p')
+#' nodeFills <- mapVisualProperty('node fill color','group','d',c("A","B"), c("#FF9900","#66AAAA"))
+#' arrowShapes <- mapVisualProperty('Edge Target Arrow Shape','interaction','d',c("activates","inhibits","interacts"),c("Arrow","T","None"))
+#' edgeWidth <- mapVisualProperty('edge width','weight','p')
+#'
+#' createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
+#' }
 
-    #Deprecated in 0.0.2
-    if(!missing(portNum)){
-        warning("portNum is deprecated; please use base.url instead.", call. = FALSE)
-        base.url=sprintf("http://localhost:%i/v1", portNum)
-    }
+createStyle <- function(style.name, defaults, mappings, base.url='http://localhost:1234/v1') {
 
     if(missing(mappings))
         mappings <- list()

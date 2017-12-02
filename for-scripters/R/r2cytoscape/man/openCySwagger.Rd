@@ -15,10 +15,11 @@ openCySwagger(domain = "cyrest", base.url = "http://localhost:1234/v1")
 Web page
 }
 \description{
-Opens swagger docs in default browser for a live 
+Opens swagger docs in default browser for a live
 instance of CyREST or CyREST-supported operations.
 }
-\examples{
-openCySwagger()
+\section{Examples}{
+ openCySwagger() \cr
 openCySwagger('commands')
 }
+

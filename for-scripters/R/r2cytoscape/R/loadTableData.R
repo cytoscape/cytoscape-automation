@@ -12,7 +12,7 @@
 #' @param network name or suid of the network; default is "current" network
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @export
-#'
+
 loadTableData<-function(data, data.key.column='row.names', table='node', table.key.column='name',
                           network='current', base.url='http://localhost:1234/v1') {
 

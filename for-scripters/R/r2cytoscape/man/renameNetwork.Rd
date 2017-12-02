@@ -20,3 +20,8 @@ server response
 \description{
 Rename network
 }
+\section{Examples}{
+ renameNetwork("newName") \cr
+renameNetwork("newName","oldName")
+}
+

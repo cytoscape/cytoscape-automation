@@ -1,14 +1,14 @@
 #' Open CySwagger docs in browser
 #'
-#' @description Opens swagger docs in default browser for a live 
-#' instance of CyREST or CyREST-supported operations. 
-#' @param domain (char) documentation domain or scope 
+#' @description Opens swagger docs in default browser for a live
+#' instance of CyREST or CyREST-supported operations.
+#' @param domain (char) documentation domain or scope
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @return Web page
 #' @export
-#' @examples
-#' openCySwagger()
+#' @section Examples: openCySwagger() \cr
 #' openCySwagger('commands')
+#' @importFrom utils browseURL
 
 openCySwagger<-function(domain='cyrest', base.url='http://localhost:1234/v1'){
     if(domain=='cyrest'){

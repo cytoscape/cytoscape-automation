@@ -4,27 +4,25 @@
 \alias{createNetwork}
 \title{Create a network from R objects}
 \usage{
-createNetwork(nodes, edges, network.name = "MyNetwork",
-  collection.name = "myNetworkCollection", portNum = 1234,
+createNetwork(nodes = NULL, edges = NULL, network.name = "MyNetwork",
+  collection.name = "myNetworkCollection",
   base.url = "http://localhost:1234/v1", ...)
 }
 \arguments{
-\item{nodes}{(data.frame) see details}
+\item{nodes}{(data.frame) see details and examples below; default NULL to derive nodes from edge sources and targets}
 
-\item{edges}{(data.frame) see details}
+\item{edges}{(data.frame) see details and examples below; default NULL for disconnected set of nodes}
 
 \item{network.name}{(char) network name}
 
 \item{collection.name}{(char) network collection name}
-
-\item{portNum}{(int) port number for cytoscape (Deprecated)}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 
 \item{...}{params for nodeSet2JSON() and edgeSet2JSON()}
 }
 \value{
-(int) network ID
+(int) network SUID
 }
 \description{
 Takes data frames for nodes and edges, as well as naming parameters to
@@ -36,22 +34,25 @@ NODES should contain a column named: id. This name can be overridden by
 the arg: node.id.list. Additional columns are loaded as node attributes.
 EDGES should contain columns named: source, target and interaction. These names can be overridden by
 args: source.id.list, target.id.list, interaction.type.list. Additional columns
-are loaded as edge attributes. The 'interaction' list can contain a single 
+are loaded as edge attributes. The 'interaction' list can contain a single
 value to apply to all rows; and if excluded altogether, the interaction type
 wiil be set to "interacts with".
 }
-\examples{
-nodes <- data.frame(id=c("node 0","node 1","node 2","node 3"), 
+\section{Example construction}{
+
+\preformatted{
+nodes <- data.frame(id=c("node 0","node 1","node 2","node 3"),
            group=c("A","A","B","B"), # optional
            stringsAsFactors=FALSE)
-edges <- data.frame(source=c("node 0","node 0","node 0","node 2"), 
+edges <- data.frame(source=c("node 0","node 0","node 0","node 2"),
            target=c("node 1","node 2","node 3","node 3"),
            interaction=c("inhibits","interacts","activates","interacts"),  # optional
            stringsAsFactors=FALSE)
-network.name <- "myNetwork"
-collection.name <- "myCollection"
 
+createNetwork(nodes,edges)
 }
+}
+
 \seealso{
 createSubnetwork
 }

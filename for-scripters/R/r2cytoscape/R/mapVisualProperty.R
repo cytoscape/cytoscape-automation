@@ -1,11 +1,11 @@
 #' Creates a mapping between an attribute and a visual property
-#' 
+#'
 #' @description Generates the appropriate data structure for the "mapping" parameter
 #' in setStyleMappings and createStyle.
-#' @details The paired list of values must be of the same length or mapping will fail. 
+#' @details The paired list of values must be of the same length or mapping will fail.
 #' Mapping will also fail if the data type of table.column.values does not match that of
-#' the existing table.column. Note that all imported numeric data are stored as Doubles in 
-#' Cytosacpe tables; and character or mixed data are stored as Strings. 
+#' the existing table.column. Note that all imported numeric data are stored as Doubles in
+#' Cytosacpe tables; and character or mixed data are stored as Strings.
 #' @param visual.prop (char) name of visual property to map
 #' @param table.column (char) name of table column to map
 #' @param mapping.type (char) continuous, discrete or passthrough (c,d,p)
@@ -16,9 +16,8 @@
 #' @return (obj) ready to convert into JSON by style mapping operations
 #' @export
 #' @seealso setStyleMappings createStyle
-#' @examples 
-#' mapVisualProperty('node fill color','score','c',c(-4.0,0.0,9.0),c('#99CCFF','#FFFFFF','#FF7777'))
-#' mapVisualProperty('node shape','type','d',c('protein','rna','metabolite'),c('ellipse','rectangle','triangle'))
+#' @section Examples: mapVisualProperty('node fill color','score','c',c(-4.0,0.0,9.0),c('#99CCFF','#FFFFFF','#FF7777')) \cr
+#' mapVisualProperty('node shape','type','d',c('protein','metabolite'),c('ellipse','rectangle')) \cr
 #' mapVisualProperty('node label','alias','p')
 #' @section List of visual properties:
 #' \tabular{lll}{
@@ -55,20 +54,20 @@
 #' Node Z Location \tab  \tab  \cr
 #' }
 
-mapVisualProperty <- function(visual.prop, table.column, mapping.type, table.column.values, 
+mapVisualProperty <- function(visual.prop, table.column, mapping.type, table.column.values,
                               visual.prop.values, network='current', base.url='http://localhost:1234/v1'){
 
     #process mapping type
     mapping.type.name = switch(mapping.type, 'c'='continuous','d'='discrete','p'='passthrough',mapping.type)
-    
+
     #processs visual property, including common alternatives for vp names :)
     visual.prop.name = toupper(gsub("\\s+","_",visual.prop))
-    visual.prop.name = switch(visual.prop.name, 
+    visual.prop.name = switch(visual.prop.name,
                               'EDGE_COLOR'='EDGE_STROKE_UNSELECTED_PAINT',
                               'EDGE_THICKNESS'='EDGE_WIDTH',
                               'NODE_BORDER_COLOR'='NODE_BORDER_PAINT',
                               visual.prop.name)
-    
+
     #check mapping column and get type
     tp = tolower(strsplit(visual.prop.name,"_")[[1]][1])
     table = paste0('default',tp)
@@ -86,15 +85,15 @@ mapVisualProperty <- function(visual.prop, table.column, mapping.type, table.col
     }
     if(is.null(table.column.type))
         print(paste0('Error: Could not find ',table.column,' column in ',table,' table of network: ',network,'.'))
-    
+
     #construct visual property map
     visual.prop.map <- list(
         mappingType=mapping.type.name,
         mappingColumn=table.column,
         mappingColumnType=table.column.type,
         visualProperty=visual.prop.name
-    ) 
-    
+    )
+
     if(mapping.type.name=='discrete'){
         map <- list()
         for (i in 1:length(table.column.values)) {
@@ -104,14 +103,14 @@ mapVisualProperty <- function(visual.prop, table.column, mapping.type, table.col
     }else if(mapping.type.name=='continuous'){
         points <- list()
         for (i in 1:length(table.column.values)) {
-            points[[i]] <- list(value=table.column.values[i], 
+            points[[i]] <- list(value=table.column.values[i],
                                 lesser=visual.prop.values[i],
                                 equal=visual.prop.values[i],
                                 greater=visual.prop.values[i])
         }
         visual.prop.map$points=points
     }
-    
+
     return(visual.prop.map)
 }
 

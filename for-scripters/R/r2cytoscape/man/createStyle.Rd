@@ -4,23 +4,20 @@
 \alias{createStyle}
 \title{Create a style from components}
 \usage{
-createStyle(style.name, defaults, mappings, portNum = 1234,
+createStyle(style.name, defaults, mappings,
   base.url = "http://localhost:1234/v1")
 }
 \arguments{
 \item{style.name}{(char) name for style}
 
-\item{defaults}{(list) key-value pairs for default mappings. See
-mapStyleDefaults() for details on formatting of this variable}
+\item{defaults}{(list) key-value pairs for default mappings.}
 
 \item{mappings}{(list) visual property mappings, see mapVisualProperty}
-
-\item{portNum}{(int) port number for cytoscape (Deprecated)}
 
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
-server response
+None
 }
 \description{
 Creates a style from defaults and predefined mappings.
@@ -28,6 +25,23 @@ Creates a style from defaults and predefined mappings.
 \details{
 Requires attribute mappings to be previously created, see mapVisualProperty.
 }
+\section{Example construction}{
+
+\preformatted{
+style.name = "myStyle"
+defaults <- list(NODE_SHAPE="diamond",
+                 NODE_SIZE=30,
+                 EDGE_TRANSPARENCY=120,
+                 NODE_LABEL_POSITION="W,E,c,0.00,0.00")
+nodeLabels <- mapVisualProperty('node label','id','p')
+nodeFills <- mapVisualProperty('node fill color','group','d',c("A","B"), c("#FF9900","#66AAAA"))
+arrowShapes <- mapVisualProperty('Edge Target Arrow Shape','interaction','d',c("activates","inhibits","interacts"),c("Arrow","T","None"))
+edgeWidth <- mapVisualProperty('edge width','weight','p')
+
+createStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
+}
+}
+
 \seealso{
 mapVisualProperty
 }

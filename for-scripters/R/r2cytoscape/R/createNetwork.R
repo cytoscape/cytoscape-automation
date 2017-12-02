@@ -14,14 +14,14 @@
 #' @param edges (data.frame) see details and examples below; default NULL for disconnected set of nodes
 #' @param network.name (char) network name
 #' @param collection.name (char) network collection name
-#' @param portNum (int) port number for cytoscape (Deprecated)
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @param ... params for nodeSet2JSON() and edgeSet2JSON()
 #' @return (int) network SUID
 #' @export
 #' @import RJSONIO
 #' @seealso createSubnetwork
-#' @examples
+#' @section Example construction:
+#' \preformatted{
 #' nodes <- data.frame(id=c("node 0","node 1","node 2","node 3"),
 #'            group=c("A","A","B","B"), # optional
 #'            stringsAsFactors=FALSE)
@@ -29,17 +29,12 @@
 #'            target=c("node 1","node 2","node 3","node 3"),
 #'            interaction=c("inhibits","interacts","activates","interacts"),  # optional
 #'            stringsAsFactors=FALSE)
-#' network.name <- "myNetwork"
-#' collection.name <- "myCollection"
 #'
-createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
-                          collection.name="myNetworkCollection",portNum=1234,base.url='http://localhost:1234/v1',...) {
+#' createNetwork(nodes,edges)
+#' }
 
-    #Deprecated in 0.0.2
-    if(!missing(portNum)){
-        warning("portNum is deprecated; please use base.url instead.", call. = FALSE)
-        base.url=sprintf("http://localhost:%i/v1", portNum)
-    }
+createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
+                          collection.name="myNetworkCollection",base.url='http://localhost:1234/v1',...) {
 
     if (is.null(nodes)) {
         if (!is.null(edges)) {

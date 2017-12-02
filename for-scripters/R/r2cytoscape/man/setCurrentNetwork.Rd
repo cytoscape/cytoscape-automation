@@ -14,3 +14,6 @@ setCurrentNetwork(network, base.url = "http://localhost:1234/v1")
 \value{
 server response
 }
+\description{
+Selects the given network as "current"
+}

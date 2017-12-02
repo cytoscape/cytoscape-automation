@@ -6,9 +6,7 @@
 #' @export
 #' @import httr
 #' @import RJSONIO
-#' @examples
-#' bundleEdges()
-#' bundleEdges(network="3570")
+#' @section Example: bundleEdges()
 
 bundleEdges<-function(network='current',base.url='http://localhost:1234/v1'){
 

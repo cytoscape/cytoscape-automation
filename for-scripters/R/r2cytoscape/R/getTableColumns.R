@@ -11,8 +11,8 @@
 #' @export
 #' @import httr
 #' @import RJSONIO
-#' @examples
-#' getTableColumns('node','score')
+#' @importFrom utils URLencode
+#' @section Example: getTableColumns('node','score')
 
 getTableColumns<-function(table,columns,namespace='default',network='current',base.url='http://localhost:1234/v1'){
 

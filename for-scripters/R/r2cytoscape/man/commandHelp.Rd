@@ -15,15 +15,16 @@ commandHelp(cmd.string = "help", base.url = "http://localhost:1234/v1")
 List of available commands or args
 }
 \description{
-Using the same syntax as Cytoscape's Command Line Dialog, 
+Using the same syntax as Cytoscape's Command Line Dialog,
 this function returns a list of available commands or args.
 }
 \details{
 Works with or without 'help' command prefix. Note that if you ask about a command that doesn't
 have any arguments, this function will run the command!
 }
-\examples{
-commandHelp()  
-commandHelp('node')
+\section{Examples}{
+ commandHelp() \cr
+commandHelp('node') \cr
 commandHelp('node get attribute')
 }
+

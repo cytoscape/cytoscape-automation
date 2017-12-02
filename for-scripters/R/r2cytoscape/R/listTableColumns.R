@@ -8,16 +8,15 @@
 #' @export
 #' @import httr
 #' @import RJSONIO
-#' @examples
-#' listTableColumns('node')
-#' listTableColumns('edge')
+#' @section Examples: listTableColumns('node') \cr
+#' listTableColumns('edge') \cr
 #' listTableColumns('network')
 
 listTableColumns<-function(table,namespace='default',network='current',base.url='http://localhost:1234/v1'){
-    
+
     if(class(network)=='numeric') # if SUID...
         network = getNetworkName(network.suid=network,base.url=base.url) # then get name
-    
+
     cmd = paste(table,' list attributes network="',network,'" namespace="',namespace,sep='')
     return(commandRun(cmd,base.url=base.url))
 }

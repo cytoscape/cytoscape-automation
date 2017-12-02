@@ -5,9 +5,6 @@
 #' @export
 #' @import httr
 #' @import RJSONIO
-#' @examples
-#' checkCytoscapeVersion()
-#' checkCytoscapeVersino(base.url='http://localhost:1234/v1')
 
 checkCytoscapeVersion<-function(base.url='http://localhost:1234/v1'){
     checkversion.url = paste(base.url, "version", sep="/")

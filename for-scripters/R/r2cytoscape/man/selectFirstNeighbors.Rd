@@ -15,9 +15,9 @@ selectFirstNeighbors(direction = "any", network = "current",
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
-server response
+list of names of selected nodes, including original selection
 }
 \description{
-Select nodes directly connected to currently selected nodes. Can 
+Select nodes directly connected to currently selected nodes. Can
 specify connection directionality using the direction param.
 }

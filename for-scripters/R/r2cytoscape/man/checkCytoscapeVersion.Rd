@@ -15,7 +15,3 @@ Cytoscape version
 \description{
 Check the version of Cytoscape
 }
-\examples{
-checkCytoscapeVersion()
-checkCytoscapeVersino(base.url='http://localhost:1234/v1')
-}

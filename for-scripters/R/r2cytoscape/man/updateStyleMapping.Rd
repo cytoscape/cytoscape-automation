@@ -17,15 +17,16 @@ updateStyleMapping(style.name, mapping, base.url = "http://localhost:1234/v1")
 server response
 }
 \description{
-Updates the visual property mapping, overriding any prior mapping. Creates a 
+Updates the visual property mapping, overriding any prior mapping. Creates a
 visual property mapping if it doesn't already exist in the style.
 }
 \details{
 Requires visual property mappings to be previously created, see mapVisualProperty.
 }
-\examples{
-updateStyleMapping('myStyle',mapVisualProperty('node label','name','p'))
+\section{Example}{
+ updateStyleMapping('myStyle',mapVisualProperty('node label','name','p'))
 }
+
 \seealso{
 mapVisualProperty
 }

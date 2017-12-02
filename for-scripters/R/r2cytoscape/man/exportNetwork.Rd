@@ -19,6 +19,7 @@ server response
 \description{
 Exports the current network as a data file
 }
-\examples{
-exportNetwork('network-1','XGMML')
+\section{Example}{
+ exportNetwork('myNetwork','XGMML')
 }
+

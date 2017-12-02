@@ -22,8 +22,9 @@ list of column names
 \description{
 List names of all columns in a table
 }
-\examples{
-listTableColumns('node')
-listTableColumns('edge')
+\section{Examples}{
+ listTableColumns('node') \cr
+listTableColumns('edge') \cr
 listTableColumns('network')
 }
+

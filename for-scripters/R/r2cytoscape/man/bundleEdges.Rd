@@ -17,7 +17,7 @@ server response
 \description{
 Bundle edges
 }
-\examples{
-bundleEdges()
-bundleEdges(network="3570")
+\section{Example}{
+ bundleEdges()
 }
+

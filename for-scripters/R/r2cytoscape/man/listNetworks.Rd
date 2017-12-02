@@ -15,6 +15,3 @@ list of network names
 \description{
 List the names of all networks in current session
 }
-\examples{
-listNetworks()
-}

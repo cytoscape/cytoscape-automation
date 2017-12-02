@@ -12,7 +12,7 @@ getTableColumns(table, columns, namespace = "default", network = "current",
 
 \item{columns}{names of columns to retrieve values from as list object or comma-separated list}
 
-\item{namespace}{namespace of table, e.g., default}
+\item{namespace}{namespace of table; default is "default"}
 
 \item{network}{name or suid of the network; default is "current" network}
 
@@ -28,6 +28,7 @@ Get table column values
 The 'name' column is always retrieved along with specified columns. The 'name' values are used
 as row names in the returned data frame. Note that this function fails on columns with missing values.
 }
-\examples{
-getTableColumns('score')
+\section{Example}{
+ getTableColumns('node','score')
 }
+

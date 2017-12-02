@@ -19,8 +19,8 @@ selectNodes(nodes, by.col = "name", keep.selected = F,
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
-server response
+list of SUIDs for nodes actually selected
 }
 \description{
-Select given nodes. Given a table that has a column called 'suids' method selects the nodes with supplied suids in
+Select nodes based on name, SUID or any other column.
 }

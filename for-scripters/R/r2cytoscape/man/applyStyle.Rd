@@ -17,6 +17,7 @@ server response
 \description{
 Apply a style to the current network
 }
-\examples{
-applyStyle("myStyle")
+\section{Example}{
+ applyStyle("myStyle")
 }
+

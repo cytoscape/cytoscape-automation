@@ -19,7 +19,7 @@ createSubnetwork(nodes, nodes.by.col = "name", edges, edges.by.col = "name",
 
 \item{exclude.edges}{(boolean) whether to exclude connecting edges; default is FALSE}
 
-\item{subnetwork.name}{name of new subnetwork to be created; 
+\item{subnetwork.name}{name of new subnetwork to be created;
 default is to add a numbered suffix to source network name}
 
 \item{network}{name or suid of the source network; default is "current" network}
@@ -27,17 +27,25 @@ default is to add a numbered suffix to source network name}
 \item{base.url}{cyrest base url for communicating with cytoscape}
 }
 \value{
-server response
+SUID of new subnetwork
 }
 \description{
 Copies a subset of nodes and edges into a newly created subnetwork.
 }
 \details{
-If you specify both nodes and edges, the resulting subset will be the union of those sets. 
-Typical usage only requires specifying either nodes or edges. Note that selected nodes will bring 
-along their connecting edges by default (see exclude.edges arg) and selected edges will always 
+If you specify both nodes and edges, the resulting subset will be the union of those sets.
+Typical usage only requires specifying either nodes or edges. Note that selected nodes will bring
+along their connecting edges by default (see exclude.edges arg) and selected edges will always
 bring along their source and target nodes.
 }
+\section{Examples}{
+ createSubnetwork("selected") \cr
+createSubnetwork("selected",subnetwork.name="mySubnetwork") \cr
+createSubnetwork(c("node 1","node 2","node 3")) \cr
+createSubnetwork(c("AKT1","TP53","PIK3CA"),"display name") \cr
+createSubnetwork(edges="all") #subnetwork of all connected nodes
+}
+
 \seealso{
 createNetwork
 }

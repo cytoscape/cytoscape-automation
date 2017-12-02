@@ -15,7 +15,7 @@ commandRun(cmd.string, base.url = "http://localhost:1234/v1")
 List object
 }
 \description{
-Using the same syntax as Cytoscape's Command Line Dialog, 
+Using the same syntax as Cytoscape's Command Line Dialog,
 this function converts a command string into a CyREST URL, executes a GET
 request, and parses the HTML result content into an R list object.
 }

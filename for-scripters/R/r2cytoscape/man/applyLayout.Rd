@@ -18,6 +18,7 @@ server response
 \description{
 Apply a layout to the current network
 }
-\examples{
-applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=100')
+\section{Example}{
+ applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=100')
 }
+
