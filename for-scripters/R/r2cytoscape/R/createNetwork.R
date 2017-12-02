@@ -10,7 +10,7 @@
 #' are loaded as edge attributes. The 'interaction' list can contain a single
 #' value to apply to all rows; and if excluded altogether, the interaction type
 #' wiil be set to "interacts with".
-#' @param nodes (data.frame) see details and examples below
+#' @param nodes (data.frame) see details and examples below; default NULL to derive nodes from edge sources and targets
 #' @param edges (data.frame) see details and examples below; default NULL for disconnected set of nodes
 #' @param network.name (char) network name
 #' @param collection.name (char) network collection name
@@ -41,17 +41,20 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
         base.url=sprintf("http://localhost:%i/v1", portNum)
     }
 
-
-    json_nodes<-c()
-    json_edges<-c()
-
-    if (!is.null(nodes)){
-        json_nodes <- nodeSet2JSON(nodes,...)
-        # cleanup global environment variables (which can be quite large)
-        remove(CreateNetwork.global.counter, envir = globalenv())
-        remove(CreateNetwork.global.size, envir = globalenv())
-        remove(CreateNetwork.global.json_set, envir = globalenv())
+    if (is.null(nodes)) {
+        if (!is.null(edges)) {
+            nodes = data.frame(id=c(edges$source,edges$target),stringsAsFactors = F)
+        }else
+            return("Create Network Failed: Must provide either nodes or edges")
     }
+
+    json_nodes <- nodeSet2JSON(nodes,...)
+    # cleanup global environment variables (which can be quite large)
+    remove(CreateNetwork.global.counter, envir = globalenv())
+    remove(CreateNetwork.global.size, envir = globalenv())
+    remove(CreateNetwork.global.json_set, envir = globalenv())
+
+    json_edges<-c()
 
     if(!is.null(edges)){
         json_edges <- edgeSet2JSON(edges,...) ##TODO allow no edges
@@ -63,15 +66,9 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
         json_edges <- "[]" #fake empty array
     }
 
-    els<-NULL
-    if(length(json_nodes)>0)
-        els$nodes<-json_nodes
-
-    els$edges<-json_edges
-
     json_network <- list(
         data=list(name=network.name),
-        elements=els
+        elements=c(nodes=list(json_nodes),edges=list(json_edges))
     )
 
     network <- toJSON(json_network)
