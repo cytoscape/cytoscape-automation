@@ -11,7 +11,7 @@
 #' value to apply to all rows; and if excluded altogether, the interaction type
 #' wiil be set to "interacts with".
 #' @param nodes (data.frame) see details and examples below
-#' @param edges (data.frame) see details and examples below
+#' @param edges (data.frame) see details and examples below; default NULL for disconnected set of nodes
 #' @param network.name (char) network name
 #' @param collection.name (char) network collection name
 #' @param portNum (int) port number for cytoscape (Deprecated)
@@ -59,13 +59,15 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
         remove(CreateNetwork.global.counter, envir = globalenv())
         remove(CreateNetwork.global.size, envir = globalenv())
         remove(CreateNetwork.global.json_set, envir = globalenv())
+    } else {
+        json_edges <- "[]" #fake empty array
     }
 
     els<-NULL
     if(length(json_nodes)>0)
         els$nodes<-json_nodes
-    if(length(json_edges)>0)
-        els$edges<-json_edges
+
+    els$edges<-json_edges
 
     json_network <- list(
         data=list(name=network.name),
@@ -73,6 +75,7 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
     )
 
     network <- toJSON(json_network)
+    print(network)
 
     url<- sprintf("%s/networks?title=%s&collection=%s",
                   base.url,network.name,collection.name,sep="")
