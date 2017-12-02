@@ -19,6 +19,6 @@ You can edit or add new functions to the r2cytoscape package by making pull requ
 * Refer to the roadmap of functions to be developed to help prioritize your work and choose harmonous function names and args. Thanks!
 
 #### Functions to be developed
-- [ ] createNetworkFromIgraph
+- [X] createNetworkFromIgraph
 - [ ] getNetworkAsIgraph
 - [ ] renameTableColumn
