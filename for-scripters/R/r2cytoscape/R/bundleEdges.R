@@ -11,13 +11,14 @@
 #' bundleEdges(network="3570")
 
 bundleEdges<-function(network='current',base.url='http://localhost:1234/v1'){
-    
+
     if(class(network)=='numeric') # if SUID...
         network = getNetworkName(network.suid=network,base.url=base.url) # then get name
-    
+
     if(network=='current')
         network = getNetworkSuid(base.url=base.url)
     eb.url = paste(base.url, "apply","edgebundling",network, sep="/")
+
     res = GET(eb.url)
     done = fromJSON(rawToChar(res$content))
     return(done)

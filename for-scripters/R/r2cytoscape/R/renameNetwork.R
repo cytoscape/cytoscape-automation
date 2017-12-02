@@ -22,9 +22,6 @@ renameNetwork <- function(new.name, network='current',base.url='http://localhost
 
   update.name.url <- paste(base.url,"networks",network,"tables/defaultnetwork",sep="/")
 
-  response <- PUT(url=update.name.url,
-                  body=selection, encode="json")
-
-  return(response)
-
+  invisible(PUT(url=update.name.url,
+                  body=selection, encode="json"))
 }

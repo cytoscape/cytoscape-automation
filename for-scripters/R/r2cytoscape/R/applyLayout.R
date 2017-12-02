@@ -9,5 +9,5 @@
 #' applyLayout('force-directed defaultSpringCoefficient=.000004 defaultSpringLength=100')
 
 applyLayout<-function(layout,base.url='http://localhost:1234/v1'){
-    commandRun(paste('layout',layout,'network="current"',sep=' '))
+    invisible(commandRun(paste('layout',layout,'network="current"',sep=' ')))
 }

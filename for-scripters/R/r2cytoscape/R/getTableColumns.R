@@ -20,28 +20,35 @@ getTableColumns<-function(table,columns,namespace='default',network='current',ba
     col.list = columns
     if(length(col.list)==1)
         col.list = unlist(strsplit(columns, ","))
-    
+
     if(class(network)=='character') # if name...
         network = getNetworkSuid(network.name=network,base.url=base.url) # then get SUID
-    
-    
+
     #get name column first
-    
     tbl = paste0(namespace,table)
     cmd = paste(base.url,'networks',network,'tables',tbl,'columns','name',sep = '/')
     res = GET(URLencode(cmd))
     res.html = htmlParse(rawToChar(res$content), asText=TRUE)
-    res.elem = xpathSApply(res.html, "//p", xmlValue) 
+    res.elem = xpathSApply(res.html, "//p", xmlValue)
     names <- fromJSON(res.elem[1])
     df = data.frame(row.names=names$values)
-    
+
+    #retrieve column names
+    table.col.list = listTableColumns(table,namespace,network,base.url)
+
     # then append other requested columns
     for (col in col.list){
-        
+
+        #check for column names
+        if(!col %in% table.col.list){
+            cat(sprintf("Error: Column %s not found in %s table \n",col,table))
+            next()
+        }
+
         cmd = paste(base.url,'networks',network,'tables',tbl,'columns',col,sep = '/')
         res = GET(URLencode(cmd))
         res.html = htmlParse(rawToChar(res$content), asText=TRUE)
-        res.elem = xpathSApply(res.html, "//p", xmlValue) 
+        res.elem = xpathSApply(res.html, "//p", xmlValue)
         col.vals <- fromJSON(res.elem[1])
         #convert NULL to NA, then unlist
         cvv <- unlist(lapply(col.vals$values, function(x) ifelse(is.null(x),NA,x)))
@@ -50,7 +57,7 @@ getTableColumns<-function(table,columns,namespace='default',network='current',ba
                 df[i,col] <- cvv[i]
             }
         } else {
-            print("Warning: requested column has missing values. Returning single column without row.names...")
+            print("Warning: Requested column has missing values. Returning single column without row.names...")
             df2 = data.frame(col=unlist(col.vals$values))
             return(df2)
         }
