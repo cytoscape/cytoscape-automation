@@ -17,7 +17,7 @@
 #' @param portNum (int) port number for cytoscape (Deprecated)
 #' @param base.url cyrest base url for communicating with cytoscape
 #' @param ... params for nodeSet2JSON() and edgeSet2JSON()
-#' @return (int) network ID
+#' @return (int) network SUID
 #' @export
 #' @import RJSONIO
 #' @seealso createSubnetwork
@@ -57,7 +57,7 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
     json_edges<-c()
 
     if(!is.null(edges)){
-        json_edges <- edgeSet2JSON(edges,...) ##TODO allow no edges
+        json_edges <- edgeSet2JSON(edges,...)
         # cleanup global environment variables (which can be quite large)
         remove(CreateNetwork.global.counter, envir = globalenv())
         remove(CreateNetwork.global.size, envir = globalenv())
@@ -72,7 +72,6 @@ createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
     )
 
     network <- toJSON(json_network)
-    print(network)
 
     url<- sprintf("%s/networks?title=%s&collection=%s",
                   base.url,network.name,collection.name,sep="")
