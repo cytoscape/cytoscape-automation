@@ -36,6 +36,11 @@
 createNetwork <- function(nodes=NULL,edges=NULL,network.name="MyNetwork",
                           collection.name="myNetworkCollection",base.url='http://localhost:1234/v1',...) {
 
+    #defining variable names to be used globally later on (to avoid devtools::check() NOTES)
+    CreateNetwork.global.counter <- NULL
+    CreateNetwork.global.size <- NULL
+    CreateNetwork.global.json_set <- NULL
+
     if (is.null(nodes)) {
         if (!is.null(edges)) {
             nodes = data.frame(id=c(edges$source,edges$target),stringsAsFactors = F)
