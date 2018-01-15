@@ -1,0 +1,438 @@
+---
+title: "Cytoscape Tutorial:  R driving CyREST"
+output: 
+  html_notebook:
+    highlight: tango
+    mathjax: null
+    theme: spacelab
+    toc: yes
+    toc_float: yes
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook that encapsulates a common bioinformatics workflow.  
+
+We will retrieve disease networks from a public database and apply gene expression and tumor mutation datasets for network analysis and visualization. Network files and images will be generated in multiple formats for sharing and publishing.
+ 
+### Basic steps to this workflow. 
+
+* Install requisite libraries and connect to Cytoscape. 
+* Query the STRING database for network associated with the diseases
+* Explore interactivity using CyREST, Commands and RCy3
+* Load data into Cytoscape and visualize data on networks
+* Select subnetworks based on data
+* Save, share and publish network results
+
+![Cytoscape automation resource diagram](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/CytoscapeAutomation_3.png)
+
+### Tested with the following versions:
+* R 3.3.3
+* RStudio 1.0.143
+* Cytoscape 3.6.0
+* CyREST 3.6.0
+* stringApp 1.2.0
+* Operating Systems tested: 
+    * Mac 10.10.5
+    * Windows 10
+    * Linux (may need to install R-devel)
+
+################################################
+# Step 0: Are You Ready?
+################################################
+
+This section will load the appropriate libraries and ensure they are functional. 
+
+### Install libs and utils 
+Please run check-library-installation.R for libs and tests:
+
+https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/check-library-installation.R
+
+**If you are in RStudio** try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(pacman)
+p_load(RJSONIO,igraph,httr,XML,RColorBrewer,RCy3)
+```
+ 
+### Setup Cytoscape
+* Launch Cytoscape on your local machine. If you haven't already installed Cytoscape, then download the latest version from http://cytoscape.org.
+* Install the STRING app, if you haven't already: http://apps.cytoscape.org/apps/stringapp
+* Leave Cytoscape running in the background during the remainder of the tutorial.
+
+Please run check-cytoscape-connection.R for tests and initial demo: 
+
+https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/check-cytoscape-connection.R
+
+#### Test connection to Cytoscape and installed apps
+**port** number needs to match value of Cytoscape property: rest.port (see Edit>Preferences>Properties...). Default is 1234.
+```{r}
+#cy.conn = CytoscapeConnection(host='localhost',port=1234)
+#checkCytoscapeVersion(cy.conn)
+
+checkCytoscapeVersion()
+
+if("string" %in% commandHelp("")) print("Success: the STRING app is installed") else print("Warning: STRING app is not installed. Please install the STRING app before proceeding.")
+if("diffusion" %in% commandHelp("")) print("Success: the Diffusion app is installed") else print("Warning: Diffusion app is not installed. Please install the Diffusion app before proceeding.")
+```
+
+################################################
+# Step 1: Getting Disease Networks
+################################################
+
+Use Cytoscape to query the STRING database for networks of genes associated with breast cancer and ovarian cancer.
+
+**If the STRING app is not installed, no error is reported, but your network  will be empty**
+
+### Query STRING database by disease to generate networks
+#### Breast cancer
+```{r}
+string.cmd = 'string disease query disease="breast cancer" cutoff=0.9 species="Homo sapiens" limit=150'
+string.query.url = command2query(string.cmd)
+GET(string.query.url)
+```
+Here we are using Cytoscape's command line syntax, converting it to a CyREST url, and then making a GET request. 
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc.png){height=100%}  
+
+#### Ovarian cancer
+```{r}
+string.cmd = 'string disease query disease="ovarian cancer" cutoff=0.9 species="Homo sapiens" limit=150'
+commandRun(string.cmd)
+?commandRun
+```
+This time, we skipped a step and used the helper function *commandRun* to make the GET request from the command string.
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc.png){height=100%}
+
+################################################
+# Step 2: Interacting with Cytoscape 
+################################################
+
+Now that we've got a couple networks into Cytoscape, let's see what we can go with them from R...
+
+### Get list of networks 
+```{r}
+getNetworkList()
+```
+
+#### CHALLENGE
+If the **listNetworks()** helper function didn't exist, how could you get the list of networks in R? *Hint:* the command is **network list**.
+
+### Layout network
+```{r echo=T}
+layoutNetwork(layout.name='circular') 
+```
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc2.png){height=100%} 
+
+#### List of layout algorithms available
+```{r}
+getLayoutNames()
+```
+
+#### CHALLENGE
+Pick a different layout algorithm and execute **applyLayout()**.
+
+#### Layout with parameters!
+```{r}
+getLayoutPropertyNames(layout.name='force-directed')
+layout.props<-list(defaultSpringCoefficient = 0.000004,
+                         defaultSpringLength = 5)
+setLayoutProperties(layout.name='force-directed',properties.list=layout.props)
+layoutNetwork(layout.name = 'force-directed')
+
+# Or equivalent, run as a command:
+#commandRun('layout force-directed defaultSpringCoefficient=0.000004 defaultSpringLength=5')
+```
+These *commandHelp* calls will allow you to interrogate the layouts and parameters available in your active Cytoscape session. This includes any layouts added by apps you've installed!
+
+### Get table data from network
+Now, let's look at the tablular data associated with our STRING networks...
+```{r}
+listTableColumns('node')
+```
+
+One of the great things about the STRING database is all the node and edge attriubtes they provide. Let's pull some of it into R to play with...
+
+#### Retrieve disease scores 
+We can retrieve any set of columns from Cytoscape and store them as an R data frame.
+```{r}
+disease.score.table <- getTableColumns('node','disease score')
+disease.score.table
+```
+
+#### Plot distribution and pick threshold
+Now you can use R like you normally would explore the data.
+```{r}
+plot(factor(row.names(disease.score.table)),disease.score.table[,1], ylab=colnames(disease.score.table)[1])
+summary(disease.score.table)
+```
+
+### Generate subnetworks
+In order to reflect your exploration back onto the network, let's generate subnetworks...
+
+...from top quartile of 'disease score'
+```{r}
+top.quart <- quantile(disease.score.table[,1], 0.75)
+top.nodes <- row.names(disease.score.table)[which(disease.score.table[,1]>top.quart)]
+createSubnetwork(top.nodes,new.title='top disease quartile')
+#returns a CytoscapeWindow object
+```
+
+...of connected nodes only
+```{r}
+createSubnetwork(edges='all')  #handy way to exclude unconnected nodes!
+renameNetwork(new.title='top disease quartile connected')
+```
+
+...from first neighbors of top 3 genes, using the network connectivity together with the data to direct discovery.
+```{r}
+setCurrentNetwork(title="String Network - ovarian cancer")
+top.nodes <- row.names(disease.score.table)[tail(order(disease.score.table[,1]),3)]
+selectNodes(node.names=top.nodes)
+selectFirstNeighbors()
+createSubnetwork('selected', new.title='top disease neighbors') # selected nodes, all connecting edges (default)
+```
+
+...from diffusion algorithm starting with top 3 genes, using the network connectivity in a more subtle way than just first-degree neighbors.
+```{r}
+setCurrentNetwork(title="String Network - ovarian cancer")
+selectNodes(node.names=top.nodes)
+commandRun('diffusion diffuse') # diffusion!
+createSubnetwork('selected',new.title = 'top disease diffusion')
+layoutNetwork(layout.name = 'force-directed')
+```
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc4.png){height=100%} 
+
+#### CHALLENGE
+Okay, now for a real challenge... pull in a new column of data from Cytoscape (provided by STRING) and use it to make a new selection. Optionally, expand on that selection. Then create a new subnetwork and rename it. *Pro-tip:* don't forget to **setCurrentNetwork()** the correct parent network before getting table column data and making selections.
+
+################################################
+# Step 3: Visualizing data on networks
+################################################
+
+### Load datasets
+Downloaded TCGA data from https://portal.gdc.cancer.gov/ and preprocessed as R objects. Also available via each TCGA publication, e.g.:
+ 
+* Breast: https://tcga-data.nci.nih.gov/docs/publications/brca_2012/
+* Ovarian: https://tcga-data.nci.nih.gov/docs/publications/ov_2011/
+  
+```{r}
+load("data/tutorial-ovc-expr-mean-dataset.robj")
+load("data/tutorial-ovc-mut-dataset.robj")
+load("data/tutorial-brc-expr-mean-dataset.robj")
+load("data/tutorial-brc-mut-dataset.robj")
+```
+
+
+### Breast Cancer Datset
+These datasets are similar to the data frames you normarlly encounter in R. For diversity, one using row.names to store corresponding gene names and the other uses the first column. Both are easy to import into Cytoscape.
+```{r}
+str(brc.expr)  # gene names in row.names of data.frame
+str(brc.mut)  # gene names in column named 'Hugo_Symbol'
+```
+
+Let's return to the Breast Cancer network...
+```{r}
+setCurrentNetwork(title="String Network - breast cancer")
+layoutNetwork(layout.name='force-directed') #uses same settings as previously set
+```
+
+...and use the helper function from RCy3 called *loadTableData*
+```{r}
+?loadTableData
+loadTableData(brc.expr)  #default data.frame key is row.names
+loadTableData(brc.mut,'Hugo_Symbol')  #specify column name if not default
+```
+
+#### Visual styles
+Let's create a new style to visualize our imported data
+...starting with the basics, we will specify a few defaults and obvious mappings in a custom style all our own.
+```{r}
+style.name = "dataStyle"
+defaults.list <- list(NODE_SHAPE="ellipse",
+                 NODE_SIZE=60,
+                 NODE_FILL_COLOR="#AAAAAA",
+                 EDGE_TRANSPARENCY=120)
+node.label.map <- mapVisualProperty('node label','name','p') # p for passthrough; nothing else needed
+createVisualStyle(style.name, defaults.list, list(node.label.map))
+setVisualStyle(style.name=style.name)
+```
+
+#### CHALLENGE
+```{r}
+?createStyle
+```
+What is the difference between *defaults* and *mappings*? Why was node label set by passthrough? What would happen if you set **NODE_LABEL="name"** as a default? Where can you find the list of all possible Visual Properties?
+
+##### Visualize expression data
+Now let's update the style with a mapping for mean expression. The first step is to grab the column data from Cytoscape and pull out the min and max to define our data mapping range of values.
+```{r}
+brc.expr.network = getTableColumns('node','expr.mean')  
+min.brc.expr = min(brc.expr.network[,1],na.rm=TRUE)
+max.brc.expr = max(brc.expr.network[,1],na.rm=TRUE)
+data.values = c(min.brc.expr,0,max.brc.expr)
+```
+
+Next, we use the RColorBrewer package to help us pick good colors to pair with our data values. 
+```{r}
+display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="div") # div,qual,seq,all
+node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
+```
+
+Finally, we use the handy *mapVisualProperty* function to construct the data object that CyREST needs to specify style mappings and then we'll send them off to Cytoscape with *updateStyleMappings*.
+```{r}
+node.fill.map <- mapVisualProperty('node fill color', 'expr.mean','c',data.values,node.colors) 
+updateStyleMapping(style.name, node.fill.map) 
+```
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc2.png){height=100%} 
+
+**Pro-tip: depending on your data, it may be better to balance your color range over negative and positive values bounded by the largest min or max data value, so that color intensity scales similarly in both directions.**
+
+#### CHALLENGE
+Update the style with a balanced data visualization range based on the largest min or max value. *Hints:* redefine data.values, redefine node.fill.map, rerun updateStyleMapping().
+
+#### Visualize mutation data
+OK, now let's update with a mapping for mutation. Here are all the same steps, but this time mapping mutation counts to *both* node border width and color. 
+```{r}
+brc.mut.network = getTableColumns('node','mut_count')
+min.brc.mut = min(brc.mut.network[,1],na.rm=TRUE)
+max.brc.mut = max(brc.mut.network[,1],na.rm=TRUE)
+data.values = c(min.brc.mut,20,max.brc.mut)
+display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="seq") 
+border.colors <- c(brewer.pal(3, "Reds"))
+node.border.map <- mapVisualProperty('node border paint','mut_count','c',data.values,border.colors)
+updateStyleMapping(style.name,node.border.map)
+border.width <- c(2,4,8)
+node.border.width.map <- mapVisualProperty('node border width','mut_count','c',data.values,border.width)
+updateStyleMapping(style.name,node.border.width.map)
+```
+This is a useful pair of visual properties to map to a single data column. See why?
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc3.png){height=100%} 
+
+#### Subnetwork based on diffusion from heavily mutated nodes
+Now, let's pull in what we learned about subnetwork selection and apply it here...
+```{r}
+top.mut <- (brc.mut$Hugo_Symbol)[tail(order(brc.mut$mut_count),2)]
+top.mut
+selectNodes(node.names=top.mut)
+commandRun('diffusion diffuse') 
+createSubnetwork('selected',new.title = 'top mutated diffusion')
+layoutNetwork(layout.name = 'force-directed')
+```
+
+The top mutated genes are based on TCGA data and the diffusion algorithm is operating based on the network connectivity from STRING data, leading to a focused subnetwork view of critical Breast Cancer genes with mean patient expression data mapped to fill color. Now *that's* data integration!
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc4.png){height=100%} 
+
+**Pro-tip: You can generate a legend for this in Cytoscape Style tab > Options > Create style...  This is no yet available as a command. Coming soon!**
+
+### Ovarian Cancer Datset
+But what about the other network and datasets? Do we have to repeat *all* of those steps again?  Actually, no!
+
+First, let's switch back over to the Ovarian Cancer network and load our data.
+```{r}
+setCurrentNetwork(title="String Network - ovarian cancer")
+clearSelection()
+str(ovc.expr)  # gene names in row.names of data.frame
+str(ovc.mut)  # gene names in column named 'Hugo_Symbol'
+
+loadTableData(ovc.expr)
+loadTableData(ovc.mut,'Hugo_Symbol')
+```
+
+**Because we used the same column names in our original data frames, now we can simply apply the *same* visual style created above!**
+```{r}
+setVisualStyle(style.name=style.name)
+```
+
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc3.png){height=100%}  
+
+Reusing the same style for both breast and ovarian cancers, we can compare the relative expression and mutation counts across the two datasets. 
+For example, notice in the case of ovarian cancer: **decreased** range of mean expression and **fewer** mega-mutated genes.
+
+##########################################
+# Step 4: Saving, sharing and publishing
+##########################################
+
+### Saving a Cytoscape session file
+Session files save *everything*. As with most project software, we recommend saving often!
+```{r}
+saveSession('tutorial_session') #.cys
+```
+
+**Note: If you don't specify a complete path, the files will be save relative to your Cytoscape installation directory, e.g., /Applications/Cytoscape_v3.6.0/... or somewhere you don't have write permissions. So, it's probably better to specify one...**
+
+```{r}
+full.path=paste(getwd(),'tutorial_session',sep='/')
+saveSession(file.name=full.path) #.cys
+```
+
+### Saving high resolution image files
+You can export extremely high resolution images, including vector graphic formats.
+```{r}
+full.path=paste(getwd(),'tutorial_image2',sep='/')
+saveImage(file.name=full.path, image.type = 'PDF') #.pdf
+?saveImage
+```
+
+### Exporting interactive web pages via cytoscape.js
+You can export the network model in multiple standard formats. And if you want to get really fancy, you can export the model and style in cytoscape.js formats and host interactive views of your network analysis and visualization results online!
+```{r}
+full.path=paste(getwd(),'tutorial_network',sep='/')
+saveNetwork(file.name=full.path, type='CYJS')  #.cyjs
+?saveNetwork
+
+full.path=paste(getwd(),'tutorial_style',sep='/')
+saveVisualStyle(file.name=full.path, type='json') #.json; current style
+?saveVisualStyle
+```
+
+More details in Cytoscape manual chapter on [Interactive Web Applications](http://manual.cytoscape.org/en/stable/Export_Your_Data.html#as-an-interactive-web-application-new-in-3-2-0)
+
+
+And in Cytoscape, you can File>Export as Web Page... to produce a folder of cytoscape.js files and html.
+
+
+### Additional network analysis and visualization options
+* Mapping edge attributes to edge thickness, color and/or transparency (e.g., score or experiments) 
+    * EDGE_WIDTH, EDGE_COLOR, EDGE TRANSPARENCY
+* Edge bundling
+    * bundleEdges()
+* Directional edge animation
+    * applyStyle('Marquee')
+    * updateStyleDefaults(style.name,list('Edge Line Type'='Marquee_Dash'))
+* Visualize two or more datasets as split-fill or pie chart, or patient-specific data as radial Circos plot
+    * pending support for charts...
+* Merge two (or more) networks
+    * copyCytoscapeNetwork() or 'network clone'; then addGraphToGraph() (Union only)
+    * using igraph: intersection(g1,g2), union(), difference(); followed by toCytoscape() and send2cy()
+    
+#### Resources for all available functions and commands
+```{r}
+help(package=RCy3) # RCy3 helper functions
+openCySwagger()  # CyREST API
+openCySwagger("commands")  # CyREST Commands API
+```
+
+##########################################
+# Step 5: Wrapping up
+##########################################
+
+You should now know how to...
+
+* Connect to Cytoscape from R
+* Retrieve disease networks from STRING
+* Interact with Cytoscape via commands, CyREST, and RCy3
+* Load various data types onto networks
+* Set visual style defaults and mappings
+* Perform selection and create subnetworks
+* Save, share and publish your networks
+* Find more information on Cytoscape automation
+
+#### Resources
+* Growing collection of [cytoscape automation resources](https://github.com/cytoscape/cytoscape-automation/), including **this** tutorial
+* Growing collection of [cytoscape tutorial materials](https://github.com/cytoscape/cytoscape-tutorials)
+* Active community on [cytoscape-helpdesk](https://groups.google.com/forum/#!forum/cytoscape-helpdesk) for any Cytoscape related questions and suggestions
