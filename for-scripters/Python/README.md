@@ -1,5 +1,5 @@
 ## What is _py2cytoscape_?
-py2cytoscape is a collection of utilities to use [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) from Python.  Network visualization feature is still limited in Python, but with this tool, you can access both of Cytoscape and Cytoscape.js as network visualization engines for your Python code!
+[py2cytoscape](https://github.com/idekerlab/py2cytoscape) is a collection of utilities to use [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) from Python.  Network visualization feature is still limited in Python, but with this tool, you can access both of Cytoscape and Cytoscape.js as network visualization engines for your Python code!
 
 This package is still experimental and in alpha status.
 [![Build Status](https://travis-ci.org/idekerlab/py2cytoscape.svg?branch=develop)](https://travis-ci.org/idekerlab/py2cytoscape)
@@ -13,7 +13,7 @@ Cytoscape is a [de-facto standard desktop application for network visualization 
 
 ## Installation
 
-py2cytoscape supports both Python 2.7 and 3.5.
+[py2cytoscape](https://github.com/idekerlab/py2cytoscape) supports both Python 2.7 and 3.5.
 
 py2cytocape depends on python-igraph and optionary depends on scipy.
 (We do not include scipy to py2cytoscape prerequisite dependencies.)
