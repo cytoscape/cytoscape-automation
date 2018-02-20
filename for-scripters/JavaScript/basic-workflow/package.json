@@ -1,0 +1,21 @@
+{
+    "name": "cy-rest-node",
+    "description": "Sample workflows for cyREST RESTful API.",
+    "version": "0.1.0",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/idekerlab/cy-rest-node.git"
+    },
+    "author": {
+      "name": "Keichiro Ono",
+      "email": "kono@ucsd.edu"
+    },
+    "dependencies": {
+        "request": "latest",
+        "cytoscape": "^2.3.1",
+        "underscore": "latest",
+        "bionode-ncbi": "latest",
+        "biojs-rest-psicquic": "latest",
+        "biojs-io-mitab": "latest"
+    }
+}
