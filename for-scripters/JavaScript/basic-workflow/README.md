@@ -17,10 +17,8 @@ This is a repository of sample scripts to automate workflow using [cyRest](https
 npm install
 ```
 
-## Basic Workflows
-
-### 1. Build a Network from NCBI Gene Database Search Result
-[This](https://github.com/idekerlab/cy-rest-node/blob/master/basic_workflow1.js) is a simple workflow to do the following:
+## Basic Workflow: Build a Network from NCBI Gene Database Search Result
+[This](./basic_workflow1.js) is a simple workflow to do the following:
 
 1. Send query to [NCBI Gene] database by [bionode-ncbi](https://github.com/bionode/bionode-ncbi) module.
 1. From the result, extract Entrez gene ID.
@@ -38,10 +36,3 @@ npm install
 ![](http://cl.ly/Xp5n/node_out1.png)
 
 You can play with some other queries.  Note that if the returned list of the genes is too big, BioGRID may return empty result. 
-
-
-### 2. Streaming results from multiple web services
-(This repo is still under construction.  More coming soon...)
-
-
-## Advanced Workflows
