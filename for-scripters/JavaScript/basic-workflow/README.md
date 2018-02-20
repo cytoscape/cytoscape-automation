@@ -4,7 +4,7 @@
 ![](http://www.olindata.com/sites/default/files/nodelogo_big_2.png)
 
 ## Introduction
-This is a repository of sample scripts to automate workflow using [cyRest](https://github.com/keiono/cy-rest) and node.js. 
+This is a repository of a basic sample script to automate a Cytoscape workflow using [cyRest](https://github.com/cytoscape/cyREST) and node.js. 
 
 
 ### Requirements
