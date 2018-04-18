@@ -72,13 +72,13 @@ class SampleTestCase(unittest.TestCase):
         within a CI (org.cytoscape.ci.model.CIResponse.java) object, as the first memeber of the 'results' array in the 
         'data' field.
         """
-        name = result.json()["data"]["results"][0]["name"]
+        name = result.json()["data"]["name"]
 
         # Assert that the name we passed above shows up in the result.
         assert name == "Sue", "Expected name field to contain 'Sue' but contained '" + name + "'"
 
         # Now we extract and verify the contents of our 'value' field.
-        list = result.json()["data"]["results"][0]["values"]
+        list = result.json()["data"]["values"]
         assert list[0] == 1, "Expected value 0 to be 1, but was {}".format(list[0])
         assert list[1] == 2, "Expected value 1 to be 2, but was {}".format(list[0])
         assert list[2] == 3, "Expected value 2 to be 3, but was {}".format(list[0])
