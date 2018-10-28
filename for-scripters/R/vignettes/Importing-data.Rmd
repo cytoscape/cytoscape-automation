@@ -1,0 +1,82 @@
+---
+title: "Importing data"
+author: "by Alexander Pico"
+package: RCy3
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true 
+vignette: >
+  %\VignetteIndexEntry{04. Importing data ~5 min}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+This vignette will show you how to import a data.frame of node attributes into Cytoscape as Node Table columns. The same approach works for edge and network attriubutes.  
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required Software
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape 
+
+```{r}
+cytoscapePing()
+```
+
+# Always Start with a Network
+When importing data, you are actually performing a merge function of sorts, appending columns to nodes (or edges) that are present in the referenced network. Data that do not match elements in the network are effectively discarded upon import.
+
+So, in order to demonstrate data import, we first need to have a network. This command will import network files in any of the supported formats (e.g., SIF, GML, XGMML, etc).
+```{r}
+sif <- system.file("extdata","galFiltered.sif",package="RCy3")
+importNetworkFromFile(sif)
+```
+
+You should now see a network with just over 300 nodes. If you look at the Node Table, you'll see that there are no attributes other than node names. Let's fix that...
+
+# Import Data
+You can import data into Cytoscape from any data.frame in R as long as it contains row.names (or an arbitrary column) that match a Node Table column in Cytoscape. In this example, we are starting with a network with yeast identifiers in the "name" column. We also have a CSV file with gene expression data values keyed by yeast identifiers here:
+```{r}
+csv <- system.file("extdata","galExpData.csv", package="RCy3")
+data <- read.csv(csv, stringsAsFactors = FALSE)
+```
+
+**Note: there may be times where your network and data identifers are of different
+types. This calls for identifier mapping. RCy3 provides a function to perform
+ID mapping in Cytoscape:**
+```{r}
+?mapTableColumn
+```
+Check out the *Identifier mapping* vignette for detailed examples.
+
+Now we have a data.frame that includes our identifiers in a column called "name", plus a bunch of data columns. Knowing our key columns, we can now perform the import:
+```{r}
+loadTableData(data,data.key.column="name")
+```
+
+If you look back at the Node Table, you'll now see that the corresponding rows of our data.frame have been imported as new columns.
+
+**Note: we relied on the default values for table ("node") and table.key.column ("name"), but these can be specified as well. See help docs for parameter details.**
+```{r}
+?loadTableData
+```
+
+
