@@ -1,0 +1,24 @@
+name: Cytoscape Rmd Notebooks
+navbar:
+  title: Cytoscape Rmd Notebooks
+  type: inverse
+  left:
+  - text: Home
+    icon: fa-home
+    href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/
+  - text: Table of Contents
+    icon: fa-list
+    menu:
+    - text: Tutorial Notebooks
+    - text: Basic fundamentals
+      href: basic-fundamentals.html
+    - text: '---------'
+    - text: Analysis Notebooks
+    - text: Advanced cancer networks and data
+      href: advanced-cancer-networks-and-data-rcy3.html
+output_dir: _site
+output:
+  html_document:
+    lib_dir: site_libs
+    self_contained: no
+
