@@ -1,5 +1,42 @@
 ---
 title: "Cytoscape Tutorial:  R driving CyREST"
+author: "Ruth Isserlin"
+date: "`r format(Sys.Date())`"
+output:
+  html_document:
+    highlight: haddock
+    keep_md: yes
+    number_sections: yes
+    theme: paper
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+  html_notebook:
+    highligh: haddock
+    number_sections: yes
+    theme: paper
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r include=FALSE}
+check=function(x) tryCatch(if(class(x) == 'logical') 1 else 1, error=function(e) 0) 
+if(check(add_setup) == 0){
+  add_setup = TRUE
+}
+```
+
+```
+#old header
+title: "Cytoscape Tutorial:  R driving CyREST"
 output: 
   html_notebook:
     highlight: tango
@@ -7,7 +44,7 @@ output:
     theme: spacelab
     toc: yes
     toc_float: yes
----
+```
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook that encapsulates a common bioinformatics workflow.  
 
@@ -420,3 +457,8 @@ You should now know how to...
 * Growing collection of [cytoscape automation resources](https://github.com/cytoscape/cytoscape-automation/), including **this** tutorial
 * Growing collection of [cytoscape tutorial materials](https://github.com/cytoscape/cytoscape-tutorials)
 * Active community on [cytoscape-helpdesk](https://groups.google.com/forum/#!forum/cytoscape-helpdesk) for any Cytoscape related questions and suggestions
+
+```{r, eval = FALSE,echo=FALSE, warning=FALSE}
+library(knitr)
+asis_output("## References\\n") # Header that is only shown if add_setup == TRUE
+```
