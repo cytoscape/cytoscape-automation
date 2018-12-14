@@ -1,0 +1,1 @@
+Place to manage shared scripts, docs and image files during the prep of the RCy3 paper. This could be a long-term store of these artifact as well, if needed. In general, we should integrate scripts, vignettes and notebooks into pre-established sites when possible.
