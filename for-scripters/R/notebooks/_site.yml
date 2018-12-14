@@ -27,7 +27,7 @@ navbar:
     - text: "Filtering Networks"
       href: Filtering-Networks.nb.html
     - text: "WikiPathways and RCy3"
-      href: WikiPathways-and-RCy3.nb.html
+      href: rWikiPathways-and-RCy3.nb.html
     - text: '---------'
     - text: Analysis Notebooks
     - text: "Cancer networks and data "
