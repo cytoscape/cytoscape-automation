@@ -1,0 +1,68 @@
+---
+title: "Cytoscape and graphNEL"
+author: "by Alexander Pico"
+package: RCy3
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true   
+vignette: >
+  %\VignetteIndexEntry{03. Cytoscape and graphNEL ~5 min}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+This vignette will show you how to convert networks between graphNEL and Cytoscape.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required Software
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape 
+
+```{r}
+cytoscapePing()
+```
+
+# From graphNEL to Cytoscape
+The graph package is a popular network tool among R users. With RCy3, you can easily translate graphNEL networks to Cytoscape networks!
+
+Create a simple GraphNEL object
+```{r}
+g <- makeSimpleGraph()
+```
+
+Now pass it along to Cytoscape:
+
+```{r}
+createNetworkFromGraph(g,"myGraph")
+```
+# From Cytoscape to GraphNEL 
+Inversely, you can use createGraphFromNetwork() in RCy3 to retreive vertex (node) and edge data.frames to construct a GraphNEL object. 
+
+```{r}
+g2 <- createGraphFromNetwork("myGraph")
+```
+
+Compare the round-trip result for yourself...
+```{r}
+g
+g2
+```

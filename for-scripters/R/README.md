@@ -5,4 +5,11 @@ Also see [RCy3](https://github.com/cytoscape/r2cytoscape) for a set of R functio
 
 
 ### Developer Notes
-Collect Rmds in the ```notebooks``` directory to be included in the Cytoscape Rmd Notebook menu system. In RStudio, open a project with a working directory at cytoscape-automation/for-scripters/R/. Update _site.yml to include any new or updated entries. Then run ```rmarkdown::render_site("notebooks")``` to build the .html files and update site_libs. Commit and push updated files to make updated notebooks avalable. 
+Collect Rmds in the ```notebooks``` directory to be included in the Cytoscape Rmd Notebook menu system. In RStudio, open a project with a working directory at cytoscape-automation/for-scripters/R/. Update _site.yml to include any new or updated entries. Then build the .nb.html files and update index.html and site_libs with this command:
+
+```
+lapply(list.files("notebooks","*.Rmd"), function(x) rmarkdown::render(paste("notebooks",x,sep="/")))
+rmarkdown::render("notebooks/index.Rmd","html_document")
+```
+
+Commit and push updated files to make updated notebooks avalable. 

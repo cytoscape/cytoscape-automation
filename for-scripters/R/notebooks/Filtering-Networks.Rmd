@@ -1,0 +1,115 @@
+---
+title: "Filtering Networks"
+author: "Kristina Hanspers, Alexander Pico"
+package: RCy3
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true    
+vignette: >
+  %\VignetteIndexEntry{12. Filtering Networks ~10 min}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+This vignette will introduce you to some techniques for filtering a network based on node properties. You will learn to:
+
+1. Select a set of nodes based on node degree and attribute filters
+2. Create a subnetwork based on selected nodes
+3. Hide a set of nodes based on filters
+
+For this tutorial, we will use data from the STRING database (https://string-db.org/).
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Prerequisites
+In addition to this package (RCy3), you will need:
+
+* **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
+* Complete installation wizard
+* Install the STRING app:
+
+```{r}
+installApp('STRINGapp')  
+```
+
+# Get network from STRING
+We are going to query the STRING Disease database for the term "breast cancer". By default, the app pulls the top 100 human proteins associated with the disease along with edges having an evidence strength of 0.4 or greater:
+```{r}
+string.cmd = 'string disease query disease="breast cancer"'
+commandsRun(string.cmd)
+string.net<-getNetworkSuid()  #grab handle on network for future reference
+```
+
+# Filtering by degree
+## Creating a degree filter
+Every node in a network has a Degree property, which corresponds to the number of edges connecting the node to other nodes, either as a target or source. Filtering based on node degree is a useful way to remove nodes with too few (or too many) connections.
+
+In this example we want to exclude low degree nodes, e.g., those with only 0, 1 or 2 connections: 
+  
+```{r}
+createDegreeFilter('degree filter', c(0,2), 'IS_NOT_BETWEEN')
+```
+
+At the bottom of the Select tab, you can see how many edges/nodes where selected.
+
+## Creating a subnetwork from a selection
+We can now create a new network, or subnetwork, from our selected set of nodes and all relevant edges: 
+
+```{r}
+createSubnetwork(subnetwork.name ='Breast cancer: highly connected nodes')
+```
+
+# Filtering by attribute
+## Creating a column filter
+We could also filter the network based on high disease score. The disease score comes from STRING and indicates the strength of the association to the disease queried.
+
+Let's select nodes from the original network with a disease score of greater than 4 (on a scale of 1-5):
+```{r}
+createColumnFilter(filter.name='disease score filter', column='disease score', 4, 'GREATER_THAN', network = string.net)
+```
+Again, we can create a subnetwork from the selection:
+```{r}
+createSubnetwork(subnetwork.name ='Breast cancer: high disease score')
+```
+
+# Combining filters
+But what if we want to combine these two filters? You could apply them sequentially as individual filters, but then you'd need to be careful about the order in which you apply the filters. Alternatively, you can create a composite filter and apply the logic all at once!  
+
+Let's combine the two filters "degree filter" and "disease score" to produce one filter, then apply it to the original network and create a final subnetwork:
+
+```{r}
+createCompositeFilter('combined filter', c('degree filter','disease score filter'), network = string.net)
+createSubnetwork(subnetwork.name ='final subnetwork')
+```
+
+We can apply a layout to help with interpreting the network:
+```{r}
+layoutNetwork('force-directed defaultSpringCoefficient=5E-6')
+```
+
+This final network obviously contains fewer nodes than the original, but they are the most connected and most highly associated with the disease. If you examine the network you can see several well-known breast cancer oncogenes, for example BRCA1, TP53 and PTEN, near the center of the action.
+
+# Hiding filtered nodes
+As a final example of the filter functions, let's return to the orignal network once more and apply our "combined filter". But this time let's *hide* the filtered out nodes, rather than forming a selection. This demonstrates the *applyFilter* function and the *hide* parameter that is optional for all *createXXXFilter* functions as well.
+
+```{r}
+applyFilter('combined filter', hide=TRUE, network = string.net)
+```

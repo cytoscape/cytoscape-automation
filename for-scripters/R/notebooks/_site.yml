@@ -9,19 +9,37 @@ navbar:
   - text: Table of Contents
     icon: fa-list
     menu:
-    - text: Tutorial Notebooks
-    - text: "Basic fundamentals"
-      href: basic-fundamentals.html
+    - text: RCy3 Vignettes
     - text: "Overview of RCy3"
-      href: http://bioconductor.org/packages/release/bioc/vignettes/RCy3/inst/doc/Overview-of-RCy3.html
+      href: Overview-of-RCy3.nb.html
+    - text: "Importing data"
+      href: Importing-data.nb.html
+    - text: "Network functions and visualization "
+      href: Network-functions-and-visualization.nb.html
+    - text: "Identifier mapping"
+      href: Identifier-mapping.nb.html
+    - text: "Cytoscape and NDEx"
+      href: Cytoscape-and-NDEx.nb.html
+    - text: "Group nodes "
+      href: Group-nodes.nb.html
+    - text: "Custom Graphics and Labels"
+      href: Custom-Graphics.nb.html
+    - text: "Filtering Networks"
+      href: Filtering-Networks.nb.html
     - text: '---------'
     - text: Analysis Notebooks
-    - text: "Advanced cancer networks and data"
-      href: advanced-cancer-networks-and-data-rcy3.html
+    - text: "Cancer networks and data "
+      href: Cancer-networks-and-data.nb.html
+    - text: '---------'
+    - text: Additional Scripts
     - text: "CyTargetLinker: use case 2, gene-pathway extension"
       href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase2/Usecase2_DEGs_Pathway_Network.Rmd
 output_dir: "."
 output:
-  html_document:
-    self_contained: no
+  html_notebook:
+    highlight: tango
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+   
 
