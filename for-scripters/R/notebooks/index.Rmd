@@ -5,8 +5,28 @@ title: "Cytoscape Rmd Notebooks"
 <big>[Cytoscape](https://cytoscape.org) is an open source bioinformatics platform for visualizing molecular interaction networks and integrating these with expression profiles and other high throughput data sets. This collection of R Markdown Notebooks includes training vignettes, detailed workflows and community contributed examples of Cytoscape automation.
 
 <b>These notebooks rely on the [RCy3 package available from Bioconductor](https://bioconductor.org/packages/release/bioc/html/RCy3.html).</b>
-
-Browse the Table of Contents menu above to find notebooks rendered as interactive HTML. Notebooks include an option to download the source Rmd file via the option button labeled 'code' at the top right of each page. 
 </big>
 
+<hr />
+## How to Use
+<big>
+Browse the <em>Table of Contents</em> menu above to find notebooks rendered as interactive HTML. Notebooks include an option to download the source Rmd file via the option button labeled 'code' at the top-right of each page. 
+
+The <em>Wiki</em> menu option will take you to the [overview documentation](https://github.com/cytoscape/cytoscape-automation/wiki) for all scripting and app-related automation resources for Cytoscape.
+
+The <em>Repo</em> menu option will take you to the [R folder](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/R) of the cytoscape automation GitHub repository.
+
+The <em>Home</em> menu option will bring you back here.
+</big>
+
+<hr />
+## How to Contribute
+<big>
+If you have an R script or notebook involving Cytoscape, please considering contributing to this central collection. You can either:
+
+ * Open a [New Issue](https://github.com/cytoscape/cytoscape-automation/issues) pointing to your content and tag it with the label, "new script or notebook". Or, 
+ * [Fork the automation repo](https://github.com/cytoscape/cytoscape-automation), push your content to the appropriate folder, and make a Pull Request. For example, Rmd files that you want to have built as notebooks and included in this site should go in the <em>for-scripters/R/notebooks/</em> folder. See [developer notes](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/R#developer-notes) for how we build and maintain this notebook collection site.
+</big>
+
+<hr />
 Return to: [Automation Home](http://automation.cytoscape.org)

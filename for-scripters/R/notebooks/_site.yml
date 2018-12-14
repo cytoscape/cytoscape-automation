@@ -6,6 +6,12 @@ navbar:
   - text: Home
     icon: fa-home
     href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks
+  - text: Wiki
+    icon: fa-compress
+    href: https://github.com/cytoscape/cytoscape-automation/wiki
+  - text: Repo
+    icon: fa-github
+    href: https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/R
   - text: Table of Contents
     icon: fa-list
     menu:

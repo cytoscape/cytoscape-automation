@@ -1,4 +1,9 @@
-# 230: Cytoscape automation in R using Rcy3
+## Cytoscape automation in R using Rcy3
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
 
 ```{r lib, echo=FALSE, results="hide", cache=FALSE}
 suppressPackageStartupMessages({
