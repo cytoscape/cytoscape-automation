@@ -5,14 +5,13 @@ date: "6/15/2015"
 output:
   html_document:
       toc: yes
+      toc_float: yes
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
-
-# Basic Workflow 1: Fundamentals
 
 by [Keiichiro Ono](http://keiono.github.io/)
 

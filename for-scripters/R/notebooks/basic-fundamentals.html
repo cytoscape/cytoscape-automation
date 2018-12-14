@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -170,6 +173,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
@@ -185,7 +283,7 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="http://cytoscape.github.io/cytoscape-automation/for-scripters/R/">
+  <a href="http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks">
     <span class="fa fa-home"></span>
      
     Home
@@ -235,33 +333,7 @@ $(document).ready(function () {
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#basic-workflow-1-fundamentals">Basic Workflow 1: Fundamentals</a><ul>
-<li><a href="#introduction">Introduction</a><ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#system-requirments">System Requirments</a></li>
-<li><a href="#questions-or-feature-requests">Questions or Feature Requests?</a></li>
-</ul></li>
-<li><a href="#install-r-packages-and-basic-setup">Install R Packages and Basic Setup</a><ul>
-<li><a href="#rd-party-library">3rd Party Library</a></li>
-<li><a href="#basic-setup">Basic Setup</a></li>
-</ul></li>
-<li><a href="#test-cyrest">Test cyREST</a><ul>
-<li><a href="#understanding-rest-basics">Understanding REST Basics</a></li>
-<li><a href="#check-connection">Check Connection</a></li>
-<li><a href="#generate-network-with-igraph">Generate Network with igraph</a></li>
-<li><a href="#create-custom-visual-style">Create Custom Visual Style</a></li>
-<li><a href="#sending-network-to-cytoscape">Sending network to Cytoscape</a></li>
-<li><a href="#apply-layout-algorithm-and-visual-style">Apply layout algorithm and Visual Style</a></li>
-<li><a href="#getting-network-view-as-image">Getting network view as image</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
 
-<div id="basic-workflow-1-fundamentals" class="section level1">
-<h1>Basic Workflow 1: Fundamentals</h1>
 <p>by <a href="http://keiono.github.io/">Keiichiro Ono</a></p>
 <p><img src="http://cytoscape.org/images/logo/cy3logoOrange.svg" /> <img src="http://www.r-project.org/Rlogo.png" /></p>
 <hr />
@@ -539,10 +611,11 @@ print(network.image.url)</code></pre>
 <p>You can open the URL above to see the image of new network as PNG.</p>
 </div>
 </div>
+
+
+
 </div>
-
-
-
+</div>
 
 </div>
 

@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -171,6 +174,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
@@ -186,7 +284,7 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="http://cytoscape.github.io/cytoscape-automation/for-scripters/R/">
+  <a href="http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks">
     <span class="fa fa-home"></span>
      
     Home
@@ -234,37 +332,6 @@ $(document).ready(function () {
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#basic-steps-to-this-workflow.">Basic steps to this workflow.</a></li>
-<li><a href="#tested-with-the-following-versions">Tested with the following versions:</a></li>
-<li><a href="#step-0-are-you-ready">Step 0: Are You Ready?</a><ul>
-<li><a href="#install-libs-and-utils">Install libs and utils</a></li>
-<li><a href="#setup-cytoscape">Setup Cytoscape</a></li>
-</ul></li>
-<li><a href="#step-1-getting-disease-networks">Step 1: Getting Disease Networks</a><ul>
-<li><a href="#query-string-database-by-disease-to-generate-networks">Query STRING database by disease to generate networks</a></li>
-</ul></li>
-<li><a href="#step-2-interacting-with-cytoscape">Step 2: Interacting with Cytoscape</a><ul>
-<li><a href="#get-list-of-networks">Get list of networks</a></li>
-<li><a href="#layout-network">Layout network</a></li>
-<li><a href="#get-table-data-from-network">Get table data from network</a></li>
-<li><a href="#generate-subnetworks">Generate subnetworks</a></li>
-</ul></li>
-<li><a href="#step-3-visualizing-data-on-networks">Step 3: Visualizing data on networks</a><ul>
-<li><a href="#load-datasets">Load datasets</a></li>
-<li><a href="#breast-cancer-datset">Breast Cancer Datset</a></li>
-<li><a href="#ovarian-cancer-datset">Ovarian Cancer Datset</a></li>
-</ul></li>
-<li><a href="#step-4-saving-sharing-and-publishing">Step 4: Saving, sharing and publishing</a><ul>
-<li><a href="#saving-a-cytoscape-session-file">Saving a Cytoscape session file</a></li>
-<li><a href="#saving-high-resolution-image-files">Saving high resolution image files</a></li>
-<li><a href="#exporting-interactive-web-pages-via-cytoscape.js">Exporting interactive web pages via cytoscape.js</a></li>
-<li><a href="#additional-network-analysis-and-visualization-options">Additional network analysis and visualization options</a></li>
-</ul></li>
-<li><a href="#step-5-wrapping-up">Step 5: Wrapping up</a></li>
-</ul>
-</div>
 
 <p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook that encapsulates a common bioinformatics workflow.</p>
 <p>We will retrieve disease networks from a public database and apply gene expression and tumor mutation datasets for network analysis and visualization. Network files and images will be generated in multiple formats for sharing and publishing.</p>
@@ -682,6 +749,8 @@ commandsAPI()  # CyREST Commands API</code></pre>
 
 
 
+</div>
+</div>
 
 </div>
 

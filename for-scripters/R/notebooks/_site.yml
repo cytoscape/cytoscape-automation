@@ -5,7 +5,7 @@ navbar:
   left:
   - text: Home
     icon: fa-home
-    href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/
+    href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks
   - text: Table of Contents
     icon: fa-list
     menu:
@@ -24,5 +24,4 @@ output_dir: "."
 output:
   html_document:
     self_contained: no
-    toc: yes
 

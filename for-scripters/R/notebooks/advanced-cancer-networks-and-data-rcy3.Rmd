@@ -4,6 +4,7 @@ output:
   html_document:
     df_print: paged
     toc: yes
+    toc_float: yes
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
