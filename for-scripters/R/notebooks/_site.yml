@@ -12,8 +12,6 @@ navbar:
     - text: Training Vignettes
     - text: "Overview of RCy3"
       href: Overview-of-RCy3.nb.html
-    - text: "Cytoscape automation in R"
-      href: 230_Isserlin_RCy3_intro.nb.html
     - text: "Importing data"
       href: Importing-data.nb.html
     - text: "Network functions and visualization "
@@ -31,13 +29,19 @@ navbar:
     - text: "WikiPathways and RCy3"
       href: rWikiPathways-and-RCy3.nb.html
     - text: '---------'
-    - text: Analysis Notebooks
-    - text: "Cancer networks and data "
+    - text: Workshops and Use Cases
+    - text: "Cancer networks and data"
       href: Cancer-networks-and-data.nb.html
+    - text: "Cytoscape automation in R"
+      href: 230_Isserlin_RCy3_intro.nb.html
     - text: '---------'
-    - text: Additional Scripts
+    - text: External Links
+    - text: "CyTargetLinker: use case 1, Rett syndrome extension"
+      href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase1/UseCase1_RettSyndrome_Compound_Disease_Network.Rmd
     - text: "CyTargetLinker: use case 2, gene-pathway extension"
       href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase2/Usecase2_DEGs_Pathway_Network.Rmd
+    - text: "Automation with KEGGScape app"
+      href: https://github.com/idekerlab/KEGGscape/blob/master/usecase/f1000-cyauto-workflow.Rmd
 output_dir: "."
 output:
   html_notebook:
