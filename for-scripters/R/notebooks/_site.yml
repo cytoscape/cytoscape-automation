@@ -12,6 +12,8 @@ navbar:
     - text: Training Vignettes
     - text: "Overview of RCy3"
       href: Overview-of-RCy3.nb.html
+    - text: "Cytoscape automation in R"
+      href: 230_Isserlin_RCy3_intro.nb.html
     - text: "Importing data"
       href: Importing-data.nb.html
     - text: "Network functions and visualization "

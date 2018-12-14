@@ -66,7 +66,7 @@ Learning objectives
 
 ## Background
 ### Cytoscape
-<div id="left_logo">![Cytoscape Apps](./230_Isserlin_RCy3_intro/images/cy3logoOrange.png){width=100px}</div>
+<div id="left_logo">![Cytoscape Apps](./bioc2018_Rcy3_intro/230_Isserlin_RCy3_intro/images/cy3logoOrange.png){width=100px}</div>
 
   * [Cytoscape](www.cytoscape.org)[@cytoscape] is a freely available open-source, cross platform network analysis software.  
   * [Cytoscape](www.cytoscape.org)[@cytoscape] can visualize complex networks and help integrate them with any other data type.  
@@ -74,7 +74,7 @@ Learning objectives
   * Check out some of the tasks you can do with Cytoscape in our online tutorial guide - tutorials.cytoscape.org
 
 ```{r cytoapps, echo=FALSE, fig.cap="Available Cytoscape Apps"}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","Apps-4.png"))
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","Apps-4.png"))
 ```
 
 
@@ -99,7 +99,7 @@ Often data in our pipelines are represented as data.frames, tables, matrices, ve
 
 
 ```{r table2network, echo=FALSE, fig.cap="Translating data to networks"}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","tables2networks.png"))
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","tables2networks.png"))
 ```
 
 In order to translate your data into a network it is important to define the entities and their relationships.  Entities and relationships can be anything. They can be user defined or they can be queried from a database.
@@ -136,14 +136,14 @@ Networks can be used for two main purposes but often go hand in hand.
 Networks offer us a useful way to represent our biological data.  But how do we seamlessly translate our data from R into Cytoscape?
 
 ```{r cytoscapeRcy3, echo=FALSE, fig.cap="Different ways to communicate with Cytoscape"}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","CytoscapeAutomation_3.png"))
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","CytoscapeAutomation_3.png"))
 ```
 
 There are multiple ways to communicate with Cytoscape programmatically.  There are two main complementary portals,**cyRest**[@cyrest] and **Commands**, that form the foundation.  cyRest transforms Cytoscape in to a REST (Representational State Transfer) enabled service where it essentially listens for events through a predefined port (by default port 1234).  The cyRest functionality started as an app add in but has now been incorporated into the main release. Commands, on the other hand, offer a mechanism whereby app developers can expose their functionality to other apps or to user through the command interface.  Prior to the implementation of cyRest many of the basic network functions were first available as commands so there is some overlap between the two different methods.  \@ref(fig:cytoscapeRcy3) shows the different ways you can call Cytoscape.
 
 ## Set up
 ```{r include=FALSE}
-evalcytoscape = FALSE
+eval = FALSE
 ```
 
 
@@ -165,7 +165,7 @@ library(RCy3)
      * [EnrichmentMap Pipeline Collection](http://apps.cytoscape.org/apps/enrichmentmappipelinecollection) - a collection of apps including EnrichmentMap[@enrichmentmap], AutoAnnotate[@autoannotate], WordCloud[@wordcloud] and clusterMaker2[@clustermaker] used to visualize and analysis enrichment results.
 
 If you are using Cytoscape 3.7 or higher (Cytoscape 3.7 will be released in August 2018) then apps can be installed directly from R.
-```{r installapps, eval=evalcytoscape}
+```{r installapps, eval=FALSE}
 #list of cytoscape apps to install
 installation_responses <- c()
 
@@ -199,24 +199,24 @@ if(length(cytoscape_version) == 3 && as.numeric(cytoscape_version[1]>=3)
    
 
 **Make sure that Cytoscape is open**
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
  cytoscapePing ()
 ```
 
 
-```{r cytoscapeping, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_cytoscapeping.png"))
+```{r cytoscapeping, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_cytoscapeping.png"))
 ```
 
 ### Getting started
 ####Confirm that Cytoscape is installed and opened
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
  cytoscapeVersionInfo ()
 ```
 
 
-```{r cytoscapeversion, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_cytoscapeversion.png"))
+```{r cytoscapeversion, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_cytoscapeversion.png"))
 ```
 
 ####Browse available functions, commands and arguments
@@ -228,24 +228,24 @@ help(package=RCy3)
 ```
 
 Open swagger docs for live instances of CyREST API.  The CyREST  API list all the functions available in a base distribution of cytoscape.  The below command will launch the swagger documentation in a web browser.  Functions are clustered into categories.  Expanding individual categories will show all the option available.  Further expanding an individual command will show detailed documentation for the function, input, outputs and allow you to try and run the function.  Running the function will show the url used for the query and all returned responses. 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 cyrestAPI()  # CyREST API
 
 ```
 
 As mentioned above, there are two ways to interact with Cytoscape, through the Cyrest API or commands.  To see the available commands in swagger similar to the Cyrest API.
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 commandsAPI()  # Commands API
 ```
 
 To get information about an individual command from the R environment you can also use the commandsHelp function.  Simply specify what command you would like to get information on by adding its name to the command.  For example "commandsHelp("help string")"
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 commandsHelp("help")
 ```
 
 
-```{r cytoscapeavailcom, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablecommands.png"))
+```{r cytoscapeavailcom, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablecommands.png"))
 ```
 
 ## Cytoscape Basics
@@ -271,23 +271,23 @@ knitr::kable(
 ```
 
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 createNetworkFromDataFrames(nodes,edges, title="my first network", collection="DataFrame Example")
 ```
 
 
-```{r networkload1, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_networkload_1.png"))
+```{r networkload1, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_networkload_1.png"))
 ```
 
 Remember. All networks we make are created in Cytoscape so get an image of the resulting network and include it in your current analysis if desired.
 
 ```{r initial_network_screenshot, include=TRUE}
-initial_network_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","initial_example_network.png")
+initial_network_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","initial_example_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(initial_network_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(initial_network_png_file_name)
@@ -311,11 +311,11 @@ There are two data files:
  
 ```{r}
 RNASeq_expression_matrix <- read.table( 
-  file.path(getwd(),"230_Isserlin_RCy3_intro","data","TCGA_OV_RNAseq_expression.txt"),  
+  file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","data","TCGA_OV_RNAseq_expression.txt"),  
   header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
 
 RNASeq_gene_scores <- read.table( 
-   file.path(getwd(),"230_Isserlin_RCy3_intro","data","TCGA_OV_RNAseq_All_edgeR_scores.txt"),  
+   file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","data","TCGA_OV_RNAseq_All_edgeR_scores.txt"),  
   header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
 ```
 ## Finding Network Data
@@ -336,7 +336,7 @@ Omics data - I have a *fill in the blank* (microarray, RNASeq, Proteomics, ATACs
 There are endless amounts of databases storing interaction data. 
 
 ```{r ppidb, echo=FALSE, fig.cap="Info graphic of some of the available pathway databases"}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","interaction-dbs.png"))
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","interaction-dbs.png"))
 ```
 
 Thankfully we don't have to query each independent ally.  In addition to many specialized (for example, for specific molecules, interaction type, or species) interaction databases there are also databases that collate these databases to create a broad resource that is easier to use. For example:
@@ -356,40 +356,40 @@ head(top_mesenchymal_genes)
 We are going to query the String Database to get all interactions found for our set of top Mesenchymal genes.
 
 Reminder: to see the parameters required by the string function or to find the right string function you can use commandsHelp.
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 commandsHelp("help string")
 ```
 
 
-```{r availablestring, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablestringcommands.png"))
+```{r availablestring, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablestringcommands.png"))
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 commandsHelp("help string protein query")
 ```
 
-```{r availablestringarg, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablestringarguments.png"))
+```{r availablestringarg, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablestringarguments.png"))
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 mesen_string_interaction_cmd <- paste('string protein query taxonID=9606 limit=150 cutoff=0.9 query="',paste(top_mesenchymal_genes$Name, collapse=","),'"',sep="")
 commandsGET(mesen_string_interaction_cmd)
 ```
 
 
-```{r stringnetworkload, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_stringnetworkload.png"))
+```{r stringnetworkload, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_stringnetworkload.png"))
 ```
 
 Get a screenshot of the initial network
 ```{r initial_string_network_screenshot, include=TRUE}
-initial_string_network_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images", "initial_string_network.png")
+initial_string_network_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images", "initial_string_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(initial_string_network_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   response <- file.remove(initial_string_network_png_file_name)
@@ -404,41 +404,41 @@ knitr::include_graphics(initial_string_network_png_file_name)
 
 
 Layout the network
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 layoutNetwork('force-directed')
 ```
 
 Check what other layout algorithms are available to try out
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 getLayoutNames()
 ```
 
-```{r availablelayouts, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablelayouts.png"))
+```{r availablelayouts, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablelayouts.png"))
 ```
 Get the parameters for a specific layout
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 getLayoutPropertyNames(layout.name='force-directed')
 ```
 
 
-```{r availablelayoutargs, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablelayoutarguments.png"))
+```{r availablelayoutargs, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablelayoutarguments.png"))
 ```
 
 Re-layout the network using the force directed layout but specify some of the parameters 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 layoutNetwork('force-directed defaultSpringCoefficient=0.0000008 defaultSpringLength=70')
 ```
 
 
 Get a screenshot of the re-laid out network
 ```{r relayout_string_network_screenshot, include=TRUE}
-relayout_string_network_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","relayout_string_network.png")
+relayout_string_network_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","relayout_string_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(relayout_string_network_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   response<- file.remove(relayout_string_network_png_file_name)
@@ -454,45 +454,45 @@ knitr::include_graphics(relayout_string_network_png_file_name)
 Overlay our expression data on the String network.  
 To do this we will be using the loadTableData function from RCy3. It is important to make sure that  that your identifiers types match up.  You can check what is used by String by pulling in the column names of the node attribute table.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 getTableColumnNames('node')
 ```
 
-```{r availablenodecol, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablenodecolumns.png"))
+```{r availablenodecol, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablenodecolumns.png"))
 ```
 
 If you are unsure of what each column is and want to further verify the column to use you can also pull in the entire node attribute table.
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 node_attribute_table_topmesen <- getTableColumns(table="node")
 head(node_attribute_table_topmesen[,3:7])
 ```
 
 
-```{r tablecolumns, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_nodetable.png"))
+```{r tablecolumns, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_nodetable.png"))
 ```
 
 The column "display name" contains HGNC gene names which are also found in our Ovarian Cancer dataset.
 
 To import our expression data we will match our dataset to the "display name" node attribute.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 ?loadTableData
 
 loadTableData(RNASeq_gene_scores,table.key.column = "display name",data.key.column = "Name")  #default data.frame key is row.names
 ```
 
 
-```{r loadnodeattribute, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_nodeattributeload.png"))
+```{r loadnodeattribute, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_nodeattributeload.png"))
 ```
 
 Modify the Visual Style
 Create your own visual style to visualize your expression data on the String network. 
 
 Start with a default style
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 style.name = "MesenchymalStyle"
 defaults.list <- list(NODE_SHAPE="ellipse",
                  NODE_SIZE=60,
@@ -504,8 +504,8 @@ setVisualStyle(style.name=style.name)
 ```
 
 
-```{r vs, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_visualstyleapplied.png"))
+```{r vs, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_visualstyleapplied.png"))
 ```
 
 Update your created style with a mapping for the Mesenchymal logFC expression. The first step is to grab the column data from Cytoscape (we can reuse the node_attribute table concept from above but we have to call the function again as we have since added our expression data) and pull out the min and max to define our data mapping range of values.
@@ -527,7 +527,7 @@ node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
 ```
 
 Map the colors to our data value and update our visual style. 
-```{r eval=evalcytoscape} 
+```{r eval=FALSE} 
 setNodeColorMapping("logFC.mesen", data.values, node.colors, style.name=style.name)
 ```
 
@@ -535,7 +535,7 @@ Remember, String includes your query proteins as well as other proteins that ass
 
 Add a different border color or change the node shape for our top hits.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 getNodeShapes()
 
 #select the Nodes of interest
@@ -544,13 +544,13 @@ setNodeShapeBypass(node.names = top_mesenchymal_genes$Name, new.shapes = "TRIANG
 ```
 
 
-```{r nodeshapes, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_availablenodeshapes.png"))
+```{r nodeshapes, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_availablenodeshapes.png"))
 ```
 
 Change the size of the node to be correlated with the Mesenchymal p-value. 
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 setNodeSizeMapping(table.column = 'LR.mesen', 
                    table.column.values = c(min(RNASeq_gene_scores$LR.mesen), 
                                            mean(RNASeq_gene_scores$LR.mesen), 
@@ -560,11 +560,11 @@ setNodeSizeMapping(table.column = 'LR.mesen',
 
 Get a screenshot of the resulting network
 ```{r mesen_string_network_screenshot, include=TRUE}
-mesen_string_network_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","mesen_string_network.png")
+mesen_string_network_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","mesen_string_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(mesen_string_network_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   response<- file.remove(mesen_string_network_png_file_name)
@@ -608,7 +608,7 @@ write.table( RNAseq_correlation_matrix,  file = correlation_filename, col.names 
 
 Use the CyRest call to access the aMatReader functionality.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 amat_url <- "aMatReader/v1/import"
 amat_params = list(files = list(correlation_filename),
                    delimiter = "TAB",
@@ -624,7 +624,7 @@ current_network_id <- response$data["suid"]
 ```
 
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 
 #relayout network
 layoutNetwork('cose',
@@ -633,7 +633,7 @@ layoutNetwork('cose',
 ```
 
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 renameNetwork(title = "Coexpression_network_pear0_95",
               network = as.numeric(current_network_id))
 ```
@@ -673,7 +673,7 @@ head(node_class_df)
 ```
 
 Map the new node attribute and the all the gene scores to the network.
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 loadTableData(RNASeq_gene_scores,table.key.column = "name",data.key.column = "Name")  #default data.frame key is row.names
 
 loadTableData(node_class_df,table.key.column = "name",data.key.column = "name")  #default data.frame key is row.names
@@ -683,7 +683,7 @@ loadTableData(node_class_df,table.key.column = "name",data.key.column = "name") 
 
 Create a color mapping for the different cancer types.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 #create a new mapping with the different types
 unique_types <- sort(unique(node_class))
 
@@ -697,11 +697,11 @@ setNodeColorMapping(table.column = "node_class",table.column.values = unique_typ
 ```
 
 ```{r correlationnetwork, include=TRUE}
-correlation_network_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","correlation_network.png")
+correlation_network_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","correlation_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(correlation_network_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(correlation_network_png_file_name)
@@ -716,7 +716,7 @@ knitr::include_graphics(correlation_network_png_file_name)
 ```
 
 cluster the Network
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 #make sure it is set to the right network
   setCurrentNetwork(network = getNetworkName(suid=as.numeric(current_network_id)))
 
@@ -774,7 +774,7 @@ runGprofiler <- function(genes,current_organism = "hsapiens",
 
 Run g:Profiler.  g:Profiler will return a set of pathways and functions that are found to be enriched in our query set of genes.  
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
   current_cluster <- "1"
   #select all the nodes in cluster 1
   selectednodes <- selectNodes(current_cluster, by.col="__mclCluster")
@@ -797,13 +797,13 @@ Run g:Profiler.  g:Profiler will return a set of pathways and functions that are
  
   head(em_results)
 ```
-```{r gprof_emresults, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_gprofiler_emresults.png"))
+```{r gprof_emresults, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_gprofiler_emresults.png"))
 ```
 
 
 Create an enrichment map with the returned g:Profiler results.  An enrichment map is a different sort of network.  Instead of nodes representing genes, nodes represent pathways or functions.  Edges between these pathways or functions represent shared genes or pathway crosstalk.  An enrichment map is a way to visualize your enrichment results to help reduce redundancy and uncover main themes.  Pathways can also be explored in detail using the features available through the App in Cytoscape. 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
  em_command = paste('enrichmentmap build analysisType="generic" ', 
                    'pvalue=',"0.05", 'qvalue=',"0.05",
                    'similaritycutoff=',"0.25",
@@ -820,11 +820,11 @@ Create an enrichment map with the returned g:Profiler results.  An enrichment ma
 Export image of resulting Enrichment map.
 
 ```{r cluster1em, include=TRUE}
-cluster1em_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","cluster1em.png")
+cluster1em_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","cluster1em.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(cluster1em_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(cluster1em_png_file_name)
@@ -839,7 +839,7 @@ knitr::include_graphics(cluster1em_png_file_name)
 ```
 
 Annotate the Enrichment map to get the general themes that are found in the enrichment results of cluster 1
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 
 #get the column from the nodetable and node table
   nodetable_colnames <- getTableColumnNames(table="node",  network =  as.numeric(em_network_suid))
@@ -855,11 +855,11 @@ Annotate the Enrichment map to get the general themes that are found in the enri
 Export image of resulting Annotated Enrichment map.
 
 ```{r cluster1emannot, include=TRUE}
-cluster1em_annot_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","cluster1em_annot.png")
+cluster1em_annot_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","cluster1em_annot.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(cluster1em_annot_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(cluster1em_annot_png_file_name)
@@ -876,7 +876,7 @@ knitr::include_graphics(cluster1em_annot_png_file_name)
 Dense networks small or large never look like network figures we so often see in journals.  A lot of manual tweaking, reorganization and optimization is involved in getting that perfect figure ready network.  The above network is what the network starts as.  The below figure is what it can look like after a few minutes of manual reorganiazation.  (individual clusters were selected from the auto annotate panel and separated from other clusters)
 
 ```{r cluster1emannotmanfig, echo=FALSE, fig.cap="Example Annotated Enrichment Map created when running an enrichment analysis using g:Profiler with the genes that are part of cluster 1 after manual adjusting to generate a cleaner figure"}
-cluster1em_annot_man_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","cluster1em_annot_man.png")
+cluster1em_annot_man_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","cluster1em_annot_man.png")
 knitr::include_graphics(cluster1em_annot_man_png_file_name)
 ```
 
@@ -930,7 +930,7 @@ download.file(
 
 Load in the gmt file
 
-```{r eval=TRUE}
+```{r eval=F}
 baderlab.gs <- getGenesets(dest_gmt_file)
 baderlab.gs[1:2]
 ```
@@ -994,8 +994,8 @@ ora.all <- sbea(method="ora", se=se_OV, gs=baderlab.gs, perm=0, alpha=0.05)
 gsRanking(ora.all)
 ```
 
-```{r ora_results, echo=FALSE, eval=!evalcytoscape}
-knitr::include_graphics(file.path(getwd(),"230_Isserlin_RCy3_intro","images","screenshot_ora_results.png"))
+```{r ora_results, echo=FALSE, eval=!FALSE}
+knitr::include_graphics(file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","screenshot_ora_results.png"))
 ```
 
 Take the enrichment results and create a generic enrichment map input file so we can create an Enrichment map.  Description of format of the generic input file can be found [here](http://enrichmentmap.readthedocs.io/en/latest/FileFormats.html#generic-results-files) and example generic enrichment map files can be found [here](http://enrichmentmap.readthedocs.io/en/latest/FileFormats.html#examples-of-generic-enrichment-result-files)
@@ -1021,7 +1021,7 @@ em_results_mesen <- data.frame(name = ora.all$res.tbl$GENE.SET,descr = ora.all$r
 
 Create an enrichment map with the returned ORA results.
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
  em_command = paste('enrichmentmap build analysisType="generic" ', "gmtFile=", dest_gmt_file,
                    'pvalue=',"0.05", 'qvalue=',"0.05",
                    'similaritycutoff=',"0.25",
@@ -1039,11 +1039,11 @@ Create an enrichment map with the returned ORA results.
 Export image of resulting Enrichment map.
 
 ```{r mesenem, include=TRUE}
-mesenem_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro", "images","mesenem.png")
+mesenem_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro", "images","mesenem.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(mesenem_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(mesenem_png_file_name)
@@ -1058,7 +1058,7 @@ knitr::include_graphics(mesenem_png_file_name)
 ```
 
 Annotate the Enrichment map to get the general themes that are found in the enrichment results.  Often for very busy networks annotating the networks doesn't help to reduce the complexity but instead adds to it.  To get rid of some of the pathway redundancy and density in the network create a summary of the underlying network. The summary network collapses each cluster to a summary node.  Each summary node is annotated with a word tag (the top 3 words associated with the nodes of the cluster) that is computed using the Wordcloud app.
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 
 #get the column from the nodetable and node table
   nodetable_colnames <- getTableColumnNames(table="node",  network =  as.numeric(em_mesen_network_suid))
@@ -1094,11 +1094,11 @@ Export image of resulting Summarized Annotated Enrichment map.
 
 
 ```{r mesenem_summary, include=TRUE}
-mesenem_summary_png_file_name <- file.path(getwd(),"230_Isserlin_RCy3_intro","images","mesenem_summary_network.png")
+mesenem_summary_png_file_name <- file.path(getwd(),"bioc2018_Rcy3_intro","230_Isserlin_RCy3_intro","images","mesenem_summary_network.png")
 
 ```
 
-```{r eval=evalcytoscape}
+```{r eval=FALSE}
 if(file.exists(mesenem_summary_png_file_name)){
   #cytoscape hangs waiting for user response if file already exists.  Remove it first
   file.remove(mesenem_summary_png_file_name)
