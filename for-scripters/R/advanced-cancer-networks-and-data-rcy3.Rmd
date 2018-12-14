@@ -1,6 +1,9 @@
 ---
-title: "Cytoscape Tutorial:  R driving CyREST"
-output: 
+title: 'Cytoscape Tutorial:  R driving CyREST'
+output:
+  html_document:
+    df_print: paged
+    toc: yes
   html_notebook:
     highlight: tango
     mathjax: null
@@ -8,6 +11,11 @@ output:
     toc: yes
     toc_float: yes
 ---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook that encapsulates a common bioinformatics workflow.  
 
