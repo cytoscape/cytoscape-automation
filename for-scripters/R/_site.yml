@@ -15,7 +15,7 @@ navbar:
     - text: '---------'
     - text: Analysis Notebooks
     - text: Advanced cancer networks and data
-      href: advanced-cancer-networks-and-data-rcy3.html
+      href: advanced-cancer-networks-and-data.nb.html
 output_dir: _site
 output:
   html_document:
