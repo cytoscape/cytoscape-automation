@@ -2,6 +2,11 @@
 title: "Cytoscape Rmd Notebooks"
 ---
 
-Notebooks
+<big>[Cytoscape](https://cytoscape.org) is an open source bioinformatics platform for visualizing molecular interaction networks and integrating these with expression profiles and other high throughput data sets. This collection of R Markdown Notebooks includes training vignettes, detailed workflows and community contributed examples of Cytoscape automation.
 
-yay!
+<b>These notebooks rely on the [RCy3 package available from Bioconductor](https://bioconductor.org/packages/release/bioc/html/RCy3.html).</b>
+
+Browse the Table of Contents menu above to find notebooks rendered as interactive HTML. Notebooks include an option to download the source Rmd file via the option button labeled 'code' at the top right of each page. 
+</big>
+
+Return to: [Automation Home](http://automation.cytoscape.org)
