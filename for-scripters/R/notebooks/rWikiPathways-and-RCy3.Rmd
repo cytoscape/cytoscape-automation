@@ -1,0 +1,113 @@
+---
+title: "rWikiPathways and RCy3"
+author: "by Alexander Pico"
+package: rWikiPathways
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true 
+vignette: >
+  %\VignetteIndexEntry{3. rWikiPathways and RCy3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+*WikiPathways* is a well-known repository for biological pathways that provides unique tools to the research community for content creation, editing and utilization [@Pico2008].
+
+**R** is a powerful programming language and environment for statistical and exploratory data analysis.
+
+*rWikiPathways* leverages the WikiPathways API to communicate between **R** and WikiPathways, allowing any pathway to be queried, interrogated and downloaded in both data and image formats. Queries are typically performed based on "Xrefs", standardized identifiers for genes, proteins and metabolites. Once you can identified a pathway, you can use the WPID (WikiPathways identifier) to make additional queries.
+
+*RCy3* leverages the CyREST API to provide a number of functions related to network visualization and analysis.
+
+# Prerequisites
+
+In addition to this **rWikiPathways** package, you'll also need to install **RCy3**:
+
+```{r}
+if(!"rWikiPathways" %in% installed.packages()){
+    if (!requireNamespace("BiocManager", quietly=TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("rWikiPathways")
+}
+library(rWikiPathways)
+if(!"RCy3" %in% installed.packages()){
+    if (!requireNamespace("BiocManager", quietly=TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape:
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape
+
+```{r}
+cytoscapePing()
+```
+
+For this vignette, you'll also need the WikiPathways app to access the WikiPathways database from within Cytoscape. Install the WikiPathways app from http://apps.cytoscape.org/apps/wikipathways
+
+If you are running Cytoscape 3.7.0 or above, you can simply run this command:
+```
+installApp('WikiPathways')  #only available in Cytoscape 3.7.0 and above
+```
+
+# Working together
+Ok, with all of these components loaded and launched, you can now perform some nifty sequences. For example, search for a pathway based on a keyword search and then load it into Cytoscape.
+
+```{r}
+gbm.pathways <- findPathwaysByText('Glioblastoma') # many pathways returned
+human.filter <- lapply(gbm.pathways, function(x) x$species == "Homo sapiens")
+human.gbm.pathways <- gbm.pathways[unlist(human.filter)] # just the human BRCA2 pathways
+```
+
+We have a list of human pathways that mention Glioblastoma The results include lots of information, so let's get a unique list of just the WPIDs.
+```{r}
+human.gbm.wpids <- unique(unlist(lapply(human.gbm.pathways, function(x) x$id)))
+```
+
+Let's import the first one of these into Cytoscape!
+```{r}
+commandsRun(paste0('wikipathways import-as-pathway id=',human.gbm.wpids[1])) 
+```
+
+Once in Cytoscape, you can load data, apply visual style mappings, perform analyses, and export images and data formats. See RCy3 package vignettes for details.
+
+# From networks to pathways
+If you are already with with networks and data in Cytoscape, you may end up focusing on one or few particular genes, proteins or metabolites, and want to query WikiPathways.
+
+For example, let's open a sample network from Cytoscape and identify the gene with the largest number of connections, i.e., node degree.
+
+**Note: this next chunk will overwrite your current session. Save if you want to keep anything.**
+```{r}
+openSession()
+net.data <- getTableColumns(columns=c('name','degree.layout','COMMON'))
+max.gene <- net.data[which.max(unlist(net.data['degree.layout'])),]
+max.gene
+```
+Great. It looks like MCM1 has the larget number of connections (18) in this network. Let's use it's identifier (YMR043W) to query WikiPathways to learn more about the gene and its biological role, and load it into Cytoscape.
+
+*Pro-tip: We need to know the datasource that provides a given identifier. In this case, it's sort of tricky: Ensembl provides these Yeast ORF identifiers for this organism rather than they typical format. So, we'll include the 'En' system code. See other vignettes for more details.*
+```{r}
+mcm1.pathways <-unique(findPathwayIdsByXref('YMR043W','En'))
+commandsRun(paste0('wikipathways import-as-pathway id=', mcm1.pathways[1]))
+```
+
+And we can easily select the MCM1 node by name in the newly imported pathway to help see where exactly it plays its role.
+
+```{r}
+selectNodes('MCM1','name')
+```
+
+
