@@ -8,6 +8,11 @@ output:
     highlight: zenburn
     toc: yes
 ---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
 
 # Basic Workflow 1: Fundamentals
 

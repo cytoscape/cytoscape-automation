@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Keiichiro Ono" />
+
+
+<title>Introduction to cyREST</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cytoscape Rmd Notebooks</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="http://cytoscape.github.io/cytoscape-automation/for-scripters/R/">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-list"></span>
+     
+    Table of Contents
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Tutorial Notebooks</li>
+    <li>
+      <a href="basic-fundamentals.html">Basic fundamentals</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Analysis Notebooks</li>
+    <li>
+      <a href="advanced-cancer-networks-and-data.nb.html">Advanced cancer networks and data</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction to cyREST</h1>
+<h4 class="author"><em>Keiichiro Ono</em></h4>
+<h4 class="date"><em>6/15/2015</em></h4>
+
+</div>
+
+
+<div id="basic-workflow-1-fundamentals" class="section level1">
+<h1>Basic Workflow 1: Fundamentals</h1>
+<p>by <a href="http://keiono.github.io/">Keiichiro Ono</a></p>
+<p><img src="http://cytoscape.org/images/logo/cy3logoOrange.svg" /> <img src="http://www.r-project.org/Rlogo.png" /></p>
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<div class="figure">
+<img src="http://chianti.ucsd.edu/~kono/images/cyrest_intro1_network.png" />
+
+</div>
+<p>This is an introduction to cyREST using R. You will learn how to access Cytoscape features from R environment.</p>
+<div id="prerequisites" class="section level3">
+<h3>Prerequisites</h3>
+<ul>
+<li>Basic knowledge of RESTful API
+<ul>
+<li><a href="http://www.restapitutorial.com/">This is a good introduction to REST</a></li>
+</ul></li>
+<li>Basic R knowledge</li>
+<li>Basic knowledge of Cytoscape</li>
+</ul>
+</div>
+<div id="system-requirments" class="section level3">
+<h3>System Requirments</h3>
+<ul>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java 8</a></li>
+<li><a href="http://cytoscape.org/download.html">Cytoscape 3.2.1 or newer</a></li>
+<li>Latest version of <a href="http://apps.cytoscape.org/apps/cyrest">cyREST app</a></li>
+</ul>
+<hr />
+</div>
+<div id="questions-or-feature-requests" class="section level3">
+<h3>Questions or Feature Requests?</h3>
+<p>Please send them to our <a href="https://groups.google.com/forum/#!forum/cytoscape-discuss">mailing list</a></p>
+<hr />
+</div>
+</div>
+<div id="install-r-packages-and-basic-setup" class="section level2">
+<h2>Install R Packages and Basic Setup</h2>
+<div id="rd-party-library" class="section level3">
+<h3>3rd Party Library</h3>
+<p>In this tutorial, we will use several popular R packages to make this workflow more realistic. You need to install the following R packages to run this example.</p>
+<div id="igraph" class="section level4">
+<h4>igraph</h4>
+<p><a href="http://igraph.org/r/">The igraph package</a> is a de-facto standard graph anaysis library for R. We will use this for manipulate/analyze graph data sets.</p>
+</div>
+<div id="http-client" class="section level4">
+<h4>HTTP Client</h4>
+<p>Since you need to access Cytoscape via RESTful API, HTTP client library is the most important tool you need to understand. In this example, we use <a href="http://cran.r-project.org/web/packages/httr/index.html">httr</a>.</p>
+</div>
+<div id="json-encoding-and-decoding" class="section level4">
+<h4>JSON Encoding and Decoding</h4>
+<p>Data will be exchanged as JSON between Cytoscape and R. We will use 3rd party package <a href="http://cran.r-project.org/web/packages/RJSONIO/index.html">RJSONIO</a> in this workflow to encode/decode JSON.</p>
+</div>
+</div>
+<div id="basic-setup" class="section level3">
+<h3>Basic Setup</h3>
+<p>At this point, there is only one option for the cy-rest module: port number.</p>
+<div id="url-to-access-cytoscape-rest-api" class="section level4">
+<h4>URL to Access Cytoscape REST API</h4>
+<p>We assume that you are running Cytoscape desktop application and R on a same machine. To access Cytoscape via cyREST, use the following URL:</p>
+<pre><code>http://localhost:PORT_NUMBER/v1/</code></pre>
+<p>where <strong>v1</strong> is the current version number of API. Once the final release is ready, we guarantee compatibility of your scripts as long as major version number is the same.</p>
+</div>
+<div id="changing-port-number" class="section level4">
+<h4>Changing Port Number</h4>
+<p>By default, port number used by cy-rest module is <strong>1234</strong>. To change this, you need set a global Cytoscape property from <em>Edit–&gt;Preserences–&gt;Properties…</em> and add a new property <strong>port.number</strong>.</p>
+<pre class="r"><code>library(RJSONIO)
+library(igraph)
+library(httr)
+
+# Basic settings
+port.number = 1234
+base.url = paste(&quot;http://localhost:&quot;, toString(port.number), &quot;/v1&quot;, sep=&quot;&quot;)
+
+print(base.url)</code></pre>
+</div>
+</div>
+</div>
+<div id="test-cyrest" class="section level2">
+<h2>Test cyREST</h2>
+<div id="understanding-rest-basics" class="section level3">
+<h3>Understanding REST Basics</h3>
+<table style="width:38%;">
+<colgroup>
+<col width="18%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">HTTP Verb</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">GET</td>
+<td align="left">Retrieving resources (in most cases, it is Cytoscape data objects, such as networks or tables)</td>
+</tr>
+<tr class="even">
+<td align="center">POST</td>
+<td align="left">Creating resources</td>
+</tr>
+<tr class="odd">
+<td align="center">PUT</td>
+<td align="left">Changing/replacing resources or collections</td>
+</tr>
+<tr class="even">
+<td align="center">DELETE</td>
+<td align="left">Deleting resources</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="check-connection" class="section level3">
+<h3>Check Connection</h3>
+<p>First, send a simple request and check server status.</p>
+<pre class="r"><code>version.url = paste(base.url, &quot;version&quot;, sep=&quot;/&quot;)
+cytoscape.version = GET(version.url)
+cy.version = fromJSON(rawToChar(cytoscape.version$content))
+print(cy.version)</code></pre>
+</div>
+<div id="generate-network-with-igraph" class="section level3">
+<h3>Generate Network with igraph</h3>
+<pre class="r"><code># 1. Create simple directed graph with Barabasi-Albert model
+graph1 &lt;- barabasi.game(200)
+
+# 2. Calculate some statistics and assign then to the graph
+graph1$name = &quot;Scale-Free Network (BA Model)&quot;
+graph1$density = graph.density(graph1)
+
+V(graph1)$degree &lt;- degree(graph1)
+V(graph1)$closeness &lt;- closeness(graph1)
+V(graph1)$betweenness &lt;- betweenness(graph1)
+V(graph1)$page_rank &lt;- page.rank(graph1)$vector
+V(graph1)$community &lt;- label.propagation.community(graph1)$membership
+
+E(graph1)$betweenness &lt;- edge.betweenness(graph1)</code></pre>
+</div>
+<div id="create-custom-visual-style" class="section level3">
+<h3>Create Custom Visual Style</h3>
+<p>You can create your own custom Visual Styles as R object. The best way to learn how to create them is getting preset Styles as JSON. For example, if you want to see how <strong><em>default</em></strong> style is composed as JSON, you can get it by the following code.</p>
+<pre class="r"><code>default.style.url = paste(base.url, &quot;styles/default&quot;, sep=&quot;/&quot;)
+GET(url=default.style.url)</code></pre>
+<p>Or, you can simply access the following URL from web browser:</p>
+<pre><code>http://localhots:1234/v1/styles/default</code></pre>
+<p>Here is the sample code to generate new Style:</p>
+<pre class="r"><code>style.name = &quot;R Style&quot;
+
+# Defaults
+def.node.color &lt;- list(
+  visualProperty = &quot;NODE_FILL_COLOR&quot;,
+  value = &quot;#00aabb&quot;
+)
+
+def.node.border.width &lt;- list(
+  visualProperty = &quot;NODE_BORDER_WIDTH&quot;,
+  value = 0
+)
+
+def.node.size &lt;- list(
+  visualProperty = &quot;NODE_SIZE&quot;,
+  value = 25
+)
+
+def.edge.target.arrow &lt;- list(
+  visualProperty=&quot;EDGE_TARGET_ARROW_SHAPE&quot;,
+  value=&quot;ARROW&quot;
+)
+
+def.edge.width &lt;- list(
+  visualProperty=&quot;EDGE_WIDTH&quot;,
+  value=3
+)
+
+defaults &lt;- list(
+  def.node.color,
+  def.node.border.width,
+  def.node.size,
+  def.edge.target.arrow,
+  def.edge.width)
+
+# Visual Mappings
+min.betweenness = min(V(graph1)$betweenness)
+max.betweenness = max(V(graph1)$betweenness)
+
+mappings = list()
+
+point1 = list(
+  value=min.betweenness,
+  lesser= &quot;20.0&quot;,
+  equal=&quot;20.0&quot;,
+  greater=&quot;20.0&quot;
+)
+
+point2 = list(
+  value=max.betweenness,
+  lesser=&quot;100.0&quot;,
+  equal=&quot;100.0&quot;,
+  greater=&quot;100.0&quot;
+)
+
+node.size.continuous.points = list(point1, point2)
+
+node.size = list(
+  mappingType=&quot;continuous&quot;,
+  mappingColumn=&quot;betweenness&quot;,
+  mappingColumnType=&quot;Double&quot;,
+  visualProperty=&quot;NODE_SIZE&quot;,
+  points = node.size.continuous.points
+)
+
+node.label = list(
+  mappingType=&quot;passthrough&quot;,
+  mappingColumn=&quot;name&quot;,
+  mappingColumnType=&quot;String&quot;,
+  visualProperty=&quot;NODE_LABEL&quot;
+)
+
+mappings = list(node.size, node.label)
+
+style &lt;- list(title=style.name, defaults = defaults, mappings = mappings)
+style.JSON &lt;- toJSON(style)
+
+style.url = paste(base.url, &quot;styles&quot;, sep=&quot;/&quot;)
+POST(url=style.url, body=style.JSON, encode = &quot;json&quot;)</code></pre>
+</div>
+<div id="sending-network-to-cytoscape" class="section level3">
+<h3>Sending network to Cytoscape</h3>
+<p>You need to convert your network data into Cytoscape-compatible JSON to send it to Cytoscape. For your convenience, there is a utility to convert igraph object into JSON:</p>
+<pre class="r"><code># Load utility functions
+source(&quot;../utility/cytoscape_util.R&quot;)
+
+# Convert to Cytoscape style JSON object
+cygraph &lt;- toCytoscape(graph1)
+
+# Send it to Cytoscape!
+network.url = paste(base.url, &quot;networks&quot;, sep=&quot;/&quot;)
+res &lt;- POST(url=network.url, body=cygraph, encode=&quot;json&quot;)
+
+# Extract SUID of the new network
+network.suid = unname(fromJSON(rawToChar(res$content)))</code></pre>
+</div>
+<div id="apply-layout-algorithm-and-visual-style" class="section level3">
+<h3>Apply layout algorithm and Visual Style</h3>
+<p>Finally, let’s apply new Visual Style and layout algorithm:</p>
+<pre class="r"><code>apply.layout.url = paste(
+  base.url,
+  &quot;apply/layouts/force-directed&quot;,
+  toString(network.suid),
+  sep=&quot;/&quot;
+)
+
+apply.style.url = paste(
+  base.url,
+  &quot;apply/styles&quot;,
+  style.name,
+  toString(network.suid),
+  sep=&quot;/&quot;
+)
+
+res &lt;- GET(apply.layout.url)
+res &lt;- GET(apply.style.url)</code></pre>
+</div>
+<div id="getting-network-view-as-image" class="section level3">
+<h3>Getting network view as image</h3>
+<pre class="r"><code>network.image.url = paste(
+  base.url,
+  &quot;networks&quot;,
+  toString(network.suid),
+  &quot;views/first.png&quot;,
+  sep=&quot;/&quot;
+)
+print(network.image.url)</code></pre>
+<p>You can open the URL above to see the image of new network as PNG.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
