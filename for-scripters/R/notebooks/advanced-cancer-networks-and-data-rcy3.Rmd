@@ -4,12 +4,6 @@ output:
   html_document:
     df_print: paged
     toc: yes
-  html_notebook:
-    highlight: tango
-    mathjax: null
-    theme: spacelab
-    toc: yes
-    toc_float: yes
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

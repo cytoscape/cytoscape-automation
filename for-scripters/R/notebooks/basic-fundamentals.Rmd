@@ -4,9 +4,7 @@ author: "Keiichiro Ono"
 date: "6/15/2015"
 output:
   html_document:
-  pdf_document:
-    highlight: zenburn
-    toc: yes
+      toc: yes
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

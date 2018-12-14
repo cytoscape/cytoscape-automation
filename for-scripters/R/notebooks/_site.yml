@@ -17,12 +17,12 @@ navbar:
     - text: '---------'
     - text: Analysis Notebooks
     - text: "Advanced cancer networks and data"
-      href: advanced-cancer-networks-and-data-rcy3.nb.html
+      href: advanced-cancer-networks-and-data-rcy3.html
     - text: "CyTargetLinker: use case 2, gene-pathway extension"
       href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase2/Usecase2_DEGs_Pathway_Network.Rmd
-output_dir: _site
+output_dir: "."
 output:
   html_document:
-    lib_dir: site_libs
     self_contained: no
+    toc: yes
 
