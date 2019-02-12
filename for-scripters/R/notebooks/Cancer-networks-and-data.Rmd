@@ -47,14 +47,12 @@ The whole point of RCy3 is to connect with Cytoscape. You will need to install a
 cytoscapePing()
 ```
 
-For this vignette, you'll also need the STRING app to access the STRING database
-from within Cytoscape:
-* Install the STRING app from https://apps.cytoscape.org/apps/stringapp
+For this vignette, you'll also need the [STRING app](https://apps.cytoscape.org/apps/stringapp) to access the STRING database from within Cytoscape:
 
-#```{r}
+```{r}
 #available in Cytoscape 3.7.0 and above
 installApp('STRINGapp')  
-#```
+```
 
 # Getting Disease Networks
 
