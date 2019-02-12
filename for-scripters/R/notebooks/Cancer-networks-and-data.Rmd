@@ -71,7 +71,7 @@ automation function, and then making a GET request. Use *commandsHelp* to interr
 the functions and parameters available in your active Cytoscape session, including the 
 apps you've installed!
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc.png){height=100%}  
+![](./data/img/brc.png){height=100%}  
 
 ### Ovarian cancer
 ```{r}
@@ -79,7 +79,7 @@ string.cmd = 'string disease query disease="ovarian cancer" cutoff=0.9 species="
 commandsRun(string.cmd)
 ```
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc.png){height=100%}
+![](./data/img/ovc.png){height=100%}
 
 # Interacting with Cytoscape 
 
@@ -95,7 +95,7 @@ getNetworkList()
 layoutNetwork(layout.name='circular') 
 ```
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc2.png){height=100%} 
+![](./data/img/ovc2.png){height=100%} 
 
 ### List of layout algorithms available
 ```{r}
@@ -165,7 +165,7 @@ createSubnetwork('selected',subnetwork.name = 'top disease diffusion')
 layoutNetwork('force-directed')
 ```
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc4.png){height=100%} 
+![](./data/img/ovc4.png){height=100%} 
 
 *Pro-tip*: don't forget to **setCurrentNetwork()** to the correct parent network before getting table column data and making selections.
 
@@ -240,7 +240,7 @@ Finally, we use the handy *mapVisualProperty* function to construct the data obj
 setNodeColorMapping('expr.mean', data.values, node.colors, style.name=style.name)
 ```
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc2.png){height=100%} 
+![](./data/img/brc2.png){height=100%} 
 
 **Pro-tip: depending on your data, it may be better to balance your color range over negative and positive values bounded by the largest min or max data value, so that color intensity scales similarly in both directions.**
 
@@ -259,7 +259,7 @@ setNodeBorderWidthMapping('mut_count',data.values,border.width,style.name=style.
 ```
 This is a useful pair of visual properties to map to a single data column. See why?
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc3.png){height=100%} 
+![](./data/img/brc3.png){height=100%} 
 
 ### Subnetwork based on diffusion from heavily mutated nodes
 Now, let's pull in what we learned about subnetwork selection and apply it here...
@@ -274,7 +274,7 @@ layoutNetwork('force-directed')
 
 The top mutated genes are based on TCGA data and the diffusion algorithm is operating based on the network connectivity from STRING data, leading to a focused subnetwork view of critical Breast Cancer genes with mean patient expression data mapped to fill color. Now *that's* data integration!
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/brc4.png){height=100%} 
+![](./data/img/brc4.png){height=100%} 
 
 **Pro-tip: You can generate a legend for this in Cytoscape Style tab > Options > Create style...  This is no yet available as a command. Coming soon!**
 
@@ -297,7 +297,7 @@ loadTableData(ovc.mut,'Hugo_Symbol', table.key.column = 'display name')
 setVisualStyle(style.name=style.name)
 ```
 
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/data/img/ovc3.png){height=100%}  
+![](./data/img/ovc3.png){height=100%}  
 
 Reusing the same style for both breast and ovarian cancers, we can compare the relative expression and mutation counts across the two datasets. 
 For example, notice in the case of ovarian cancer: **decreased** range of mean expression and **fewer** mega-mutated genes.
