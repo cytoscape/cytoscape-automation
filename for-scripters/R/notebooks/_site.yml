@@ -38,6 +38,8 @@ navbar:
     - text: Workshops and Use Cases
     - text: "Cancer networks and data"
       href: Cancer-networks-and-data.nb.html
+    - text: "Cancer networks and data (challenge script)"
+      href: Cancer-networks-and-data-challenge.R
     - text: "Cytoscape automation in R"
       href: 230_Isserlin_RCy3_intro.nb.html
     - text: '---------'

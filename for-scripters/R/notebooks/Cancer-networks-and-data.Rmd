@@ -160,7 +160,7 @@ createSubnetwork('selected', subnetwork.name='top disease neighbors') # selected
 ```{r}
 setCurrentNetwork(network="String Network - ovarian cancer")
 selectNodes(nodes=top.nodes)
-commandsPOST('diffusion diffuse') # diffusion!
+diffusionBasic() # diffusion!
 createSubnetwork('selected',subnetwork.name = 'top disease diffusion')
 layoutNetwork('force-directed')
 ```
@@ -267,7 +267,7 @@ Now, let's pull in what we learned about subnetwork selection and apply it here.
 top.mut <- (brc.mut$Hugo_Symbol)[tail(order(brc.mut$mut_count),2)]
 top.mut
 selectNodes(nodes=top.mut,'display name')
-commandsPOST('diffusion diffuse') 
+diffusionBasic() 
 createSubnetwork('selected',subnetwork.name = 'top mutated diffusion')
 layoutNetwork('force-directed')
 ```
