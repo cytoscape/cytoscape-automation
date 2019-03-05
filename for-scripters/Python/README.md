@@ -1,5 +1,5 @@
 ## What is _py2cytoscape_?
-[py2cytoscape](https://github.com/cytoscape/py2cytoscape) is a collection of utilities to use [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) from Python.  Network visualization feature is still limited in Python, but with this tool, you can access both of Cytoscape and Cytoscape.js as network visualization engines for your Python code!
+[py2cytoscape](https://github.com/cytoscape/py2cytoscape) is a collection of utilities for using [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) with Python.  The Network visualization feature is still limited in Python, but with this tool, you can access both Cytoscape and Cytoscape.js network visualization engines from your Python code!
 
 This package is still experimental and in alpha status.
 [![Build Status](https://travis-ci.org/idekerlab/py2cytoscape.svg?branch=develop)](https://travis-ci.org/idekerlab/py2cytoscape)
@@ -9,14 +9,14 @@ This package is still experimental and in alpha status.
 
 ![](http://cl.ly/Xk5o/cytoscape-flat-logo-orange-100.png)
 
-Cytoscape is a [de-facto standard desktop application for network visualization in bioinformatics community](https://scholar.google.com/scholar?hl=en&q=cytoscape).  But actually, it is a domain-independent graph visualization software for all typs of network data analysis.  We want to introduce cy2cytoscape, along with _cyREST_ and _Jupyter Notebook_, to broader data science community.
+Cytoscape is a [de-facto standard desktop application for network visualization in the bioinformatics community](https://scholar.google.com/scholar?hl=en&q=cytoscape).  But actually, it is a domain-independent graph visualization software for all typs of network data analysis.  We want to introduce py2cytoscape, along with _cyREST_ and _Jupyter Notebook_, to the broader data science community.
 
 ## Installation
 
 [py2cytoscape]https://github.com/cytoscape/py2cytoscape) supports both Python 2.7 and 3.5.
 
-py2cytocape depends on python-igraph and optionary depends on scipy.
-(We do not include scipy to py2cytoscape prerequisite dependencies.)
+py2cytocape depends on python-igraph and optionally depends on scipy.
+(We do not include scipy as a py2cytoscape prerequisite dependency.)
 
 You can install py2cytoscape with pip.
 
@@ -30,14 +30,14 @@ pip install scipy
 
 ### Windows
 
-To install py2cytoscape dependencies, we recommend that you use [Miniconda](http://conda.pydata.org/miniconda.html) Python package manager.
+To install py2cytoscape dependencies, we recommend that you use the [Miniconda](http://conda.pydata.org/miniconda.html) Python package manager.
 
-Miniconda has scipy binary package, but do not have python-igraph binary package.
+Miniconda has a scipy binary package, but does not have a python-igraph binary package.
 So download the python-igraph whl for your Python (2 or 3, 32bit or 64bit) from [Christoph’s site](http://www.lfd.uci.edu/~gohlke/pythonlibs/#python-igraph).
 And install it with `pip`.
 Please install python-igraph before you install py2cytoscape, otherwise pip will try to **build** python-igraph (and will fail). 
 
-(In the case of Python3.5 64bit)
+(In the case of Python 3.5 64bit)
 
 ```
 pip install .\python_igraph-0.7.1.post6-cp35-none-win_amd64.whl
@@ -108,11 +108,11 @@ print(network.get_id())
 
 ![](http://cl.ly/aexk/cyjs_widget.png)
 
-You can use Cytoscape.js network visualization widget in Jupyter Notebook. This is particulaly useful when you share your network analysis results with others.
+You can use the Cytoscape.js network visualization widget in Jupyter Notebook. This is particularly useful when you share your network analysis results with others.
 
 
-### Data Conversion Utilities from/to [Cytoscape.js](http://js.cytoscape.org/) JSON
-Cytoscape.js JSON is one of the standard data exchange formats in Cytoscape community.  py2cytoscape includes some graph data conversion utilities for popular graph analysis packages in Python.
+### Data Conversion Utilities to/from [Cytoscape.js](http://js.cytoscape.org/) JSON
+Cytoscape.js JSON is one of the standard data exchange formats in the Cytoscape community.  py2cytoscape includes some graph data conversion utilities for popular graph analysis packages in Python.
 
 Currently, the following graph objects are supported:
 
