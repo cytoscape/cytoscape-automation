@@ -1,0 +1,245 @@
+---
+title: "Affinity purification-mass spectrometry network analysis"
+author: "Kristina Hanspers, Alexander Pico"
+package: RCy3
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true    
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+This vignette describes how to use data from an affinity purification-mass spectrometry experiment to to generate relevant interaction networks, enriching the networks with information from public resources, analyzing the networks and creating effective visualizations.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+
+if(!"RColorBrewer" %in% installed.packages()){
+    install.packages("RColorBrewer")
+}
+library(RColorBrewer)
+```
+
+# Prerequisites
+In addition to this package (RCy3), you will need:
+
+  * **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
+* Complete installation wizard
+* Launch Cytoscape 
+For this vignette, you’ll also need the STRING app and the enhancedGraphics app: 
+
+* Install the STRING app from https://apps.cytoscape.org/apps/stringapp
+* Install the enhancedGraphics app from http://apps.cytoscape.org/apps/enhancedgraphics
+
+```{r}
+#available in Cytoscape 3.7.0 and above 
+installApp('stringApp')
+installApp('enhancedGraphics')
+```
+
+# Background
+The data used for this protocol represents interactions between human and HIV proteins by Jäger et al (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3310911/). In this quantitative AP-MS experiment, a relatively small number of bait proteins are used to pull down a larger set of prey proteins.
+
+Note that this tutorial does not describe how to pre-process the raw AP-MS data, the data used here is already scored and filtered.
+
+# Import Network and Data
+Let's start by reading in the example data file:
+
+```{r}
+apms.data<-read.csv(file="https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS/ap-ms-demodata.csv", stringsAsFactors = FALSE)
+```
+
+Now we can create a data frame for the network edges (interactions) using the imported data. We will add an interaction "AP-MS" to each edge, which will be useful later, and we can also add the AP-MS score from the data as an edge attribute: 
+
+```{r}
+edges <- data.frame(source=apms.data[,"Bait"],target=apms.data[,"Prey"],interaction="AP-MS", AP.MS.Score=apms.data[,"AP.MS.Score"],stringsAsFactors=FALSE)
+```
+
+Finally, we use the edge data fram to create the network. Note that we don't need to define a data fram for nodes, as all nodes in this case are represented in the edge data frame.
+```{r}
+createNetworkFromDataFrames(edges=edges, title="apms network", collection = "apms collection")
+```
+The imported network consists of multiple smaller subnetworks, each representing a bait node and its associated prey nodes
+
+# Loading Data
+There are three other columns of data and annotations for the "Prey" proteins that we want to load into this network. 
+
+Note that in this data, the "Prey" nodes are repeated more than once, representing interactions with more than one Bait node. This means that different values for the same attribute (for example the HEKScore) exist for each Prey node. Upon import, Cytoscape will use the last value imported in these cases
+
+```{r}
+loadTableData(apms.data[,2:5], data.key.column="Prey")
+```
+
+# Augmenting Network with Existing Protein-protein Interaction Data 
+We are going to use existing protein-protein interaction data to enrich the network, using the STRING database with the human protein nodes as input.
+
+Let's collect all the UniProt identifiers from the data, and create a text string that we can use to query STRING:
+
+```{r}
+uniprot.str<-toString(apms.data[,"UniProt"])
+string.cmd<-paste0('string protein query query="',uniprot.str,'" species="Homo sapiens" limit=0 cutoff=0.999')
+commandsRun(string.cmd)
+```
+
+The resulting network contains known interactions between the human proteins, with an evidence score of 0.999 or greater.
+
+# Merge Networks
+To incorprate the new information into our AP-MS network, we need merge the STRING and AP-MS networks. Hwever, Cytoscape's network merge feature has not yet been automated, so we will perform these steps in the GUI.
+
+We can use the Uniprot IDs available in both networks as the matching attribute.
+
+1. Go to Tools → Merge → Networks...
+2. In the Available Networks list, select both networks and click the right arrow to add then to the Networks to Merge list.
+3. Expand the Advanced Options interface.
+4. In the Matching Columns field, select "Uniprot" for the AP-MS network and "query term" for the string network.
+5. In the How to merge columns section, find the entry for "display name" for the string network. 
+6. Click on the column for the ap-ms network for that same row and select "name" from the drop-down.
+
+![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){height=100%}
+
+# Network Visualization
+When the merged network first loads, it will have the STRING style applied. However, because the HIV nodes are not from STRING, they will be white and difficult to see. The layout also makes the network hard to interpret. Let's change the style of the network a bit.
+
+First, let's set our AP-MS network as the current network:
+```{r}
+setCurrentNetwork('Merged Network')
+```
+
+Next, we can define our style and apply it to the network:
+```{r}
+style.name = "AP-MS"
+createVisualStyle(style.name)
+lockNodeDimensions(TRUE)
+setNodeSizeDefault('50', style.name = style.name)
+setNodeColorDefault("#CCCCCC", style.name=style.name)
+setNodeLabelMapping('display name', style.name=style.name)
+setVisualStyle(style.name=style.name)
+```
+
+```{r}
+layoutNetwork(paste('force-directed', 
+              'defaultSpringCoefficient=0.00001',
+              'defaultSpringLength=50',
+              sep=' '))
+```
+
+# STRING Enrichment
+Now that we have a merged network, we can do enrichment analysis on it, using the STRING enrichment tool.
+
+The STRING app has built-in enrichment analysis functionality, which includes enrichment for GO Process, GO Component, GO Function, InterPro, KEGG Pathways, and PFAM.
+
+```{r}
+string.cmd = 'string make string network="current"'
+commandsRun(string.cmd)
+string.cmd = 'string retrieve enrichment allNetSpecies="Homo sapiens" cutoff=0.05 selectedNodesOnly="false"'
+commandsRun(string.cmd)
+```
+
+The STRING enrichment results don't open by default if run from the command interface. 
+```{r}
+string.cmd = 'string show enrichment'
+commandsRun(string.cmd)
+```
+
+The STRING app includes several options for filtering and displaying the enrichment results. We will filter the results to only show GO Process.
+
+```{r}
+string.cmd = 'string filter enrichment categories="GO Process" removeOverlapping="true"'
+commandsRun(string.cmd)
+```
+
+Next, we will add a split donut chart.
+
+```{r}
+string.cmd = 'string show charts'
+commandsRun(string.cmd)
+```
+
+# Visualizing Results - Jurkat Score
+We can create a visualization based on the Jurkat Score, and the different interaction types (AP-MS and STRING):
+
+```{r}
+style.name = "AP-MS Jurkat Score"
+createVisualStyle(style.name)
+setVisualStyle(style.name)
+setNodeColorDefault("#FFCC00", style.name=style.name)
+setNodeLabelMapping('display name', style.name=style.name)
+setEdgeColorMapping("interaction", "AP-MS", "#55AA55", "d", style.name = style.name)
+setEdgeLineWidthMapping('AP.MS.Score', table.column.values=c(0,1), widths=c(1,5), mapping.type="c", style.name=style.name)
+```
+
+First, we define the range of data values for the mapping, and the Brewer palette to use:
+
+```{r}
+data.values = c(0,0.5,1)
+display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="seq") # div,qual,seq,all
+node.colors <- c(rev(brewer.pal(length(data.values), "Purples")))
+```
+
+Next, we apply the mapping to the network:
+
+```{r}
+setNodeColorMapping('JurkatScore', data.values, node.colors, style.name=style.name)
+```
+
+We now have a visualization of the network highlighting the ap-ms experimental data (green edges), as well as additional known interactions (grey edges), with node color indicating the Jurkat Score from the data.
+
+# Visualizing Results - Combined
+We could create a similar kind of style for the HEK score, but that only allows for viewing each style seperately. Instead, we can create a combined style, using the enhancedGraphics app.
+
+For this, we will need a new column defining a new attribute that will be used for mapping to the Custom Graphics property via the enhancedGraphics app. This new attribute has to be in the form of mappings recognized by the enhancedGraphics app.
+
+We can copy the previous style to retain some of the mappings we want to keep:
+
+```{r}
+copyVisualStyle(from.style="AP-MS Jurkat Score", to.style="AP-MS CombinedScore")
+setVisualStyle(style.name="AP-MS CombinedScore")
+```
+
+To begin adding the new column, we first define a data frame with the new attribute formatted for enhancedGraphics:
+
+```{r}
+all.nodes<-getAllNodes()
+combined.df<-data.frame(all.nodes, 'piechart: showlabels=false range="0,1" arcstart=90 valuelist=".5,.5" colorlist="up:blue,zero:white,down:white;up:purple,zero:white,down:white" attributelist="HEKScore,JurkatScore" labellist="HEKScore,JurkatScore"')
+colnames(combined.df)<-c("name","CombinedScore")
+```
+
+Next, we load this dataframe into the Node Table to create and fill a new column:
+
+```{r}
+loadTableData(combined.df, data.key.column = "name", table.key.column = "name")
+```
+
+We now have a new column, *CombinedScore*, that we can use for the mapping. This mapping does not come with a custom helper function, se we are going to use two alternative functions to prepare the passthrough mapping property and then update our visual style with the new mapping:
+
+```{r}
+piechart.map<-mapVisualProperty('node customgraphics 4','CombinedScore','p')
+updateStyleMapping('AP-MS CombinedScore', piechart.map)
+```
+
+# Saving, sharing and publishing
+
+## Saving a Cytoscape session file
+Session files save *everything*. As with most project software, we recommend saving often!
+```{r}
+saveSession('AP-MS_session') #.cys
+```
+**Note:** If you don't specify a complete path, the files will be saved relative to your current working directory in R. 
+
+## Saving high resolution image files
+You can export extremely high resolution images, including vector graphic formats.
+```{r}
+exportImage('AP-MS_image', type = 'PDF') #.pdf
+?exportImage
+```
