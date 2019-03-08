@@ -227,6 +227,7 @@ We now have a new column, *CombinedScore*, that we can use for the mapping. This
 piechart.map<-mapVisualProperty('node customgraphics 4','CombinedScore','p')
 updateStyleMapping('AP-MS CombinedScore', piechart.map)
 ```
+Remember that because of the way Cytoscape deals with multiple attribute values for a single node, the visualization for human nodes interacting with more than one HIV nodes is affected. An example in this network is EIF3A, which interacts with both PR and POL.
 
 # Saving, sharing and publishing
 
