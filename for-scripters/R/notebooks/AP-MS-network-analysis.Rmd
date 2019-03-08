@@ -75,7 +75,7 @@ The imported network consists of multiple smaller subnetworks, each representing
 # Loading Data
 There are three other columns of data and annotations for the "Prey" proteins that we want to load into this network. 
 
-Note that in this data, the "Prey" nodes are repeated more than once, representing interactions with more than one Bait node. This means that different values for the same attribute (for example the HEKScore) exist for each Prey node. Upon import, Cytoscape will use the last value imported in these cases
+In this data, the Prey nodes are repeated for each interactions with a Bait node, so the data contains different values for the same attribute (for example HEKScore), for each Prey node. During import, the last value imported will overwrite prior values and visualizations using this attribute thus only shows the last value.
 
 ```{r}
 loadTableData(apms.data[,2:5], data.key.column="Prey")
@@ -235,7 +235,8 @@ We now have a new column, *CombinedScore*, that we can use for the mapping. This
 piechart.map<-mapVisualProperty('node customgraphics 4','CombinedScore','p')
 updateStyleMapping('AP-MS CombinedScore', piechart.map)
 ```
-Remember that because of the way Cytoscape deals with multiple attribute values for a single node, the visualization for human nodes interacting with more than one HIV nodes is affected. An example in this network is EIF3A, which interacts with both PR and POL.
+
+Remember that when we imported multiple values for a single node attribute, such as the scores for human nodes interacting with more than one HIV nodes, the last value imported will overwrite prior values and the visualization thus only shows the last value. For <b>EIF3A</b>, which interacts with both <b>PR</b> and <b>POL</b>, only the data relevant to the <b>PR</b> interaction is maintained in the Node Table because our source data was sorted alphabetically by Bait.
 
 # Saving, sharing and publishing
 
