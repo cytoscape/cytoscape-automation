@@ -88,7 +88,12 @@ Let's collect all the UniProt identifiers from the data, and create a text strin
 
 ```{r}
 uniprot.str<-toString(apms.data[,"UniProt"])
-string.cmd<-paste0('string protein query query="',uniprot.str,'" species="Homo sapiens" limit=0 cutoff=0.999')
+string.cmd<-paste('string protein query',
+                  'query="',uniprot.str,'"', 
+                  'species="Homo sapiens"', 
+                  'limit=0', 
+                  'cutoff=0.999',
+                  sep= ' ')
 commandsRun(string.cmd)
 ```
 
@@ -122,7 +127,7 @@ style.name = "AP-MS"
 createVisualStyle(style.name)
 lockNodeDimensions(TRUE)
 setNodeSizeDefault('50', style.name = style.name)
-setNodeColorDefault("#CCCCCC", style.name=style.name)
+setNodeColorDefault("#CCCCFF", style.name=style.name)
 setNodeLabelMapping('display name', style.name=style.name)
 setVisualStyle(style.name=style.name)
 ```
@@ -131,6 +136,7 @@ setVisualStyle(style.name=style.name)
 layoutNetwork(paste('force-directed', 
               'defaultSpringCoefficient=0.00001',
               'defaultSpringLength=50',
+              'defaultNodeMass=4',
               sep=' '))
 ```
 
@@ -140,30 +146,32 @@ Now that we have a merged network, we can do enrichment analysis on it, using th
 The STRING app has built-in enrichment analysis functionality, which includes enrichment for GO Process, GO Component, GO Function, InterPro, KEGG Pathways, and PFAM.
 
 ```{r}
-string.cmd = 'string make string network="current"'
-commandsRun(string.cmd)
-string.cmd = 'string retrieve enrichment allNetSpecies="Homo sapiens" cutoff=0.05 selectedNodesOnly="false"'
-commandsRun(string.cmd)
+commandsRun('string make string network="current"')
+commandsRun(paste('string retrieve enrichment', 
+                  'allNetSpecies="Homo sapiens"', 
+                  'cutoff=0.05',
+                  'selectedNodesOnly="false"',
+                  sep = ' '))
 ```
 
 The STRING enrichment results don't open by default if run from the command interface. 
 ```{r}
-string.cmd = 'string show enrichment'
-commandsRun(string.cmd)
+commandsRun('string show enrichment')
 ```
 
 The STRING app includes several options for filtering and displaying the enrichment results. We will filter the results to only show GO Process.
 
 ```{r}
-string.cmd = 'string filter enrichment categories="GO Process" removeOverlapping="true"'
-commandsRun(string.cmd)
+commandsRun(paste('string filter enrichment', 
+                  'categories="GO Process"',
+                  'removeOverlapping="true"',
+                  sep = ' '))
 ```
 
 Next, we will add a split donut chart.
 
 ```{r}
-string.cmd = 'string show charts'
-commandsRun(string.cmd)
+commandsRun('string show charts')
 ```
 
 # Visualizing Results - Jurkat Score
@@ -211,7 +219,7 @@ To begin adding the new column, we first define a data frame with the new attrib
 
 ```{r}
 all.nodes<-getAllNodes()
-combined.df<-data.frame(all.nodes, 'piechart: showlabels=false range="0,1" arcstart=90 valuelist=".5,.5" colorlist="up:blue,zero:white,down:white;up:purple,zero:white,down:white" attributelist="HEKScore,JurkatScore" labellist="HEKScore,JurkatScore"')
+combined.df<-data.frame(all.nodes, 'piechart: showlabels=false range="0,1" arcstart=90 valuelist=".5,.5" colorlist="up:blue,zero:white,down:white;up:purple,zero:white,down:white" attributelist="HEKScore,JurkatScore"')
 colnames(combined.df)<-c("name","CombinedScore")
 ```
 
