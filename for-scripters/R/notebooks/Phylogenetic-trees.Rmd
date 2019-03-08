@@ -1,0 +1,110 @@
+---
+title: "Phylogenetic-trees"
+author: "Alexander Pico, Gildas Lepennetier"
+package: RCy3
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true    
+vignette: >
+  %\VignetteIndexEntry{13. Phylogenetic Trees ~3 min}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+This vignette will show you how to work the popular Newick format for phylogenetic trees in Cytoscape by conversion to igraph and import via RCy3. The initial conversion step was provided by https://github.com/GildasLepennetier/newick_to_graphml.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+## Prerequisites
+We will also need a few additional packages for the file conversion steps:
+```{r}
+install.packages('ape')
+install.packages('phytools')
+install.packages('igraph')
+library(ape)
+library(phytools)
+library(igraph)
+```
+
+In addition to these R packages, you will need **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen. 
+
+# Trees to Networks
+Phylogenetic trees are simply a special type of network. And Cytoscape can work with *any* type of network! Trees are often represented in the [Newick format](https://en.wikipedia.org/wiki/Newick_format), like so
+
+```
+((raccoon:19.19959,bear:6.80041):0.84600,((sea_lion:11.99700, seal:12.00300):7.52973,((monkey:100.85930,cat:47.14069):20.59201, weasel:18.87953):2.09460):3.87382,dog:25.46154);
+
+(Bovine:0.69395,(Gibbon:0.36079,(Orang:0.33636,(Gorilla:0.17147,(Chimp:0.19268, Human:0.11927):0.08386):0.06124):0.15057):0.54939,Mouse:1.21460):0.10;
+
+(Bovine:0.69395,(Hylobates:0.36079,(Pongo:0.33636,(G._Gorilla:0.17147, (P._paniscus:0.19268,H._sapiens:0.11927):0.08386):0.06124):0.15057):0.54939, Rodent:1.21460); 
+```
+
+The first step to loading Newick files into Cytoscape is to convert them to more generic network format using igraph, which Cytoscape already knows how to read via the RCy3 package.
+
+```{r}
+tree <- phytools::read.newick(system.file("extdata","phylotree.newick", package="RCy3"))
+ig <- ape::as.igraph.phylo(tree, FALSE) # boolean for whether tree is rooted or not
+ig <- set_edge_attr(ig,'distance', value=tree$edge.length) # set distances as edge attributes
+```
+
+# Network to Cytoscape
+From here it's a simple matter of loading the igraph network into Cytoscape. RCy3 has a function for that:
+```{r}
+createNetworkFromIgraph(ig, title="phylotree", collection = "phylotree")
+```
+
+Now it just needs a layout a bit of style...
+
+A force-directed layout can work well for trees, if it is tuned properly. You might need to adjust some of the parameters to get a good layout for other Newick files, but the following works well for the demo file in this vignette.
+```{r}
+layoutNetwork(paste('force-directed',
+                    'defaultEdgeWeight=3',
+                    'defaultSpringCoefficient=5E-5',
+                    'defaultSpringLength=80',
+                    sep = ' '))
+```
+*Pro-tip: In the GUI of Cytoscape you also have access to yFiles Layouts (after accepting the license). Their hierarchical layout is perfect for trees! Unfortunately, it is not accessible via scripting however due to license restrictions.*
+
+Also, notice how the junction nodes, which are nameless in the Newick format, are given generic names by igraph (like "Node1")and display too promonently in Cytoscape. Let's create a filter to select these nodes and alter their style.
+```{r}
+createColumnFilter('junctions', 'id', "^Node\\\\d+$", "REGEX")
+junctions<-getSelectedNodes()
+setNodeWidthBypass(junctions,1)
+setNodeHeightBypass(junctions,1)
+setNodeLabelBypass(junctions, "")
+```
+
+# Edge Length as Distance
+And, as a final touch, let's label our edges with distance values:
+```{r}
+setEdgeLabelMapping('distance')
+```
+
+We can also explore layouts that consider edge lengths, such as:
+```{r}
+layoutNetwork(paste('force-directed',
+                    'edgeAttribute="distance"',
+                    'type="1 - normalized value"',
+                    'defaultSpringCoefficient=5E-4',
+                    'defaultSpringLength=50',
+                    sep = ' '))
+```
+Notice how "monkey" with a much larger distance of just over 100 is now positioned much further from the other more closely related nodes.
