@@ -111,7 +111,7 @@ We can use the Uniprot IDs available in both networks as the matching attribute.
 5. In the How to merge columns section, find the entry for "display name" for the string network. 
 6. Click on the column for the ap-ms network for that same row and select "name" from the drop-down.
 
-![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){height=100%}
+![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){height=60%}
 
 # Network Visualization
 When the merged network first loads, it will have the STRING style applied. However, because the HIV nodes are not from STRING, they will be white and difficult to see. The layout also makes the network hard to interpret. Let's change the style of the network a bit.
