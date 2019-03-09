@@ -15,13 +15,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+*The R markdown is from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd).*
+
+<hr />
 This vignette describes how to use data from an affinity purification-mass spectrometry experiment to generate relevant interaction networks, enriching the networks with information from public resources, analyzing the networks and creating effective visualizations.
 
 The result of this vignette will be a visualization of a human-HIV integrated network combining experimental data and publicly available interaction data. 
 
-![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/final-module.png){height=60%}
-
-The R markdown is available here: https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd
+<center>
+![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/final-module.png){width=60%}
+</center>
+<hr />
 
 # Installation
 ```{r}
@@ -117,7 +121,9 @@ We can use the Uniprot IDs available in both networks as the matching attribute.
 5. In the How to merge columns section, find the entry for "display name" for the string network. 
 6. Click on the column for the ap-ms network for that same row and select "name" from the drop-down.
 
-![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){height=60%}
+<center>
+![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){width=80%}
+</center>
 
 # Network Visualization
 When the merged network first loads, it will have the STRING style applied. However, because the HIV nodes are not from STRING, they will be white and difficult to see. The layout also makes the network hard to interpret. Let's change the style of the network a bit.
