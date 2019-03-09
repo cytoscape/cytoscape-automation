@@ -1,7 +1,9 @@
 # Cytoscape Automation for Script Writers in R
-Collection of sample scripts that provide support for automation.
+Collection of sample scripts and notebooks that provide support for automation.
 
-Also see [RCy3](https://github.com/cytoscape/r2cytoscape) for a set of R functions to facilitate Cytoscape automation.
+Visit the [collection of Rmd notebooks](https://cytoscape.org/cytoscape-automation/for-scripters/R/notebooks/) to browse and download content interactively.
+
+Also see [RCy3](https://bioconductor.org/packages/RCy3/) for a set of R functions to facilitate Cytoscape automation.
 
 
 ### Developer Notes
