@@ -15,7 +15,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette describes how to use data from an affinity purification-mass spectrometry experiment to to generate relevant interaction networks, enriching the networks with information from public resources, analyzing the networks and creating effective visualizations.
+This vignette describes how to use data from an affinity purification-mass spectrometry experiment to generate relevant interaction networks, enriching the networks with information from public resources, analyzing the networks and creating effective visualizations.
+
+The result of this vignette will be a visualization of a human-HIV integrated network combining experimental data and publicly available interaction data. 
+
+![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/final-module.png){height=60%}
+
+The R markdown is available here: https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd
 
 # Installation
 ```{r}
