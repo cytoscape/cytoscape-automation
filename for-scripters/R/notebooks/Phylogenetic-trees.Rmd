@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Phylogenetic-trees.Rmd).*
+
+<hr />
+
 This vignette will show you how to work the popular Newick format for phylogenetic trees in Cytoscape by conversion to igraph and import via RCy3. The initial conversion step was provided by https://github.com/GildasLepennetier/newick_to_graphml.
 
 # Installation

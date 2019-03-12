@@ -18,7 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Identifier-mapping.Rmd).*
 
+<hr />
 This vignette will show you how to map or translate identifiers from one database
 (e.g., Ensembl) to another  (e.g, Entrez Gene). This is a common requirement
 for data analysis. In the context of Cytoscape, for example, identifier mapping is
@@ -91,6 +93,10 @@ mapped.cols[1:3,] #first three entries
 *Note: the row names of the return data frame are the node SUIDs from Cytoscape.
 These are handy if you want to load the mappings yourself (see last example).*
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/identifier-mapping1.png){width=60%}
+</center>
+
 # Example: From proteins to genes
 For this next example, you'll need the STRING app to access the STRING database
 from within Cytoscape:
@@ -114,6 +120,10 @@ commandsGET(string.cmd)
 
 Check out the Node Table and you'll see display names and identifiers. In particular,
 the *canonical name* column appears to hold Uniprot-TrEMBL IDs. Nice, we can use that!
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/identifier-mapping2.png){width=60%}
+</center>
 
 ## Perform identifier mapping
 Say we have a dataset keyed by Ensembl gene identifiers. Well, then we would want

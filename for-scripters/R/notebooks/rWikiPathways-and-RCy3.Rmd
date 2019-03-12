@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/rWikiPathways-and-RCy3.Rmd).*
+
+<hr />
 
 *WikiPathways* is a well-known repository for biological pathways that provides unique tools to the research community for content creation, editing and utilization [@Pico2008].
 
@@ -82,6 +85,10 @@ Let's import the first one of these into Cytoscape!
 commandsRun(paste0('wikipathways import-as-pathway id=',human.gbm.wpids[1])) 
 ```
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/Glioblastoma.png){width=60%}
+</center>
+
 Once in Cytoscape, you can load data, apply visual style mappings, perform analyses, and export images and data formats. See RCy3 package vignettes for details.
 
 # From networks to pathways
@@ -109,5 +116,9 @@ And we can easily select the MCM1 node by name in the newly imported pathway to 
 ```{r}
 selectNodes('MCM1','name')
 ```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/MCM_Pathway.png){width=60%}
+</center>
 
 

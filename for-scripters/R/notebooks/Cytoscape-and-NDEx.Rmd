@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Cytoscape-and-NDEx.Rmd).*
+
+<hr />
 
 *Cytoscape* is a well-known bioinformatics tool for displaying and exploring biological networks.
 **R** is a powerful programming language and environment for statistical and exploratory data analysis.
@@ -76,6 +79,9 @@ If we want to visualize and interact with this network, Cytoscape is our best ch
 ```{r}
 brca.net.suid <- importNetworkFromNDEx(networkId) 
 ```
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/NDEx.png){width=60%}
+</center>
 
 **Note: Do not use the "rcx" frunctions provided by ndexr to pass through igraph in order to import into Cytoscape. This unnecessary intermediate step will result in scientific notation values being translated to type "other" (denoted by "x") and ultimately converted to Strings in Cytoscape. All style information is lost as well.**
 

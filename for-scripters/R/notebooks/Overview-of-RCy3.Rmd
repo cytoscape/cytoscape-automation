@@ -181,6 +181,10 @@ Now, add a node size rule, using *log2fc* again as controlling node values.
 
 If you recall the third type of mapping, *passthrough*, we can see it already working in our current network example. The node labels! By default, the *name* column is mapped to the node label property using *passthrough* logic: the value is passed directly to the style property.
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/MyFirstNetwork_NodeSizeMapping.png){width=60%}
+</center>
+
 
 ## Selecting nodes
 

@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Custom-Graphics.Rmd).*
+
+<hr />
 
 This vignette illustrates how Cytoscape's Custom Graphics can be used to add graphs, charts and other graphics to node, and how to combine Custom Graphics with the enhancedGraphics app for specialized visualizations.
 
@@ -81,6 +84,11 @@ setNodeCustomPieChart(c("Radiality", "Degree"), slot = 3)
 setNodeCustomPosition(nodeAnchor = "W", xOffset = -20, slot = 3)
 ```
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/custom-graphics.png){width=60%}
+</center>
+
+
 # Enhanced Graphics
 The nodes in the network are labeled with the corresponding protein names (yeast), but there is additional text information in the Node Table that could be useful to display as labels on the nodes. We are going to use the enhancedGraphics app to create a second node label for the common yeast gene name.
 
@@ -125,3 +133,7 @@ Finally, we position the new label in the upper right corner:
 ```{r}
 setNodeCustomPosition(nodeAnchor = "E", graphicAnchor = "C", xOffset = 10, slot = 4)
 ```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/custom-graphics-label.png){width=60%}
+</center>

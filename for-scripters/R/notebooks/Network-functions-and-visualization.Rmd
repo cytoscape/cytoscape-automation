@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Network-functions-and-visualization.Rmd).*
+
+<hr />
 
 This vignette will show how to perform basic network operations on an iGraph
 networks and use this information to customize its appearance in Cytoscape 
@@ -131,7 +134,7 @@ Check the edge attributes. You should see "weight" and "similarity" added.
 summary(gD)
 ```
 
-# Let check it out in Cytoscape
+# Lets check it out in Cytoscape
 
 *Update: You can go straight from igraph to Cytoscape, sending all attributes and displaying graph!*
 ```{r}
@@ -183,6 +186,10 @@ setNodeShapeDefault('ellipse')
 setNodeFontSizeDefault(20)
 setNodeLabelColorDefault('#000000')
 ```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/lemis.png){width=60%}
+</center>
 
 Voila! All done.
 

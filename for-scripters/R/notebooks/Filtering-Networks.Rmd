@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Filtering-Networks.Rmd).*
+
+<hr />
+
 This vignette will introduce you to some techniques for filtering a network based on node properties. You will learn to:
 
 1. Select a set of nodes based on node degree and attribute filters
@@ -77,6 +81,10 @@ We can now create a new network, or subnetwork, from our selected set of nodes a
 createSubnetwork(subnetwork.name ='Breast cancer: highly connected nodes')
 ```
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/filter-subnet1.png){width=60%}
+</center>
+
 # Filtering by attribute
 ## Creating a column filter
 We could also filter the network based on high disease score. The disease score comes from STRING and indicates the strength of the association to the disease queried.
@@ -106,6 +114,10 @@ layoutNetwork('force-directed defaultSpringCoefficient=5E-6')
 ```
 
 This final network obviously contains fewer nodes than the original, but they are the most connected and most highly associated with the disease. If you examine the network you can see several well-known breast cancer oncogenes, for example BRCA1, TP53 and PTEN, near the center of the action.
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/filter-subnet2.png){width=60%}
+</center>
 
 # Hiding filtered nodes
 As a final example of the filter functions, let's return to the orignal network once more and apply our "combined filter". But this time let's *hide* the filtered out nodes, rather than forming a selection. This demonstrates the *applyFilter* function and the *hide* parameter that is optional for all *createXXXFilter* functions as well.

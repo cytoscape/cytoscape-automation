@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Importing-data.Rmd).*
+
+<hr />
 
 This vignette will show you how to import a data.frame of node attributes into Cytoscape as Node Table columns. The same approach works for edge and network attriubutes.  
 
@@ -49,6 +52,10 @@ So, in order to demonstrate data import, we first need to have a network. This c
 sif <- system.file("extdata","galFiltered.sif",package="RCy3")
 importNetworkFromFile(sif)
 ```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/galfilteredsif.png){width=60%}
+</center>
 
 You should now see a network with just over 300 nodes. If you look at the Node Table, you'll see that there are no attributes other than node names. Let's fix that...
 
