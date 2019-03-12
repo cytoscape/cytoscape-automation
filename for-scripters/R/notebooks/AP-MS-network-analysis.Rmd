@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-*The R markdown is from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd).*
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd).*
 
 <hr />
 This vignette describes how to use data from an affinity purification-mass spectrometry experiment to generate relevant interaction networks, enriching the networks with information from public resources, analyzing the networks and creating effective visualizations.

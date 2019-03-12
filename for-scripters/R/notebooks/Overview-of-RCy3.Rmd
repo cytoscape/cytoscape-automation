@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Overview-of-RCy3.Rmd).*
+
+<hr />
 
 *Cytoscape* is a well-known bioinformatics tool for displaying and exploring biological networks.
 **R** is a powerful programming language and environment for statistical and exploratory data analysis.
@@ -85,6 +88,10 @@ edgeWidth <- mapVisualProperty('edge width','weight','p')
 createVisualStyle(style.name, defaults, list(nodeLabels,nodeFills,arrowShapes,edgeWidth))
 setVisualStyle(style.name)
 ```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/MyFirstNetwork.png){width=60%}
+</center>
 
 *Pro-tip: if you want to set NODE_WIDTH and NODE_HEIGHT independently, you also need to unlock the node dimensions with...*
 ```

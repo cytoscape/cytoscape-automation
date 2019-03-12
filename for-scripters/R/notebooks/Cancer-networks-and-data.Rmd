@@ -18,9 +18,18 @@ knitr::opts_chunk$set(
   eval=FALSE
 )
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Cancer-networks-and-data.Rmd).*
 
-This vignette will demonstrate network retrieval from the STRING database, basic
-analysis, TCGA data loading and visualization in Cytoscape from R using the RCy3 package.
+<hr />
+This vignette will demonstrate network retrieval from the STRING database, basic analysis, loading and visualization TCGA data in Cytoscape from R using the RCy3 package. Relevant subnetworks will be identified using different strategies, including network connectivity.
+
+At the end of this vignette, you will have will be a visualization of TCGA data on a subnetwork built around highly mutated genes in the relevant cancer type.
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/brc4.png)
+</center>
+
+<hr />
 
 # Installation
 ```{r}
