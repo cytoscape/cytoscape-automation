@@ -75,7 +75,7 @@ human.filter <- lapply(gbm.pathways, function(x) x$species == "Homo sapiens")
 human.gbm.pathways <- gbm.pathways[unlist(human.filter)]
 ```
 
-We have a list of human pathways that mention Colon Cancer The results include lots of information, so let's get a unique list of just the WPIDs.
+We have a list of human pathways that mention "Colon Cancer". The results include lots of information, so let's get a unique list of just the WPIDs.
 ```{r}
 human.gbm.wpids <- unique(unlist(lapply(human.gbm.pathways, function(x) x$id)))
 ```
