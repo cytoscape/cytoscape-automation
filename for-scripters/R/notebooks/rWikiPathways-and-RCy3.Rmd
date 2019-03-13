@@ -70,12 +70,12 @@ installApp('WikiPathways')  #only available in Cytoscape 3.7.0 and above
 Ok, with all of these components loaded and launched, you can now perform some nifty sequences. For example, search for a pathway based on a keyword search and then load it into Cytoscape.
 
 ```{r}
-gbm.pathways <- findPathwaysByText('Glioblastoma') # many pathways returned
+gbm.pathways <- findPathwaysByText('colon cancer') # many pathways returned
 human.filter <- lapply(gbm.pathways, function(x) x$species == "Homo sapiens")
-human.gbm.pathways <- gbm.pathways[unlist(human.filter)] # just the human BRCA2 pathways
+human.gbm.pathways <- gbm.pathways[unlist(human.filter)]
 ```
 
-We have a list of human pathways that mention Glioblastoma The results include lots of information, so let's get a unique list of just the WPIDs.
+We have a list of human pathways that mention Colon Cancer The results include lots of information, so let's get a unique list of just the WPIDs.
 ```{r}
 human.gbm.wpids <- unique(unlist(lapply(human.gbm.pathways, function(x) x$id)))
 ```
@@ -86,7 +86,7 @@ commandsRun(paste0('wikipathways import-as-pathway id=',human.gbm.wpids[1]))
 ```
 
 <center>
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/SignalingGlioblastoma.png){width=60%}
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/ColonCancer.png){width=60%}
 </center>
 
 Once in Cytoscape, you can load data, apply visual style mappings, perform analyses, and export images and data formats. See RCy3 package vignettes for details.
