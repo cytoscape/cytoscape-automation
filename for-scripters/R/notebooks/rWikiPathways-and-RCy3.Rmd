@@ -86,10 +86,6 @@ commandsRun(paste0('wikipathways import-as-pathway id=',human.gbm.wpids[1]))
 ```
 
 <center>
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/Glioblastoma.png){width=60%}
-</center>
-
-<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/SignalingGlioblastoma.png){width=60%}
 </center>
 
