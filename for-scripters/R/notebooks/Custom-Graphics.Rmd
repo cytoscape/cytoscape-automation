@@ -135,5 +135,5 @@ setNodeCustomPosition(nodeAnchor = "E", graphicAnchor = "C", xOffset = 10, slot 
 ```
 
 <center>
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/custom-graphics-label.png){width=60%}
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/custom-graphics_label.png){width=60%}
 </center>

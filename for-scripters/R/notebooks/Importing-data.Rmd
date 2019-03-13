@@ -78,6 +78,9 @@ Now we have a data.frame that includes our identifiers in a column called "name"
 ```{r}
 loadTableData(data,data.key.column="name")
 ```
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/galfiltereddata.png){width=60%}
+</center>
 
 If you look back at the Node Table, you'll now see that the corresponding rows of our data.frame have been imported as new columns.
 
