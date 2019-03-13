@@ -89,6 +89,10 @@ commandsRun(paste0('wikipathways import-as-pathway id=',human.gbm.wpids[1]))
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/Glioblastoma.png){width=60%}
 </center>
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/SignalingGlioblastoma.png){width=60%}
+</center>
+
 Once in Cytoscape, you can load data, apply visual style mappings, perform analyses, and export images and data formats. See RCy3 package vignettes for details.
 
 # From networks to pathways
