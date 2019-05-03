@@ -1,7 +1,7 @@
 # cytoscape-automation
 
 ## Main Page
-Visit [automation.cytoscape.org](https://github.com/cytoscape/cytoscape-automation/wiki) for a curated set of automation examples.
+Visit [automation.cytoscape.org](http://automation.cytoscape.org) for a curated set of automation examples.
 
 ## What is Cytoscape Automation
 Cytoscape is a desktop-based tool that focuses on user-initiated operations for generating user-consumable results. **Cytoscape Automation** enables users to create workflows executed entirely within Cytoscape or by external tools (e.g., Jupyter, R, GenomeSpace, etc), and whose results are reproducible. This enables Cytoscape to scale to large collections of datasets and to larger more complex workflows than is practical via keyboard and mouse.
