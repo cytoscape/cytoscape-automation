@@ -1,4 +1,4 @@
-# cytoscape-automation
+# Cytoscape Automation Overview
 
 ## Main Page
 Visit [automation.cytoscape.org](http://automation.cytoscape.org) for a curated set of automation examples.
