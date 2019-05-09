@@ -76,10 +76,11 @@ Now we can create a data frame for the network edges (interactions) using the im
 edges <- data.frame(source=apms.data[,"Bait"],target=apms.data[,"Prey"],interaction="AP-MS", AP.MS.Score=apms.data[,"AP.MS.Score"],stringsAsFactors=FALSE)
 ```
 
-Finally, we use the edge data fram to create the network. Note that we don't need to define a data fram for nodes, as all nodes in this case are represented in the edge data frame.
+Finally, we use the edge data fram to create the network. Note that we don't need to define a data frame for nodes, as all nodes in this case are represented in the edge data frame.
 ```{r}
 createNetworkFromDataFrames(edges=edges, title="apms network", collection = "apms collection")
 ```
+
 The imported network consists of multiple smaller subnetworks, each representing a bait node and its associated prey nodes
 
 # Loading Data

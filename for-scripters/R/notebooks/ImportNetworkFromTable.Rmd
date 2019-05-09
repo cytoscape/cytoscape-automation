@@ -1,0 +1,72 @@
+---
+title: "Importing Network From Table"
+author: "Kristina Hanspers"
+package: RCy3
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+#  pdf_document:
+#    toc: true    
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd).*
+
+<hr />
+In addition to importing networks in network file formats, such as sif and xgmml, Cytoscape also supports importing networks from tabular data. In this vignette, the data table represents protein-protein interaction data from a mass-spectrometry experiment.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Prerequisites
+In addition to this package (RCy3), you will need:
+
+  * **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
+* Complete installation wizard
+* Launch Cytoscape 
+
+# Background
+The data used for this protocol represents interactions between human and HIV proteins by Jäger et al (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3310911/). In this quantitative AP-MS experiment, a relatively small number of bait proteins were used to pull down a larger set of prey proteins.
+
+# Import Network
+
+First we need to read in the example data file:
+
+```{r}
+apms.data<-read.csv(file="https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS/ap-ms-demodata.csv", stringsAsFactors = FALSE)
+```
+
+Now we can create a data frame for the network edges (interactions) using the imported data. We can also add the AP-MS score from the data as an edge attribute: 
+
+```{r}
+edges <- data.frame(source=apms.data[,"Bait"],target=apms.data[,"Prey"], AP.MS.Score=apms.data[,"AP.MS.Score"],stringsAsFactors=FALSE)
+```
+
+Finally, we use the edge data fram to create the network. Note that we don't need to define a data frame for nodes, as all nodes in this case are represented in the edge data frame.
+
+```{r}
+createNetworkFromDataFrames(edges=edges, title="apms network", collection = "apms collection")
+```
+
+The imported network consists of multiple smaller subnetworks, each representing a bait node and its associated prey nodes.
+
+# Loading Data
+There is one other column of data for the "Prey" proteins that we want to load into this network, the "HEKScore".
+
+In this data, the Prey nodes are repeated for each interactions with a Bait node, so the data contains different values for the same attribute (for example HEKScore), for each Prey node. During import, the last value imported will overwrite prior values and visualizations using this attribute thus only shows the last value.
+
+```{r}
+loadTableData(apms.data[,c("Prey","HEKScore")], data.key.column="Prey")
+```
+
