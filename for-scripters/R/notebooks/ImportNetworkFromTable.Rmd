@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS-network-analysis.Rmd).*
 
 <hr />
 In addition to importing networks in network file formats, such as sif and xgmml, Cytoscape also supports importing networks from tabular data. In this vignette, the data table represents protein-protein interaction data from a mass-spectrometry experiment.
@@ -44,7 +43,7 @@ The data used for this protocol represents interactions between human and HIV pr
 First we need to read in the example data file:
 
 ```{r}
-apms.data<-read.csv(file="https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS/ap-ms-demodata.csv", stringsAsFactors = FALSE)
+apms.data<-read.csv(file="https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS/ap-ms-demodata_simple.csv", stringsAsFactors = FALSE)
 ```
 
 Now we can create a data frame for the network edges (interactions) using the imported data. We can also add the AP-MS score from the data as an edge attribute: 
