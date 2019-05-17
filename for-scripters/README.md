@@ -10,3 +10,4 @@ files, each with corresponding entrypoints into Cytoscape:
 
 To learn more about Cytoscape Automation, visit our [FAQ](https://docs.google.com/document/d/1QTrT-9ylhI4OX5DkauMo2ujLIqeg3WDUDwl77KLtfVY/edit?usp=sharing).
 
+```Note to repository maintainers: Please *DO NOT* move this page ... the Cytoscape Automation paper refers directly to it.```
