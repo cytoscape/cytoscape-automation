@@ -14,3 +14,4 @@ The winners were:
 * [Ruth Isserlin](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/challenge-2017/Isserlin_PPI_network_pipeline_R) (R) [teaser](https://github.com/cytoscape/cytoscape-automation/tree/master/for-scripters/challenge-2017/Isserlin_PPI_network_pipeline_R/Example_ppi_network_pipeline.Rmd)
   - Extensive cell-cell interaction calculations in Python followed by simple but elegant styling and layout
   
+```Note to repository maintainers: Please *DO NOT* move this page ... the Cytoscape Automation paper refers directly to it.```
