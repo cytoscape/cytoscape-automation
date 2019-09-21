@@ -1,0 +1,80 @@
+---
+title: "Shortest Path with RBGL"
+author: "by Alexander Pico"
+package: RCy3
+date: "`r Sys.Date()`"
+output: 
+  html_notebook:
+    toc_float: true
+    code_folding: "none"
+#  pdf_document:
+#    toc: true  
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Shortest-path.Rmd).*
+
+This vignette will show you how to perform a shortest path calculation using RBGL on a network in Cytoscape. RBGL is a Biocondutor package that offers an array of analytical functions for graphs.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+if(!"RBGL" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RBGL")
+}
+library(RCy3)
+library(RBGL)
+```
+
+# Required Software
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php 
+* Complete installation wizard
+* Launch Cytoscape 
+
+```{r}
+cytoscapePing()
+```
+
+# Shortest Path with RBGL
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/shortest.png)
+</center>
+
+Convert a sample Cytoscape network to a graph object.
+```{r}
+openSession()
+g <- createGraphFromNetwork()
+```
+	
+Identify start and finish nodes (styling is optional).
+```{r}
+start <- "YNL216W"  #RAP1
+finish <- "YER040W"  #GLN3
+setNodeBorderWidthBypass(c(start,finish), 20)
+setNodeBorderColorBypass(start,"#00CC33")
+setNodeBorderColorBypass(finish,"#CC00CC")
+```
+
+Perform shortest path calculation.
+```{r}
+shortest <- sp.between(g, start, finish)
+shortest$`YNL216W:YER040W`$length 
+shortest.path <- shortest$`YNL216W:YER040W`$path_detail
+```
+
+Visualize results in Cytoscape.
+```{r}
+selectNodes(shortest.path, "name")
+setNodeBorderWidthBypass(shortest.path, 20)
+createSubnetwork()
+```
