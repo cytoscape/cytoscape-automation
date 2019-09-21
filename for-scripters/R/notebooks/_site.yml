@@ -44,6 +44,8 @@ navbar:
       href: Cancer-networks-and-data-challenge.R
     - text: "AP-MS network analysis"
       href: AP-MS-network-analysis.nb.html
+    - text: "Shortest path"
+      href: Shortest-path.nb.html
     - text: "Cytoscape automation in R"
       href: 230_Isserlin_RCy3_intro.nb.html
     - text: '---------'

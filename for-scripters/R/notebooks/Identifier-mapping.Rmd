@@ -4,8 +4,9 @@ author: "by Alexander Pico"
 package: RCy3
 date: "`r Sys.Date()`"
 output: 
-  BiocStyle::html_document:
+  html_notebook:
     toc_float: true
+    code_folding: "none"
 #  pdf_document:
 #    toc: true 
 vignette: >
