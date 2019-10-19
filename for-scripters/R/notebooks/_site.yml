@@ -38,6 +38,8 @@ navbar:
       href: Phylogenetic-trees.nb.html
     - text: '---------'
     - text: Workshops and Use Cases
+    - text: "RCy3 use cases"
+      href: RCy3-use-cases.nb.html
     - text: "Cancer networks and data"
       href: Cancer-networks-and-data.nb.html
     - text: "Cancer networks and data (challenge script)"
