@@ -133,8 +133,8 @@ data <- read.csv(csv, stringsAsFactors = FALSE)
 loadTableData(data,data.key.column="name")
 
 # Prepare data-mapping points
-gal80Rexp.min <- min(data$gal80Rexp, na.rm = T)
-gal80Rexp.max <- max(data$gal80Rexp, na.rm = T)
+gal80Rexp.min <- min(data$gal80Rexp, na.rm = TRUE)
+gal80Rexp.max <- max(data$gal80Rexp, na.rm = TRUE)
 ## For a balanced color gradient, pick the largest absolute value
 gal80Rexp.max.abs <- max(abs(gal80Rexp.min), abs(gal80Rexp.max)) 
 
@@ -193,7 +193,6 @@ exportNetworkToNDEx(username, password, TRUE)
 This workflow illustrates how to plot an annotated map of enrichment results using the  [EnrichmentMap Pipeline Collection of apps](http://apps.cytoscape.org/apps/enrichmentmappipelinecollection) in Cytoscape.  An enrichment map is a network visualization of related genesets in which nodes are gene sets (or pathways) and edge weight indicates the overlap in member genes. Following the construction of the enrichment map, AutoAnnotate clusters redundant gene sets and uses WordCloud to label the resulting cluster. The code uses the Commands interface to invoke EnrichmentMap and AutoAnnotate apps. After installing apps, run commandsAPI() to open the live Swagger documentation to browse and execute command-line syntax.
 ```{r}
 installApp("EnrichmentMap Pipeline Collection") # installs 4 apps
-commandsAPI() #(optional) browse commands for enrichmentmap
 # Download sample gmt file of human pathways
 gmt.file <- "rcy3_enrichmentmap.gmt"
 download.file(file.path("http://download.baderlab.org/EM_Genesets",
