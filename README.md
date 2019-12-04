@@ -1,5 +1,17 @@
 # Cytoscape Automation Overview
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=rstudio) (for R)
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=lab/tree/for-scripters/Python) (for Python)
+
+## How to use the Binder environments
+- Launch RStudio or JupyterLab server by clicking the above Binder badges.
+- Run the following command in the RStudio `Terminal` tab or JupyterLab `Shell`. This command launches Cytoscape Desktop in the background. The Cytoscape window is never visible.
+  ```
+  xvfb-run bash ~/cytoscape-unix-3.7.2/cytoscape.sh
+  ```
+- Open .Rmd or .ipynb file with RStudio or JupyterLab and run the code chunks or cells.
+
 ## Main Page
 Visit [automation.cytoscape.org](http://automation.cytoscape.org) for a curated set of automation examples.
 
