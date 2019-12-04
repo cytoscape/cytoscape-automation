@@ -1,0 +1,4 @@
+dependencies:
+  - pandas
+  - py2cytoscape
+  
