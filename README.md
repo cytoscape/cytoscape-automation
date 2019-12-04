@@ -6,7 +6,7 @@
 
 ## How to use the Binder environments
 - Launch RStudio or JupyterLab server by clicking the above Binder badges.
-- Run the following command in the RStudio `Terminal` tab or JupyterLab `Shell`. This command launches Cytoscape Desktop in the background. The Cytoscape window is never visible.
+- Run the following command in the RStudio `Terminal` tab or JupyterLab `Terminal`. This command launches Cytoscape Desktop in the background. The Cytoscape window is never visible.
   ```
   xvfb-run bash ~/cytoscape-unix-3.7.2/cytoscape.sh
   ```
