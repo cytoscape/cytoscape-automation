@@ -10,7 +10,7 @@
   ```
   xvfb-run bash ~/cytoscape-unix-3.7.2/cytoscape.sh
   ```
-- Open .Rmd or .ipynb file with RStudio or JupyterLab and run the code chunks or cells.
+- Open .Rmd or .ipynb file with RStudio or JupyterLab and run the code chunks or cells. Feel free to modify any of the scripts and run commands directly, but note that your changes will *not* be saved. *Binder only provides a temporary space to try out R and Python automation with Cytoscape.*
 
 ## Main Page
 Visit [automation.cytoscape.org](http://automation.cytoscape.org) for a curated set of automation examples.
