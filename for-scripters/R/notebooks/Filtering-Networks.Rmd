@@ -92,7 +92,7 @@ We could also filter the network based on high disease score. The disease score 
 
 Let's select nodes from the original network with a disease score of greater than 4 (on a scale of 1-5):
 ```{r}
-createColumnFilter(filter.name='disease score filter', column='disease score', 4, 'GREATER_THAN', network = string.net)
+createColumnFilter(filter.name='disease score filter', column='stringdb::disease score', 4, 'GREATER_THAN', network = string.net)
 ```
 Again, we can create a subnetwork from the selection:
 ```{r}

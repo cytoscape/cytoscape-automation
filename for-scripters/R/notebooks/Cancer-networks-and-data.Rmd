@@ -129,7 +129,7 @@ One of the great things about the STRING database is all the node and edge attri
 ### Retrieve disease scores 
 We can retrieve any set of columns from Cytoscape and store them as an R data frame keyed by SUID. In this case, let's retrieve the disease score column from the node table. Those will be our two parameters:
 ```{r}
-disease.score.table <- getTableColumns('node','disease score')
+disease.score.table <- getTableColumns('node','stringdb::disease score')
 disease.score.table
 ```
 

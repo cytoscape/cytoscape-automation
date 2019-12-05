@@ -130,7 +130,7 @@ the *canonical name* column appears to hold Uniprot-TrEMBL IDs. Nice, we can use
 Say we have a dataset keyed by Ensembl gene identifiers. Well, then we would want
 to perform this mapping:
 ```{r}
-mapped.cols <- mapTableColumn('canonical name','Human','Uniprot-TrEMBL','Ensembl')
+mapped.cols <- mapTableColumn('stringdb::canonical name','Human','Uniprot-TrEMBL','Ensembl')
 ```
 
 Scroll all the way to the right in the Node Table and you'll see a new column with
