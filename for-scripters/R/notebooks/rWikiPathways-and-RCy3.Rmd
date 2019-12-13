@@ -63,7 +63,7 @@ cytoscapePing()
 For this vignette, you'll also need the WikiPathways app to access the WikiPathways database from within Cytoscape. Install the WikiPathways app from http://apps.cytoscape.org/apps/wikipathways
 
 If you are running Cytoscape 3.7.0 or above, you can simply run this command:
-```
+```{r}
 installApp('WikiPathways')  #only available in Cytoscape 3.7.0 and above
 ```
 
