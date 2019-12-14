@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:19.10
+      - image: rocker/tidyverse:3.6.1
     steps:
       - checkout
       - run:
