@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ubuntu:19.10
+    steps:
+      - checkout
+      - run:
+          name: Setup Cytoscape
+          command: apt-get update && apt-get install pandoc openjdk-8-jdk wget curl xvfb -y && wget https://github.com/cytoscape/cytoscape/releases/download/3.7.2/cytoscape-3.7.2.tar.gz && tar xf cytoscape-3.7.2.tar.gz && rm cytoscape-3.7.2.tar.gz
+      - run:
+          name: Install RCy3
+          command: export DEBIAN_FRONTEND=noninteractive && apt-get install r-base -y && Rscript -e 'install.packages(c("BiocManager", "rmarkdown")); BiocManager::install(c("RCy3", "BiocStyle"))'
+      - run:
+          name: Start Cytoscape
+          command: xvfb-run bash ./cytoscape-unix-3.7.2/cytoscape.sh
+          background: true
+      - run:
+          name: Check CyREST
+          command: sleep 60 && curl -X GET 'http://localhost:1234/v1/version'
+      - run:
+          name: Render R Markdown
+          command: cd for-scripters/R/notebooks && Rscript -e 'for (rmdpath in Sys.glob("*.Rmd")) {rmarkdown::render(rmdpath)}'
+      - run:
+          name: Move html to artifact dir
+          command: mkdir /tmp/artifacts && mv *.html /tmp/artifacts/
+      - store_artifacts:
+          path: /tmp/artifacts
+          
