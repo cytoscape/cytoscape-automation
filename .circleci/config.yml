@@ -7,10 +7,10 @@ jobs:
       - checkout
       - run:
           name: Setup Cytoscape
-          command: apt-get update && apt-get install libxml2-dev pandoc openjdk-8-jdk wget curl xvfb -y && wget https://github.com/cytoscape/cytoscape/releases/download/3.7.2/cytoscape-3.7.2.tar.gz && tar xf cytoscape-3.7.2.tar.gz && rm cytoscape-3.7.2.tar.gz
+          command: apt-get update && apt-get install pandoc openjdk-8-jdk curl xvfb -y && wget https://github.com/cytoscape/cytoscape/releases/download/3.7.2/cytoscape-3.7.2.tar.gz && tar xf cytoscape-3.7.2.tar.gz && rm cytoscape-3.7.2.tar.gz
       - run:
           name: Install RCy3
-          command: export DEBIAN_FRONTEND=noninteractive && apt-get install r-base -y && Rscript -e 'install.packages(c("BiocManager", "rmarkdown")); BiocManager::install(c("RCy3", "BiocStyle"))'
+          command: Rscript -e 'BiocManager::install(c("RCy3", "BiocStyle"))'
       - run:
           name: Start Cytoscape
           command: xvfb-run bash ./cytoscape-unix-3.7.2/cytoscape.sh
