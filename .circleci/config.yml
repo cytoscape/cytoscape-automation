@@ -23,7 +23,7 @@ jobs:
           command: cd for-scripters/R/notebooks && Rscript -e 'for (rmdpath in Sys.glob("*.Rmd")) {rmarkdown::render(rmdpath)}'
       - run:
           name: Move html to artifact dir
-          command: mkdir /tmp/artifacts && mv *.html /tmp/artifacts/
+          command: mkdir /tmp/artifacts && mv for-scripters/R/notebooks/*.html /tmp/artifacts/
       - store_artifacts:
           path: /tmp/artifacts
           
