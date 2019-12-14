@@ -4,6 +4,8 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=lab/tree/for-scripters/Python) (for Python)
 
+[![CircleCI](https://circleci.com/gh/cytoscape/cytoscape-automation.svg?style=svg)](https://circleci.com/gh/cytoscape/cytoscape-automation) (for R)
+
 ## How to use the Binder environments
 - Launch RStudio or JupyterLab server by clicking the above Binder badges.
 - Run the following command in the RStudio `Terminal` tab or JupyterLab `Terminal`. This command launches Cytoscape Desktop in the background. The Cytoscape window is never visible.
