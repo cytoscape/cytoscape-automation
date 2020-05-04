@@ -45,7 +45,7 @@ library(RColorBrewer)
 # Prerequisites
 In addition to this package (RCy3), you will need:
 
-  * **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
+  * **Latest version of Cytoscape**, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
 * Complete installation wizard
 * Launch Cytoscape 
 For this vignette, you’ll also need the STRING app and the enhancedGraphics app: 
@@ -54,7 +54,6 @@ For this vignette, you’ll also need the STRING app and the enhancedGraphics ap
 * Install the enhancedGraphics app from http://apps.cytoscape.org/apps/enhancedgraphics
 
 ```{r}
-#available in Cytoscape 3.7.0 and above 
 installApp('stringApp')
 installApp('enhancedGraphics')
 ```
@@ -112,27 +111,25 @@ commandsRun(string.cmd)
 The resulting network contains known interactions between the human proteins, with an evidence score of 0.999 or greater.
 
 # Merge Networks
-To incorprate the new information into our AP-MS network, we need merge the STRING and AP-MS networks. Hwever, Cytoscape's network merge feature has not yet been automated, so we will perform these steps in the GUI.
+To incorprate the new information into our AP-MS network, we need merge the STRING and AP-MS networks. We can use the Uniprot IDs available in both networks as the matching attribute, "Uniprot" in the AP-MS network, and "query term in the String network.
+We will also specify how to merge the attribute containing the node name (symbol), which is contained in the "name" attribute for the AP-MS network and the "display name" for the String network. 
 
-We can use the Uniprot IDs available in both networks as the matching attribute.
-
-1. Go to Tools → Merge → Networks...
-2. In the Available Networks list, select both networks and click the right arrow to add then to the Networks to Merge list.
-3. Expand the Advanced Options interface.
-4. In the Matching Columns field, select "Uniprot" for the AP-MS network and "query term" for the string network.
-5. In the How to merge columns section, find the entry for "display name" for the string network. 
-6. Click on the column for the ap-ms network for that same row and select "name" from the drop-down.
-
-<center>
-![](https://cytoscape.github.io/cytoscape-tutorials/protocols/AP-MS-network-analysis/merge-interface.png){width=80%}
-</center>
+```{r}
+merge.cmd<-paste('network merge',
+                 'operation=union',
+                 'sources="apms network,String Network"',
+                 'nodeKeys="Uniprot,query term"', 
+                 'nodeMergeMap="{name,display name,display name, string}"')
+commandsRun(merge.cmd)
+```
 
 # Network Visualization
-When the merged network first loads, it will have the STRING style applied. However, because the HIV nodes are not from STRING, they will be white and difficult to see. The layout also makes the network hard to interpret. Let's change the style of the network a bit.
+When the merged network first loads, it will have the STRING style applied. However, because the HIV nodes are not from STRING, they will be grey. The layout also makes the network hard to interpret. Let's change the style of the network a bit.
 
 First, let's set our AP-MS network as the current network:
 ```{r}
-setCurrentNetwork('Merged Network')
+setCurrentNetwork('union: apms network,String Network')
+setCurrentView()
 ```
 
 Next, we can define our style and apply it to the network:
@@ -161,11 +158,12 @@ The STRING app has built-in enrichment analysis functionality, which includes en
 
 ```{r}
 commandsRun('string make string network="current"')
-commandsRun(paste('string retrieve enrichment', 
-                  'allNetSpecies="Homo sapiens"', 
-                  'cutoff=0.05',
-                  'selectedNodesOnly="false"',
-                  sep = ' '))
+
+string.cmd<-paste('string retrieve enrichment', 
+                  'allNetSpecies="Homo sapiens"',
+                  'background="genome"',
+                  'selectedNodesOnly="false"')
+commandsRun(string.cmd)
 ```
 
 The STRING enrichment results don't open by default if run from the command interface. 
