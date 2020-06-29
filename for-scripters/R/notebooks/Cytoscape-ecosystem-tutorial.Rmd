@@ -43,7 +43,8 @@ Confirm your connection with the *cytoscapePing* funciton:
 cytoscapePing()
 ```
 
-# Load Network from NDEx
+# PART I 
+## Load Network from NDEx
 We will import a network from NDEx into the Cytoscape environment. Networks are provided a Universal Unique ID (UUID) by NDEx that can be used to reliably reference a particular network. The import method returns a Cytoscape Session Unique ID (SUID) for the imported network, enabling us to reference it in subsequent steps within a given Cytoscape session.
 
 ```{r}
@@ -51,7 +52,7 @@ NETWORK_UUID = 'fa7405cf-3d7f-11ea-bfdc-0ac135e8bacf' # UUID provided by NDEx
 network_suid <- importNetworkFromNDEx(NETWORK_UUID) 
 ```
 	
-# Copy Visual Style
+## Copy Visual Style
 One of the easiest ways to apply a visual style to a network is to copy that style from another network. This lets you work on the style of your network in Cytoscape using the interactive style editor, then save the network to NDEx for future use as a template.
 
 The name of the template network becomes the name of its style and the *set* method assigns that style to another network, specified by that network's SUID.
@@ -63,7 +64,7 @@ setVisualStyle(paste0(style_network_name,'-Style'), network=network_suid)
 setCurrentNetwork(network_suid)
 ```
 
-# Apply Layout
+## Apply Layout
 We can easily access the layouts available in Cytoscape.
 ```{r}
 getLayoutNames() # explore available layouts
@@ -76,7 +77,7 @@ getLayoutPropertyNames('force-directed') # explore parameter options
 layoutNetwork('force-directed defaultSpringCoefficient=1E-5', network=network_suid)
 ```
 
-# Save Network to NDEx
+## Save Network to NDEx
 There is a one-step method to save networks from Cytoscape to NDEx. You can also control whether the network is publicly accessible or private to your account.
 
 **Note:** By itself, "public" does not mean that users can find the network by searching NDEx. This is so that searches are not cluttered by networks that were convenient to make public but which are not intended for general use. To make a network findable in searches, you need to go to your account on the NDEx site and change that setting. In the context of a tutorial where you access NDEx programmatically, you can see how important this is: no one wants to find the 20,000 networks you accidentally loaded to your account because of a bug in your code.
@@ -87,10 +88,15 @@ renameNetwork(new_name)
 
 USERNAME <- readline('Enter your NDEx username: ')
 PASSWORD <= readline('Enter your NDEx password: ')
-exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=network_suid)
+new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=network_suid)
 ```
 
 
+# PART II
+## Load PPI Network
+
+
+## Load Expression Data
 
 
 
