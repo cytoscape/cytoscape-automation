@@ -60,4 +60,37 @@ STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
 style_network_suid <- importNetworkFromNDEx(STYLE_NETWORK_UUID) 
 style_network_name <- getNetworkName(style_network_suid)
 setVisualStyle(paste0(style_network_name,'-Style'), network=network_suid)
+setCurrentNetwork(network_suid)
 ```
+
+# Apply Layout
+We can easily access the layouts available in Cytoscape.
+```{r}
+getLayoutNames() # explore available layouts
+layoutNetwork('force-directed', network=network_suid)
+```
+
+Cytoscape layouts also have parameters that can be tuned for each network
+```{r}
+getLayoutPropertyNames('force-directed') # explore parameter options
+layoutNetwork('force-directed defaultSpringCoefficient=1E-5', network=network_suid)
+```
+
+# Save Network to NDEx
+There is a one-step method to save networks from Cytoscape to NDEx. You can also control whether the network is publicly accessible or private to your account.
+
+**Note:** By itself, "public" does not mean that users can find the network by searching NDEx. This is so that searches are not cluttered by networks that were convenient to make public but which are not intended for general use. To make a network findable in searches, you need to go to your account on the NDEx site and change that setting. In the context of a tutorial where you access NDEx programmatically, you can see how important this is: no one wants to find the 20,000 networks you accidentally loaded to your account because of a bug in your code.
+
+```{r}
+new_name <- paste0(getNetworkName(network_suid),'-tutorial')
+renameNetwork(new_name)
+
+USERNAME <- readline('Enter your NDEx username: ')
+PASSWORD <= readline('Enter your NDEx password: ')
+exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=network_suid)
+```
+
+
+
+
+
