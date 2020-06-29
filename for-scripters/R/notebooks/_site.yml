@@ -50,6 +50,8 @@ navbar:
       href: Shortest-path.nb.html
     - text: "Cytoscape automation in R"
       href: 230_Isserlin_RCy3_intro.nb.html
+    - text: "ISMB 2020 tutorial"
+      href: ismb-network-analysis-tutorial.nb.html
     - text: '---------'
     - text: External Links
     - text: "CyTargetLinker: use case 1, Rett syndrome extension"
