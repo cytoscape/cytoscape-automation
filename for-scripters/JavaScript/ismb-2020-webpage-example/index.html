@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cytoscape Automation By JavaScript</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://unpkg.com/ndex-client@0.0.2/dist/build/bundle.js"></script>
+  <script type='text/javascript'>
+     const ndexServerUrl = 'https://ndexbio.org/v2';
+     const ndex = new ndexClient.NDEx(ndexServerUrl);
+     const NETWORK_UUID = 'fa7405cf-3d7f-11ea-bfdc-0ac135e8bacf'
+     const STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
+     
+  </script>
+</head>
+
+<body>
+  <h1>Cytoscape Automation By JavaScript</h1>
+  <h2>Prerequisites</h2>
+  <list>
+    <li>An installed and running version of Cytoscape.</li>
+    <li>An internet connection.</li>
+    <li>An NDEx account.</li>
+  </list>
+  <h2>Step 1: Set Source Network</h2>
+  <form onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value);return false;">
+    <label for="ndex-username">NDEx User ID:</label>
+    <input type="text" id="ndex-username" name="ndex-username" value=''><br><br>
+    <label for="ndex-password">NDEx Password:</label>
+    <input type="password" id="ndex-password" name="ndex-password" value=''><br><br>
+    <input type="submit" value='Login to NDEx'>
+  </form>
+
+  <iframe src="./README.md" title="W3Schools Free Online Web Tutorials"></iframe>
+
+  <pre class='code'>
+    Code example</pre>
+
+  <h2>Step 2: Check Network Summary</h2>
+  <script type="text/javascript">
+    // Use the NDEx javascript client to fetch the JSON summary of the network.
+
+    function getNetworkSummary(uuid) {
+      
+      ndex.getStatus().then((response) => {
+        var p = document.createElement('p');
+        p.appendChild(document.createTextNode('Status: ' + response.message));
+        document.getElementById('content').appendChild(p);
+      });
+
+      ndex.getNetworkSummary(uuid).then((response) => {
+          document.getElementById('network-summary').value = JSON.stringify(response, null, 2);
+        });
+    }
+  </script>
+  <button
+    onClick='getNetworkSummary(NETWORK_UUID)'>Get
+    Network Summary</button>
+  <br><br>
+  <form>
+    <label for="network-summary">Network Summary:</label><br>
+    <textarea readonly id="network-summary" name="network-summary" rows="27" cols="60"></textarea>
+    <br><br>
+  </form>
+
+  <h2>Step 3: Import network into Cytoscape</h2>
+  <script type="text/javascript">
+    const CYREST_BASE_URL = 'http://127.0.0.1'
+
+    const importNetwork = (cyRESTPort, serverUrl, uuid, username, password) => {
+
+      const cyRESTParams = {
+        serverUrl: serverUrl,
+        uuid: uuid,
+        username: username,
+        password: password
+      }
+
+      const importNetworkUrl =
+        CYREST_BASE_URL + ':' + cyRESTPort + '/cyndex2/v1/networks'
+      console.log('Calling CyREST POST:', importNetworkUrl)
+
+      return fetch(importNetworkUrl, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cyRESTParams)
+      })
+    }
+  </script>
+  <button
+    onClick='importNetwork("1234", ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value)'>Import
+    to Cytoscape</button>
+</body>
+</html>
