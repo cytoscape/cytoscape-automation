@@ -94,9 +94,43 @@ new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, netw
 
 # PART II
 ## Load PPI Network
+Tabular data can be read in as a dataframe and then loaded as a network in Cytoscape. 
 
+**Note:** A column named "source" automatically becomes the source node column; "target" becomes the target node column, and "interaction" becomes the edge interactions column. All other columns become edge attributes.
+
+```{r}
+PPI_DATA_URL = 'https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/Python/data/ap-ms-demo-data.csv'
+ppi_data <- read.csv(PPI_DATA_URL, stringsAsFactors = F)
+ppi_data
+colnames(ppi_data)[1:2] <- c('source','target')
+ppi_data
+```
+```{r}
+ppi_suid <- createNetworkFromDataFrames(edges=ppi_data, 
+                            title = 'AP-MS Demo Data-tutorial',
+                            collection = 'AP-MS Demo Data')
+```
 
 ## Load Expression Data
+Now, the network can be annotated with expression data, provided a column in the datset matches a column in the network's Node Table.
 
+```{r}
+EXPRESSION_DATA_URL = 'https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/Python/data/annotation-data.csv'
+exp_data <- read.csv(EXPRESSION_DATA_URL, stringsAsFactors = F)
+exp_data
+```
 
+In this example, the column "GeneSymbol" matches the source nodes in our network in a default "name" column.
 
+```{r}
+loadTableData(exp_data, data.key.column = 'GeneSymbol')
+```
+
+## Save Network to NDEx
+Again, we can save this network to NDEx as well, including the network and associated expression data.
+
+```{r}
+USERNAME <- readline('Enter your NDEx username: ')
+PASSWORD <= readline('Enter your NDEx password: ')
+ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=ppi_suid)
+```
