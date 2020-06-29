@@ -1,5 +1,5 @@
 ---
-title: "ISMB Network Anlaysis Tutorial"
+title: "Cytoscape Ecosystem Tutorial"
 author: "by Alexander Pico"
 package: RCy3
 date: "`r Sys.Date()`"
