@@ -32,7 +32,6 @@ if(!"RCy3" %in% installed.packages()){
 library(RCy3)
 ```
 
-# Required Software
 The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
 
 * Download the latest Cytoscape from http://www.cytoscape.org/download.php 
