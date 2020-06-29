@@ -1,0 +1,10 @@
+.code {
+    font-family: monospace;
+    background-color: #f8f8f8;
+    color: #333;
+    border-style: solid;
+    border-color: #999;
+    border-width: 1px;
+    padding: 1em;
+}
+
