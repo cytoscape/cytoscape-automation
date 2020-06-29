@@ -51,7 +51,7 @@ navbar:
     - text: "Cytoscape automation in R"
       href: 230_Isserlin_RCy3_intro.nb.html
     - text: "Cytoscape ecosystem tutorial"
-      href: Cytoscape-ecosystem-tuorial.nb.html
+      href: Cytoscape-ecosystem-tutorial.nb.html
     - text: '---------'
     - text: External Links
     - text: "CyTargetLinker: use case 1, Rett syndrome extension"
