@@ -44,6 +44,8 @@ cytoscapePing()
 ```
 
 # PART I 
+Here, we will access NDEx and control Cytoscape using just a few of the hundreds of methods available in RCy3.
+
 ## Load Network from NDEx
 We will import a network from NDEx into the Cytoscape environment. Networks are provided a Universal Unique ID (UUID) by NDEx that can be used to reliably reference a particular network. The import method returns a Cytoscape Session Unique ID (SUID) for the imported network, enabling us to reference it in subsequent steps within a given Cytoscape session.
 
@@ -93,6 +95,8 @@ new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, netw
 
 
 # PART II
+In addition to working with networks from NDEx, you can also load networks from local or hosted flatfiles in a variety of formats and annotate them with data, just like you would using the Cytoscape GUI. 
+
 ## Load PPI Network
 Tabular data can be read in as a dataframe and then loaded as a network in Cytoscape. 
 
@@ -134,3 +138,47 @@ USERNAME <- readline('Enter your NDEx username: ')
 PASSWORD <= readline('Enter your NDEx password: ')
 ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=ppi_suid)
 ```
+
+# PART III
+We have demonstrating working with networks and datasets in Cytoscape via scripting. Of course, you can also represent networks at data objects in your scripting environment for bioinformatic analysis.
+
+## Retrieve Network from NDEx
+In order to retrieve networks from NDEx and represent them in R, we will need to install the *ndexr* package.
+
+```{r}
+if(!"ndexr" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("ndexr")
+}
+library(ndexr)
+```
+
+You can start with NDEx by first establishing a connection.
+```{r}
+ndexcon <- ndex_connect()
+```
+We will use ndexcon throughout the other ndexr calls. For example, a basic search.
+```{r}
+networks <- ndex_find_networks(ndexcon, "Breast Cancer")
+print(networks[,c("name","externalId","nodeCount","edgeCount")])
+```
+That print statement provides a nifty way to browse the search results. You’ll notice that we got results that hit each of the search terms individually, thus including any pathway with “cancer” in the name. That’s perhaps a bit too broad…
+```{r}
+networks <- ndex_find_networks(ndexcon, "BRCA")
+print(networks[,c("name","externalId","nodeCount","edgeCount")])
+```
+Ok. We can work with this list. Let’s use the first hit. Note: you are going to get different hits as this database changes over time, so proceed with any hit you like.
+```{r}
+networkId = networks$externalId[1]
+network = ndex_get_network(ndexcon, networkId)
+print(network)
+```
+The *network* is an RCX object. Explore the RCX object to see its contents.
+```{r}
+str(network)
+network$metaData
+network$nodes
+network$edges
+```
+
+**Note:** RCX can be coverted to two flavors of igraph objects using *rcx_toNGraph* and *rcx_toRCXgraph*. See method documentation for more details.
