@@ -166,12 +166,33 @@ onClick='applyLayout(network_SUID, "force-directed");'>Apply Layout</button>
   <script type="text/javascript">
 
 
-    const exportNetwork = (cyRESTPort, serverUrl, uuid, username, password) => {
+    async function exportNetwork( suid, serverUrl, uuid, username, password) {
+      const cyRESTParams = {
+        serverUrl: serverUrl,
+        uuid: uuid,
+        username: username,
+        password: password
+      }
 
+      const exportNetworkUrl =
+        CYREST_BASE_URL + '/cyndex2/v1/networks/' + suid
+      console.log('Calling CyREST POST:', exportNetworkUrl)
 
+      const response = await fetch(exportNetworkUrl, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cyRESTParams)
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json))
     }
   </script>
-  
+    <button
+    onClick='exportNetwork(network_SUID, ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
+    to Cytoscape</button>
 
 </body>
 
