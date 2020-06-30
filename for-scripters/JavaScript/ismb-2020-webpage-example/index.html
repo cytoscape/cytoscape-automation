@@ -101,12 +101,12 @@
     }
   </script>
   <button
-    onClick='network_SUID = importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
+    onClick='importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
     to Cytoscape</button>
 
   <h2>Use Another Network as a Visual Style Template</h2>
   <button
-    onClick='network_SUID = importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => style_network_SUID = suid);'>Import
+    onClick='importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => style_network_SUID = suid);'>Import
     to Cytoscape</button>
 
     <script type="text/javascript">
@@ -131,7 +131,7 @@
   <pre>http://localhost:1234/v1/apply/styles/NDEx%20default%20style%20v2-Style/1821</pre>
 
   <button
-  onClick='applyStyle(style_network_SUID, "NDEx default style v2-Style");'>Apply Style</button>
+  onClick='applyStyle(network_SUID, "NDEx default style v2-Style");'>Apply Style</button>
 
   <h2>Apply a Layout to the Network</h2>
 
@@ -157,7 +157,7 @@
 <pre>http://localhost:1234/v1/apply/styles/NDEx%20default%20style%20v2-Style/1821</pre>
 
 <button
-onClick='applyLayout(style_network_SUID, "force-directed");'>Apply Layout</button>
+onClick='applyLayout(network_SUID, "force-directed");'>Apply Layout</button>
 
 
   <pre>http://localhost:1234/v1/apply/layouts/force-directed/1821</pre>
