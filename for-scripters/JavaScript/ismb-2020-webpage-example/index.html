@@ -10,12 +10,12 @@
     const ndexServerUrl = 'https://ndexbio.org/v2';
     const ndex = new ndexClient.NDEx(ndexServerUrl);
     const NETWORK_UUID = 'fa7405cf-3d7f-11ea-bfdc-0ac135e8bacf'
-
-
     const STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
 
     var network_SUID = undefined;
     var style_network_SUID = undefined;
+
+    var new_network_UUID = undefined;
 
     const CYREST_BASE_URL = 'http://127.0.0.1:1234';
 
@@ -52,8 +52,9 @@
     const ndex = new ndexClient.NDEx(ndexServerUrl);
     
     ndex.setBasicAuth(username, password).value</pre>
-  <p>For this demo, we have preset the username and password to one specific to this tutorial, but you can also change the username and password below to your own acount.</p>
-  
+  <p>For this demo, we have preset the username and password to one specific to this tutorial, but you can also change
+    the username and password below to your own acount.</p>
+
   <form
     onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value);return false;">
     <label for="ndex-username">NDEx User ID:</label>
@@ -228,7 +229,8 @@
 
   <h2>Apply a Layout to the Network</h2>
 
-  <p>Similarly to applying a style to a network, we can perform a layout in Cytoscape using the <em>GET /v1/apply/layouts/{layout}/{network}</em> </p>
+  <p>Similarly to applying a style to a network, we can perform a layout in Cytoscape using the <em>GET
+      /v1/apply/layouts/{layout}/{network}</em> </p>
 
   <pre class='code'>
   const applyLayoutURL = CYREST_BASE_URL + '/v1/apply/layouts/' + encodeURI(layout) + '/' + networkSUID;
@@ -264,14 +266,19 @@
   <button onClick='applyLayout(network_SUID, "force-directed");'>Apply Layout</button>
 
   <h2>Step 5: Export network to NDEx</h2>
-  
+
   <p>
-    Similarly to our network import, we can save networks to NDEx using the <em>POST /cyndex2/v1/networks/{network}</em> method. Here you can also control whether the network is publicly accessible or private to your account.
+    Similarly to our network import, we can save networks to NDEx using the <em>POST /cyndex2/v1/networks/{network}</em>
+    method. Here you can also control whether the network is publicly accessible or private to your account.
   </p>
   <p>
-    Note: By itself, "public" does not mean that users can find the network by searching NDEx. This is so that searches are not cluttered by networks that were convenient to make public but which are not intended for general use. To make a network findable in searches, you need to go to your account on the NDEx site and change that setting. In the context of a tutorial where you access NDEx programmatically, you can see how important this is: no one wants to find the 20,000 networks you accidentally loaded to your account because of a bug in your code.
+    Note: By itself, "public" does not mean that users can find the network by searching NDEx. This is so that searches
+    are not cluttered by networks that were convenient to make public but which are not intended for general use. To
+    make a network findable in searches, you need to go to your account on the NDEx site and change that setting. In the
+    context of a tutorial where you access NDEx programmatically, you can see how important this is: no one wants to
+    find the 20,000 networks you accidentally loaded to your account because of a bug in your code.
   </p>
-  
+
   <pre class='code'>
   // This is the JSON sent as a body parameter to the REST endpoint.
   // This is similar to the import parameter structure, 
@@ -299,13 +306,13 @@
     });
     const json = await response.json();
   </pre>
-  
+
   <script type="text/javascript">
 
-    async function exportNetwork(suid, serverUrl, uuid, username, password) {
+    async function exportNetwork(suid, serverUrl, username, password) {
       const cyRESTParams = {
         serverUrl: serverUrl.replace('https', 'http'),
-        uuid: uuid,
+        //uuid: uuid,
         username: username,
         password: password,
         isPublic: false
@@ -324,17 +331,36 @@
         body: JSON.stringify(cyRESTParams)
       });
       const json = await response.json();
-      console.log('Response JSON: ' + JSON.stringify(json))
+      console.log('Response JSON: ' + JSON.stringify(json));
+      const uuid = json.data.uuid;
+      console.log('saved network UUID: ' + uuid);
+      return uuid;
     }
   </script>
   <button
-    onClick='exportNetwork(network_SUID, ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Export to NDEx</button>
+    onClick='exportNetwork(network_SUID, ndexServerUrl, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(uuid => new_network_UUID = uuid);'>Export
+    to NDEx</button>
 
-<br>
-<br>
+  <br>
+  <br>
+  <script src="https://unpkg.com/cytoscape-cx2js@0.6.4/build/bundle.js"></script>
+  <script src="https://unpkg.com/cytoscape@3.6.0/dist/cytoscape.min.js"></script>
+  <script src="./script.js"></script>
+
+  <div id="cy1"></div>
+
+  <script type="text/javascript">
+    function displayNDExCX(uuid, element) {
+      ndex.getRawNetwork(uuid).then((cx) => { displayCX(cx, element); });
+    }
+  </script>
+
+  <button onClick='displayNDExCX(NETWORK_UUID, "cy1")'>Network 1</button>
   <!--<iframe src="./README.md" title="W3Schools Free Online Web Tutorials"></iframe>-->
 
-
+  <div id="cy2"></div>
+  <button onClick='displayNDExCX(new_network_UUID, "cy2")'>Network 2</button>
 
 </body>
+
 </html>
