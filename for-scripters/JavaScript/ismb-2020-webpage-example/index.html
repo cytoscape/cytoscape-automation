@@ -19,6 +19,10 @@
 
     const CYREST_BASE_URL = 'http://127.0.0.1:1234';
 
+    function updateButton(element) {
+      element.innerHTML = element.innerHTML + ' [DONE]';
+    }
+
   </script>
 </head>
 
@@ -58,7 +62,7 @@
     the username and password below to your own acount.</p>
 
   <form
-    onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value);return false;">
+    onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value); updateButton(this); return false;">
     <label for="ndex-username">NDEx User ID:</label>
     <input type="text" id="ndex-username" name="ndex-username" value='sol015'><br><br>
     <label for="ndex-password">NDEx Password:</label>
@@ -80,20 +84,15 @@
   <script type="text/javascript">
     // Use the NDEx javascript client to fetch the JSON summary of the network.
 
-    function getNetworkSummary(uuid) {
-
-      ndex.getStatus().then((response) => {
-        //var p = document.createElement('p');
-        //p.appendChild(document.createTextNode('Status: ' + response.message));
-        //document.getElementById('content').appendChild(p);
-      });
+    function getNetworkSummary(uuid, button) {
 
       ndex.getNetworkSummary(uuid).then((response) => {
         document.getElementById('network-summary').value = JSON.stringify(response, null, 2);
+        updateButton(button)
       });
     }
   </script>
-  <button onClick='getNetworkSummary(NETWORK_UUID)'>Get
+  <button onClick='getNetworkSummary(NETWORK_UUID, this)'>Get
     Network Summary</button>
   <br><br>
   <form>
@@ -104,11 +103,13 @@
 
   <h2>Download the Network to Cytoscape</h2>
 
-  <p>We use the JavaScript fetch function to communicate with the Cytoscape Desktop via HTTP. Cytoscape now runs as a
-    local REST server, its API exposing many of the core operations and the operations provided by Apps. In this case,
-    we use the <em>POST /cyndex2/v1/networks</em> endpoint to import the network from NDEx into the Cytoscape
-    environment. The method returns a session ID (SUID) for the downloaded network, enabling us to reference it in the
-    next steps.</p>
+  <p>We use the JavaScript fetch function to communicate with the Cytoscape Desktop via HTTP. Cytoscape includes a core
+    app called CyREST, which functions as a local REST server. The CyREST API exposes many of Cytoscape's core
+    operations and the operations provided by its Apps. All of the functionality available in CyREST is documented and
+    can be interacted with by using the <em>Help > Automation</em> menu within Cytoscape.
+  <p>In this step, we use the <em>POST /cyndex2/v1/networks</em> endpoint to import the network from NDEx into the
+    Cytoscape environment. The method returns a session ID (SUID) for the downloaded network, enabling us to reference
+    it in the next steps.</p>
 
   <pre class='code'>
     // This is the JSON sent as a body parameter to the REST endpoint.
@@ -174,7 +175,7 @@
     }
   </script>
   <button
-    onClick='importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
+    onClick='importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => {network_SUID = suid; updateButton(this);});'>Import
     to Cytoscape</button>
 
   <h2>Use Another Network as a Visual Style Template</h2>
@@ -188,7 +189,7 @@
     we used above.
   </p>
   <button
-    onClick='importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => style_network_SUID = suid);'>Import
+    onClick='importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => {style_network_SUID = suid; updateButton(this);});'>Import
     to Cytoscape</button>
   <p>
     Once loaded, the name of the template network becomes the name of its style and the
@@ -227,7 +228,7 @@
     }
   </script>
 
-  <button onClick='applyStyle(network_SUID, "NDEx default style v2-Style");'>Apply Style</button>
+  <button onClick='applyStyle(network_SUID, "NDEx default style v2-Style"); updateButton(this);'>Apply Style</button>
 
   <h2>Apply a Layout to the Network</h2>
 
@@ -265,7 +266,7 @@
     }
   </script>
 
-  <button onClick='applyLayout(network_SUID, "force-directed");'>Apply Layout</button>
+  <button onClick='applyLayout(network_SUID, "force-directed"); updateButton(this);'>Apply Layout</button>
 
   <h2>Step 5: Export network to NDEx</h2>
 
@@ -289,7 +290,6 @@
     // Be mindful that for current versions of CyNDEx2, https is not yet supported.
     // This must be an http URL.
     serverUrl: serverUrl,
-    uuid: uuid,
     username: username,
     password: password,
     isPublic: false
@@ -314,7 +314,6 @@
     async function exportNetwork(suid, serverUrl, username, password) {
       const cyRESTParams = {
         serverUrl: serverUrl.replace('https', 'http'),
-        //uuid: uuid,
         username: username,
         password: password,
         isPublic: false
@@ -340,7 +339,7 @@
     }
   </script>
   <button
-    onClick='exportNetwork(network_SUID, ndexServerUrl, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(uuid => new_network_UUID = uuid);'>Export
+    onClick='exportNetwork(network_SUID, ndexServerUrl, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(uuid => { new_network_UUID = uuid; updateButton(this)});'>Export
     to NDEx</button>
   <br>
   <br>
@@ -371,8 +370,8 @@
   <pre class='code'>
   //We are using 
   ndex.getRawNetwork(uuid).then((cx) => { displayCX(cx, element); });</pre>
-  
-  
+
+
   <h4>Original Network</h4>
   <div id="cy1"></div>
 
