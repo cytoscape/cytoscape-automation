@@ -15,6 +15,8 @@
     const STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
     var style_network_SUID = undefined;
 
+    const CYREST_BASE_URL = 'http://127.0.0.1:1234';
+
   </script>
 </head>
 
@@ -41,7 +43,7 @@
   <pre class='code'>
     Code example</pre>
 
-  <h2>Step 2: Check Network Summary</h2>
+  <h2>Download the First Example Network Summary From NDEx to the JavaScript Environment</h2>
   <script type="text/javascript">
     // Use the NDEx javascript client to fetch the JSON summary of the network.
 
@@ -67,11 +69,10 @@
     <br><br>
   </form>
 
-  <h2>Step 3: Import network into Cytoscape</h2>
+  <h2>Download the Same Network to Cytoscape</h2>
   <script type="text/javascript">
-    const CYREST_BASE_URL = 'http://127.0.0.1'
-
-    async function importNetwork (cyRESTPort, serverUrl, uuid, username, password) {
+    
+    async function importNetwork(serverUrl, uuid, username, password) {
 
       const cyRESTParams = {
         serverUrl: serverUrl,
@@ -81,7 +82,7 @@
       }
 
       const importNetworkUrl =
-        CYREST_BASE_URL + ':' + cyRESTPort + '/cyndex2/v1/networks'
+        CYREST_BASE_URL + '/cyndex2/v1/networks'
       console.log('Calling CyREST POST:', importNetworkUrl)
 
       const response = await fetch(importNetworkUrl, {
@@ -100,21 +101,77 @@
     }
   </script>
   <button
-    onClick='network_SUID = importNetwork("1234", ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
+    onClick='network_SUID = importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => network_SUID = suid);'>Import
     to Cytoscape</button>
 
-  <h2>Step 4: Export network to NDEx</h2>
+  <h2>Use Another Network as a Visual Style Template</h2>
+  <button
+    onClick='network_SUID = importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => style_network_SUID = suid);'>Import
+    to Cytoscape</button>
+
+    <script type="text/javascript">
+    
+      async function applyStyle(networkSUID, style) {
+  
+        const applyStyleURL =
+          CYREST_BASE_URL + '/v1/apply/styles/' + encodeURI(style) + '/' + networkSUID;
+        console.log('Calling CyREST POST:', applyStyleURL)
+  
+        const response = await fetch(applyStyleURL, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        const json = await response.json();
+        console.log('Response JSON: ' + JSON.stringify(json));
+      }
+    </script>
+  <pre>http://localhost:1234/v1/apply/styles/NDEx%20default%20style%20v2-Style/1821</pre>
+
+  <button
+  onClick='applyStyle(style_network_SUID, "NDEx default style v2-Style");'>Apply Style</button>
+
+  <h2>Apply a Layout to the Network</h2>
+
   <script type="text/javascript">
-   
+    
+    async function applyLayout(networkSUID, layout) {
+
+      const applyLayoutURL =
+        CYREST_BASE_URL + '/v1/apply/layouts/' + encodeURI(layout) + '/' + networkSUID;
+      console.log('Calling CyREST POST:', applyLayoutURL)
+
+      const response = await fetch(applyLayoutURL, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json));
+    }
+  </script>
+<pre>http://localhost:1234/v1/apply/styles/NDEx%20default%20style%20v2-Style/1821</pre>
+
+<button
+onClick='applyLayout(style_network_SUID, "force-directed");'>Apply Layout</button>
+
+
+  <pre>http://localhost:1234/v1/apply/layouts/force-directed/1821</pre>
+
+  <h2>Step 5: Export network to NDEx</h2>
+  <script type="text/javascript">
+
 
     const exportNetwork = (cyRESTPort, serverUrl, uuid, username, password) => {
 
-    
+
     }
   </script>
-  <button
-    onClick='console.log("Haaaay: " + network_SUID);'>Import
-    to Cytoscape</button>
+  
 
 </body>
 
