@@ -112,6 +112,8 @@
     // For this endpoint, we set the NDEx URL, the UUID of the network we wish to import, 
     // and the username and password we are using to access NDEx.
     const cyRESTParams = {
+      // Be mindful that for current versions of CyNDEx2, https is not yet supported.
+      // This must be an http URL.
       serverUrl: serverUrl,
       uuid: uuid,
       username: username,
@@ -122,7 +124,7 @@
     const CYREST_BASE_URL = 'http://127.0.0.1:1234';
     const importNetworkUrl = CYREST_BASE_URL + '/cyndex2/v1/networks'
 
-    //This is our fetch statement, including the URL we have built, and our body parameter. 
+    // This is our fetch statement, including the URL we have built, and our body parameter. 
     // In our case, we are performing our fetch synchronously, using the await statement. 
     // You can also use asynchronous fetch processing.
     const response = await fetch(importNetworkUrl, {
@@ -143,7 +145,7 @@
     async function importNetwork(serverUrl, uuid, username, password) {
 
       const cyRESTParams = {
-        serverUrl: serverUrl,
+        serverUrl: serverUrl.replace('https', 'http'),
         uuid: uuid,
         username: username,
         password: password
@@ -271,7 +273,12 @@
   </p>
   
   <pre class='code'>
+  // This is the JSON sent as a body parameter to the REST endpoint.
+  // This is similar to the import parameter structure, 
+  // but with the addition of the isPublic field.
   const cyRESTParams = {
+    // Be mindful that for current versions of CyNDEx2, https is not yet supported.
+    // This must be an http URL.
     serverUrl: serverUrl,
     uuid: uuid,
     username: username,
@@ -297,7 +304,7 @@
 
     async function exportNetwork(suid, serverUrl, uuid, username, password) {
       const cyRESTParams = {
-        serverUrl: serverUrl,
+        serverUrl: serverUrl.replace('https', 'http'),
         uuid: uuid,
         username: username,
         password: password,
