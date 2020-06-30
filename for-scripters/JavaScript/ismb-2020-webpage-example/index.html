@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Cytoscape Automation By JavaScript</title>
+  <title>Cytoscape Ecosystem Tutorial: JavaScript</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://unpkg.com/ndex-client@0.0.2/dist/build/bundle.js"></script>
   <script type='text/javascript'>
@@ -23,13 +23,15 @@
 </head>
 
 <body>
-  <h1>Cytoscape Automation By JavaScript</h1>
+  <h1>Cytoscape Ecosystem Tutorial</h1>
   <h2>Prerequisites</h2>
   <list>
     <li>An installed and running version of Cytoscape.</li>
     <li>An internet connection.</li>
-    <li>An NDEx account.</li>
+    <li>An NDEx account (one is provided in this tutorial).</li>
   </list>
+
+  <h2>PART 1</h2>
   <h2>The JavaScript NDEx Client</h2>
   <p>
     The NDEx JavaScript client provides a convenient wrapper around around the NDEx server API. NDEx networks are
@@ -340,13 +342,38 @@
   <button
     onClick='exportNetwork(network_SUID, ndexServerUrl, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(uuid => new_network_UUID = uuid);'>Export
     to NDEx</button>
-
   <br>
   <br>
   <script src="https://unpkg.com/cytoscape-cx2js@0.6.4/build/bundle.js"></script>
   <script src="https://unpkg.com/cytoscape@3.6.0/dist/cytoscape.min.js"></script>
   <script src="./script.js"></script>
 
+  <h2>PART 2</h2>
+  <h2>Displaying CX Networks Using Cytoscape.js</h2>
+  <p>
+    Any CX data can be rendered interactively using the <a href="https://js.cytoscape.org/">Cytoscape.js</a> library.
+    Cytoscape.js is a powerful web-based rendering engine for networks, and can perform many useful operations such as
+    algorithmic layouts, network analyses, and others. The Cytoscape.js webpage has thorough documentation on its many
+    features.
+  </p>
+  <p>
+    We will load both of our networks from PART 1: the original network from NDEx, and the version we modified in
+    Cytoscape. We rely on two public libraries: Cytoscape.js and the cx2js conversion utility.
+  </p>
+  <pre class='code'>
+    &lt;script src=&quot;https://unpkg.com/cytoscape-cx2js@0.6.4/build/bundle.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://unpkg.com/cytoscape@3.6.0/dist/cytoscape.min.js&quot;&gt;&lt;/script&gt;</pre>
+
+  <p>Once these libraries are available, we can use the NDEx JavaScript Client to get the raw CX data for a network.
+    This data is then passed to the <em>displayCX</em> function, which uses these two libraries to convert and render
+    the network within a named document element in the web page. The <em>displayCX</em> function can be viewed <a
+      href="./script.js">here</a>.</p>
+  <pre class='code'>
+  //We are using 
+  ndex.getRawNetwork(uuid).then((cx) => { displayCX(cx, element); });</pre>
+  
+  
+  <h4>Original Network</h4>
   <div id="cy1"></div>
 
   <script type="text/javascript">
@@ -355,11 +382,11 @@
     }
   </script>
 
-  <button onClick='displayNDExCX(NETWORK_UUID, "cy1")'>Network 1</button>
+  <button onClick='displayNDExCX(NETWORK_UUID, "cy1")'>Display original NDEx Network</button>
   <!--<iframe src="./README.md" title="W3Schools Free Online Web Tutorials"></iframe>-->
-
+  <h4>Modified Network</h4>
   <div id="cy2"></div>
-  <button onClick='displayNDExCX(new_network_UUID, "cy2")'>Network 2</button>
+  <button onClick='displayNDExCX(new_network_UUID, "cy2")'>Display network modified by Cytoscape</button>
 
 </body>
 

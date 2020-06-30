@@ -11,19 +11,26 @@
 #cy1 {
     background-color: white;
       width: 100%;
-      height: 600px;
+      height: 400px;
       top: 0px;
       left: 0px;
       z-index: 0;
-      letter-spacing: 1px;
+      letter-spacing: 1px; 
+      border-style: solid;
+      border-color: #999;
+      border-width: 1px;
+
   }
 
   #cy2 {
     background-color: white;
       width: 100%;
-      height: 600px;
+      height: 400px;
       top: 0px;
       left: 0px;
       z-index: 0;
       letter-spacing: 1px;
+      border-style: solid;
+      border-color: #999;
+      border-width: 1px;
   }
