@@ -52,6 +52,8 @@
     const ndex = new ndexClient.NDEx(ndexServerUrl);
     
     ndex.setBasicAuth(username, password).value</pre>
+  <p>For this demo, we have preset the username and password to one specific to this tutorial, but you can also change the username and password below to your own acount.</p>
+  
   <form
     onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value);return false;">
     <label for="ndex-username">NDEx User ID:</label>
@@ -107,7 +109,8 @@
 
   <pre class='code'>
     // This is the JSON sent as a body parameter to the REST endpoint.
-    // For this endpoint, we set the NDEx URL, the UUID of the network we wish to import, and the username and password we are using to access NDEx.
+    // For this endpoint, we set the NDEx URL, the UUID of the network we wish to import, 
+    // and the username and password we are using to access NDEx.
     const cyRESTParams = {
       serverUrl: serverUrl,
       uuid: uuid,
@@ -119,7 +122,9 @@
     const CYREST_BASE_URL = 'http://127.0.0.1:1234';
     const importNetworkUrl = CYREST_BASE_URL + '/cyndex2/v1/networks'
 
-    //This is our fetch statement, including the URL we have built, and our body parameter. In our case, we are performing our fetch synchronously, using the await statement. You can also use asynchronous fetch processing.
+    //This is our fetch statement, including the URL we have built, and our body parameter. 
+    // In our case, we are performing our fetch synchronously, using the await statement. 
+    // You can also use asynchronous fetch processing.
     const response = await fetch(importNetworkUrl, {
       method: 'POST',
       headers: {
