@@ -9,8 +9,8 @@
   <script type='text/javascript'>
     const ndexServerUrl = 'https://ndexbio.org/v2';
     const ndex = new ndexClient.NDEx(ndexServerUrl);
-    const NETWORK_UUID = 'fa7405cf-3d7f-11ea-bfdc-0ac135e8bacf'
-    const STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
+    const NETWORK_UUID = 'b1e9a489-bbe7-11ea-aaef-0ac135e8bacf'
+    const STYLE_NETWORK_UUID = 'b1c1aa27-bbe7-11ea-aaef-0ac135e8bacf'
 
     var network_SUID = undefined;
     var style_network_SUID = undefined;
@@ -64,9 +64,9 @@
   <form
     onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value); updateButton(this); return false;">
     <label for="ndex-username">NDEx User ID:</label>
-    <input type="text" id="ndex-username" name="ndex-username" value='sol015'><br><br>
+    <input type="text" id="ndex-username" name="ndex-username" value='ismbdemo'><br><br>
     <label for="ndex-password">NDEx Password:</label>
-    <input type="password" id="ndex-password" name="ndex-password" value='test'><br><br>
+    <input type="password" id="ndex-password" name="ndex-password" value='ismbdemo2020'><br><br>
     <input type="submit" value='Initialize NDEx JavaScript Client'>
   </form>
 
