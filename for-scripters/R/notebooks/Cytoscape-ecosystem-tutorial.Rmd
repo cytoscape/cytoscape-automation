@@ -87,10 +87,12 @@ There is a one-step method to save networks from Cytoscape to NDEx. You can also
 ```{r}
 new_name <- paste0(getNetworkName(network_suid),'-tutorial')
 renameNetwork(new_name)
+```
 
+```{r}
 USERNAME <- readline('Enter your NDEx username: ')
-PASSWORD <= readline('Enter your NDEx password: ') 
-new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=network_suid)
+PASSWORD <- readline('Enter your NDEx password: ') 
+new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=FALSE, network=network_suid)
 ```
 
 
@@ -135,8 +137,8 @@ Again, we can save this network to NDEx as well, including the network and assoc
 
 ```{r}
 USERNAME <- readline('Enter your NDEx username: ')
-PASSWORD <= readline('Enter your NDEx password: ')
-ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=ppi_suid)
+PASSWORD <- readline('Enter your NDEx password: ')
+ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=FALSE, network=ppi_suid)
 ```
 
 # PART III
