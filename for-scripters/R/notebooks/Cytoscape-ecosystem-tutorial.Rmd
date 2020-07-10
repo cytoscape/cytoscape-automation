@@ -50,7 +50,7 @@ Here, we will access NDEx and control Cytoscape using just a few of the hundreds
 We will import a network from NDEx into the Cytoscape environment. Networks are provided a Universal Unique ID (UUID) by NDEx that can be used to reliably reference a particular network. The import method returns a Cytoscape Session Unique ID (SUID) for the imported network, enabling us to reference it in subsequent steps within a given Cytoscape session.
 
 ```{r}
-NETWORK_UUID = 'fa7405cf-3d7f-11ea-bfdc-0ac135e8bacf' # UUID provided by NDEx
+NETWORK_UUID = 'b1e9a489-bbe7-11ea-aaef-0ac135e8bacf' # UUID provided by NDEx
 network_suid <- importNetworkFromNDEx(NETWORK_UUID) 
 ```
 	
@@ -59,7 +59,7 @@ One of the easiest ways to apply a visual style to a network is to copy that sty
 
 The name of the template network becomes the name of its style and the *set* method assigns that style to another network, specified by that network's SUID.
 ```{r}
-STYLE_NETWORK_UUID = '145a6a47-78ee-11e9-848d-0ac135e8bacf'
+STYLE_NETWORK_UUID = 'b1c1aa27-bbe7-11ea-aaef-0ac135e8bacf'
 style_network_suid <- importNetworkFromNDEx(STYLE_NETWORK_UUID) 
 style_network_name <- getNetworkName(style_network_suid)
 setVisualStyle(paste0(style_network_name,'-Style'), network=network_suid)
@@ -87,10 +87,12 @@ There is a one-step method to save networks from Cytoscape to NDEx. You can also
 ```{r}
 new_name <- paste0(getNetworkName(network_suid),'-tutorial')
 renameNetwork(new_name)
+```
 
+```{r}
 USERNAME <- readline('Enter your NDEx username: ')
-PASSWORD <= readline('Enter your NDEx password: ')
-new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=network_suid)
+PASSWORD <- readline('Enter your NDEx password: ') 
+new_network_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=FALSE, network=network_suid)
 ```
 
 
@@ -135,8 +137,8 @@ Again, we can save this network to NDEx as well, including the network and assoc
 
 ```{r}
 USERNAME <- readline('Enter your NDEx username: ')
-PASSWORD <= readline('Enter your NDEx password: ')
-ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=False, network=ppi_suid)
+PASSWORD <- readline('Enter your NDEx password: ')
+ppi_data_uuid <- exportNetworkToNDEx(USERNAME, PASSWORD, isPublic=FALSE, network=ppi_suid)
 ```
 
 # PART III
