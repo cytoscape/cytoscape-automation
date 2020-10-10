@@ -22,42 +22,39 @@ suppressPackageStartupMessages({
 	library(RCy3)
 	library(RColorBrewer)
 	library(gProfileR)
-	library(RCurl)
 })
 ```
 
-#Overview
+# Overview
 
-## Instructor names and contact information
+### Instructor names and contact information
 
 * Ruth Isserlin - ruth dot isserlin (at) utoronto (dot) ca
 * Brendan Innes - brendan (dot) innes (at) mail (dot) utoronto (dot) ca
 * Jeff Wong - jvwong (at) gmail (dot) com 
 * Gary Bader - gary (dot) bader (at) utoronto (dot) ca
 
-## Workshop Description
+### Workshop Description
 
 Cytoscape(www.cytoscape.org) is one of the most popular applications for network analysis and visualization. In this workshop, we will demonstrate new capabilities to integrate Cytoscape into programmatic workflows and pipelines using R. We will begin with an overview of network biology themes and concepts, and then we will translate these into Cytoscape terms for practical applications. The bulk of the workshop will be a hands-on demonstration of accessing and controlling Cytoscape from R to perform a network analysis of tumor expression data.
 
-## Workshop prerequisites:
+### Workshop prerequisites
 * Basic knowledge of R syntax
 * Basic knowledge of Cytoscape software
 * Familiarity with network biology concepts
 
-## Background:
+### Background
 * “How to visually interpret biological data using networks.” Merico D, Gfeller D, Bader GD. Nature Biotechnology 2009 Oct 27, 921-924 - http://baderlab.org/Publications?action=AttachFile&do=view&target=2009_Merico_Primer_NatBiotech_Oct.pdf
 * “CyREST: Turbocharging Cytoscape Access for External Tools via a RESTful API”. Keiichiro Ono, Tanja Muetze, Georgi Kolishovski, Paul Shannon, Barry Demchak.F1000Res. 2015 Aug 5;4:478. - https://f1000research.com/articles/4-478/v1
 
-## Workshop Participation
+### Workshop Participation
 Participants are required to bring a laptop with Cytoscape, R, and RStudio installed.  Installation instructions will be provided in the weeks preceding the workshop.  The workshop will consist of a lecture and lab.
 
-## R / Bioconductor packages used
+### R / Bioconductor packages used
 * RCy3
 * gProfileR
-* RCurl
-* EnrichmentBrowser
 
-## Time outline
+### Time outline
 
 | Activity                                       | Time |
 |------------------------------------------------|------|
@@ -67,16 +64,14 @@ Participants are required to bring a laptop with Cytoscape, R, and RStudio insta
 | Summary                                        | 10m  |
 
 
-## Workshop goals and objectives
+### Workshop goals and objectives
 
-Learning goals
-
+Learning goals:
 * Know when and how to use Cytoscape in your research area
 * Generalize network analysis methods to multiple problem domains
 * Integrate Cytoscape into your bioinformatics pipelines
 
-Learning objectives
-
+Learning objectives:
 * Programmatic control over Cytoscape from R
 * Publish, share and export networks
 
@@ -189,12 +184,12 @@ installApp('clusterMaker2')
 ```
 
 ## Getting started
-###Confirm that Cytoscape is installed and opened
+### Confirm that Cytoscape is installed and opened
 ```{r eval=FALSE}
  cytoscapeVersionInfo ()
 ```
 
-###Browse available functions, commands and arguments
+### Browse available functions, commands and arguments
 Depending on what apps you have installed there is different functionality available.  
 
 To see all the functions available in RCy3 package
@@ -300,7 +295,7 @@ Example use cases:
  1. Omics data - I have a *fill in the blank* (microarray, RNASeq, Proteomics, ATACseq, MicroRNA, GWAS ...) dataset.  I have normalized and scored my data. How do I overlay my data on existing interaction data? 
  1. Coexpression data - I have a dataset that represents relationships.  How do I represent it as a network. 
 
-## Use Case 1 - How are my top genes related?
+# Use Case 1 - How are my top genes related?
 
 Omics data - I have a *fill in the blank* (microarray, RNASeq, Proteomics, ATACseq, MicroRNA, GWAS ...) dataset.  I have normalized and scored my data. How do I overlay my data on existing interaction data? 
 
@@ -495,7 +490,7 @@ response <- exportImage(mesen_string_network_png_file_name, type = "png")
 knitr::include_graphics(mesen_string_network_png_file_name)
 ```
 
-## Use Case 2 - Which genes have similar expression.
+# Use Case 2 - Which genes have similar expression.
 
 Instead of querying existing resources look for correlations in your own dataset to find out which genes have similar expression.  There are many tools that can analyze your data for correlation.  A popular tool is Weighted Gene Correlation Network Analysis (WGCNA)[@wgcna] which takes expression data and calculates functional modules.  As a simple example we can transform our expression dataset into a correlation matrix.  
 
