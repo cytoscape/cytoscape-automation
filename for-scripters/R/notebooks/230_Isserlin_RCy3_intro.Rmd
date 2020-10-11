@@ -212,10 +212,6 @@ To get information about an individual command from the R environment you can al
 commandsHelp("help")
 ```
 
-<center>
-![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/bioc2018_Rcy3_intro/230_Isserlin_RCy3_intro/images/screenshot_availablecommands.png)
-</center>
-
 ## Cytoscape Basics
 Create a Cytoscape network from some basic R objects
 ```{r}
