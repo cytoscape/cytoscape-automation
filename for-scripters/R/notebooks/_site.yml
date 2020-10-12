@@ -5,7 +5,7 @@ navbar:
   left:
   - text: Home
     icon: fa-home
-    href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks
+    href: http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/index.html
   - text: Wiki
     icon: fa-compress
     href: https://github.com/cytoscape/cytoscape-automation/wiki
