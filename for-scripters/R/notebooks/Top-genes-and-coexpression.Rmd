@@ -1,0 +1,575 @@
+---
+title: "Top genes and coexpression"
+author: "by Ruth Isserlin, Kristina Hanspers"
+package: RCy3
+date: "`r Sys.Date()`"
+output: 
+  html_notebook:
+    toc_float: true
+    code_folding: "none"
+#  pdf_document:
+#    toc: true  
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Top-genes-and-coexpression.Rmd).*
+
+<hr />
+Cytoscape(www.cytoscape.org) is one of the most popular applications for network analysis and visualization. In this workshop, we will demonstrate new capabilities to integrate Cytoscape into programmatic workflows and pipelines using R. We will begin with an overview of network biology themes and concepts, and then we will translate these into Cytoscape terms for practical applications. The bulk of the workshop will be a hands-on demonstration of accessing and controlling Cytoscape from R to perform a network analysis of tumor expression data.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+
+if(!"RColorBrewer" %in% installed.packages()){
+    install.packages("RColorBrewer")
+}
+library(RColorBrewer)
+
+if(!"EnrichmentBrowser" %in% installed.packages()){
+    install.packages("EnrichmentBrowser")
+}
+library(EnrichmentBrowser)
+
+if(!"gProfileR" %in% installed.packages()){
+    install.packages("gProfileR")
+}
+library(gProfileR)
+```
+
+# Required Software
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
+    
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape 
+
+**Make sure that Cytoscape is running**
+```{r eval=FALSE}
+ cytoscapePing ()
+```
+
+```{r eval=FALSE}
+ cytoscapeVersionInfo ()
+```
+
+To see all the functions available in the RCy3 package: 
+```{r}
+help(package=RCy3)
+```
+
+Also install additional Cytoscape apps that will be used in this tutorial:
+
+```{r}
+#available in Cytoscape 3.7.0 and above
+installApp('STRINGapp')  
+installApp('aMatReader')
+installApp('clusterMaker2')
+```
+
+# Example Data Set
+We downloaded gene expression data from the Ovarian Serous Cystadenocarcinoma project of The Cancer Genome Atlas (TCGA)[@TCGA], http://cancergenome.nih.gov via the Genomic Data Commons (GDC) portal[@GDC] on 2017-06-14 using TCGABiolinks R package[@TCGABiolinks]. The data includes 300 samples available as RNA-seq data, with reads mapped to a reference genome using MapSplice[@MapSplice] and read counts per transcript determined using the RSEM method[@RSEM]. RNA-seq data are labeled as ‘RNA-Seq V2’, see details at: https://wiki.nci.nih.gov/display/TCGA/RNASeq+Version+2). The RNA-SeqV2 data consists of raw counts similar to regular RNA-seq but RSEM (RNA-Seq by Expectation Maximization) data can be used with the edgeR method. The expression dataset of 300 tumours, with 79 classified as Immunoreactive, 72 classified as Mesenchymal, 69 classified as Differentiated, and 80 classified as Proliferative samples(class definitions were obtained from Verhaak et al.[@OV] Supplementary Table 1, third column). RNA-seq read counts were converted to CPM values and genes with CPM > 1 in at least 50 of the samples are retained for further study (50 is the minimal sample size in the classes).  The data was normalized and differential expression was calculated for each cancer class relative to the rest of the samples. 
+
+There are two data files:
+ 1. Expression matrix - containing the normalized expression for each gene across all 300 samples.
+ 1. Gene ranks - containing the p-values, FDR and foldchange values for the 4 comparisons (mesenchymal vs rest, differential vs rest, proliferative vs rest and immunoreactive vs rest)
+
+The following commands will download the necessary data files to the working directory. This entire tutorial assumes that the data is in that same working directory, and this is also where files will be exported. Let's start by finding out what the working directory is. If you need to change it, this is done by the command setwd(), which you will see commented out in the snippet below:
+
+```{r}
+print(getwd())
+##setwd(path)
+```
+
+```{r}
+#define locations for data and download
+url_exp <- "https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_expression.txt"
+path_exp <- file.path(getwd(), "TCGA_OV_RNAseq_expression.txt")
+
+url_scores <-"https://github.com/cytoscape/cytoscape-tutorials/blob/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_All_edgeR_scores.txt?raw=true"
+path_scores <- file.path(getwd(), "TCGA_OV_RNAseq_All_edgeR_scores.txt")
+
+#download files
+download.file(url_exp, path_exp)
+download.file(url_scores, path_scores)
+```
+
+```{r lib, echo=FALSE, results="hide", cache=FALSE}
+wd <- getwd()
+```
+
+Now we can read the downloaded files into R:
+```{r}
+RNASeq_expression_matrix <- read.table(path_exp, header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+
+RNASeq_gene_scores <- read.table(path_scores, header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+```
+
+# Use Case 1 - How are my top genes related?
+
+Omics data - I have a *fill in the blank* (microarray, RNASeq, Proteomics, ATACseq, MicroRNA, GWAS ...) dataset. I have normalized and scored my data. How do I overlay my data on existing interaction data? 
+
+Get a subset of genes of interest from our scored data:
+```{r}
+top_mesenchymal_genes <- RNASeq_gene_scores[which(RNASeq_gene_scores$FDR.mesen < 0.05 & RNASeq_gene_scores$logFC.mesen > 2),]
+head(top_mesenchymal_genes)
+```
+
+We are going to query the String Database to get all interactions found for our set of top Mesenchymal genes.
+
+Reminder: to see the parameters required by the string function or to find the right string function you can use commandsHelp.
+```{r eval=FALSE}
+commandsHelp("help string")
+```
+
+```{r eval=FALSE}
+commandsHelp("help string protein query")
+```
+
+```{r eval=FALSE}
+mesen_string_interaction_cmd <- paste('string protein query taxonID=9606 limit=150 cutoff=0.9 query="',paste(top_mesenchymal_genes$Name, collapse=","),'"',sep="")
+commandsGET(mesen_string_interaction_cmd)
+```
+
+Get a screenshot of the initial network:
+```{r initial_string_network_screenshot, include=TRUE}
+initial_string_network_png_file_name <- file.path(getwd(), "initial_string_network.png")
+```
+
+```{r eval=FALSE}
+if(file.exists(initial_string_network_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  response <- file.remove(initial_string_network_png_file_name)
+} 
+
+response <- exportImage(initial_string_network_png_file_name, type = "png")
+```
+
+```{r initialstringnetwork, echo=FALSE, fig.cap="Initial network returned by String from our set of Mesenchymal query genes"}
+knitr::include_graphics(initial_string_network_png_file_name)
+```
+
+Layout the network:
+```{r eval=FALSE}
+layoutNetwork('force-directed')
+```
+
+Check what other layout algorithms are available to try out:
+```{r eval=FALSE}
+getLayoutNames()
+```
+
+Get the parameters for a specific layout:
+```{r eval=FALSE}
+getLayoutPropertyNames(layout.name='force-directed')
+```
+
+Re-layout the network using the force directed layout but specify some of the parameters:
+```{r eval=FALSE}
+layoutNetwork('force-directed defaultSpringCoefficient=0.0000008 defaultSpringLength=70')
+```
+
+Get a screenshot of the re-laid out network:
+```{r relayout_string_network_screenshot, include=TRUE}
+relayout_string_network_png_file_name <- file.path(getwd(), "relayout_string_network.png")
+```
+
+```{r eval=FALSE}
+if(file.exists(relayout_string_network_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  response<- file.remove(relayout_string_network_png_file_name)
+  } 
+response <- exportImage(relayout_string_network_png_file_name, type = "png")
+```
+
+```{r relayoutstringnetwork, echo=FALSE, fig.cap="Initial network returned by String from our set of Mesenchymal query genes"}
+knitr::include_graphics(relayout_string_network_png_file_name)
+```
+
+Overlay our expression data on the String network.  
+To do this we will be using the loadTableData function from RCy3. It is important to make sure that  that your identifiers types match up.  You can check what is used by String by pulling in the column names of the node attribute table.
+```{r eval=FALSE}
+getTableColumnNames('node')
+```
+
+If you are unsure of what each column is and want to further verify the column to use you can also pull in the entire node attribute table:
+```{r eval=FALSE}
+node_attribute_table_topmesen <- getTableColumns(table="node")
+head(node_attribute_table_topmesen[,3:7])
+```
+
+The column "display name" contains HGNC gene names which are also found in our Ovarian Cancer dataset.
+
+To import our expression data we will match our dataset to the "display name" node attribute:
+```{r eval=FALSE}
+?loadTableData
+
+loadTableData(RNASeq_gene_scores,table.key.column = "display name",data.key.column = "Name")  #default data.frame key is row.names
+```
+
+Modify the Visual Style
+Create your own visual style to visualize your expression data on the String network. 
+
+Start with a default style:
+```{r eval=FALSE}
+style.name = "MesenchymalStyle"
+defaults.list <- list(NODE_SHAPE="ellipse",
+                 NODE_SIZE=60,
+                 NODE_FILL_COLOR="#AAAAAA",
+                 EDGE_TRANSPARENCY=120)
+node.label.map <- mapVisualProperty('node label','display name','p') # p for passthrough; nothing else needed
+createVisualStyle(style.name, defaults.list, list(node.label.map))
+setVisualStyle(style.name=style.name)
+```
+
+Update your created style with a mapping for the Mesenchymal logFC expression. The first step is to grab the column data from Cytoscape (we can reuse the node_attribute table concept from above but we have to call the function again as we have since added our expression data) and pull out the min and max to define our data mapping range of values.
+
+**Note**: you could define the min and max based on the entire dataset or just the subset that is represented in Cytoscape currently. The two methods will give you different results. If you intend on comparing different networks created with the same dataset then it is best to calculate the min and max from the entire dataset as opposed to a subset. 
+```{r}
+min.mesen.logfc = min(RNASeq_gene_scores$logFC.mesen,na.rm=TRUE)
+max.mesen.logfc = max(RNASeq_gene_scores$logFC.mesen,na.rm=TRUE)
+data.values = c(min.mesen.logfc,0,max.mesen.logfc)
+```
+
+Next, we use the RColorBrewer package to help us pick good colors to pair with our data values:
+```{r}
+library(RColorBrewer)
+display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="div") # div,qual,seq,all
+node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
+```
+
+Map the colors to our data value and update our visual style:
+```{r eval=FALSE} 
+setNodeColorMapping("logFC.mesen", data.values, node.colors, style.name=style.name)
+```
+
+Remember, String includes your query proteins as well as other proteins that associate with your query proteins (including the strongest connection first). Not all of the proteins in this network are your top hits. How can we visualize which proteins are our top Mesenchymal hits?
+
+Add a different border color or change the node shape for our top hits:
+```{r eval=FALSE}
+getNodeShapes()
+
+#select the Nodes of interest
+#selectNode(nodes = top_mesenchymal_genes$Name, by.col="display name")
+setNodeShapeBypass(node.names = top_mesenchymal_genes$Name, new.shapes = "TRIANGLE")
+```
+
+Change the size of the node to be correlated with the Mesenchymal p-value:
+```{r eval=FALSE}
+setNodeSizeMapping(table.column = 'LR.mesen', 
+                   table.column.values = c(min(RNASeq_gene_scores$LR.mesen), 
+                                           mean(RNASeq_gene_scores$LR.mesen), 
+                                           max(RNASeq_gene_scores$LR.mesen)), 
+                   sizes = c(30, 60, 150),mapping.type = "c", style.name = style.name)
+```
+
+Get a screenshot of the resulting network:
+```{r mesen_string_network_screenshot, include=TRUE}
+mesen_string_network_png_file_name <- file.path(getwd(), "mesen_string_network.png")
+```
+
+```{r eval=FALSE}
+if(file.exists(mesen_string_network_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  response<- file.remove(mesen_string_network_png_file_name)
+  } 
+response <- exportImage(mesen_string_network_png_file_name, type = "png")
+```
+
+```{r mesenstringnetwork, echo=FALSE, fig.cap="Formatted String network from our set of Mesenchymal query genes.  Annotated with our expressin data"}
+knitr::include_graphics(mesen_string_network_png_file_name)
+```
+
+# Use Case 2 - Which genes have similar expression.
+
+Instead of querying existing resources look for correlations in your own dataset to find out which genes have similar expression.  There are many tools that can analyze your data for correlation.  A popular tool is Weighted Gene Correlation Network Analysis (WGCNA)[@wgcna] which takes expression data and calculates functional modules.  As a simple example we can transform our expression dataset into a correlation matrix.  
+
+Using the Cytoscape App, aMatReader[@amatreader], we transform our adjacency matrix into an interaction network. First we filter the correlation matrix to contain only the strongest connections (for example, only correlations greater than 0.9). 
+```{r}
+
+RNASeq_expression <- RNASeq_expression_matrix[,3:ncol(RNASeq_expression_matrix)]
+
+rownames(RNASeq_expression) <- RNASeq_expression_matrix$Name
+RNAseq_correlation_matrix <- cor(t(RNASeq_expression), method="pearson")
+
+#set the diagonal of matrix to zero - eliminate self-correlation
+RNAseq_correlation_matrix[ 
+  row(RNAseq_correlation_matrix) == col(RNAseq_correlation_matrix) ] <- 0
+
+# set all correlations that are less than 0.9 to zero
+RNAseq_correlation_matrix[which(RNAseq_correlation_matrix<0.90)] <- 0
+
+#get rid of rows and columns that have no correlations with the above thresholds
+RNAseq_correlation_matrix <- RNAseq_correlation_matrix[which(rowSums(RNAseq_correlation_matrix) != 0),
+                          which(colSums(RNAseq_correlation_matrix) !=0)]
+
+#write out the correlation file
+correlation_filename <- file.path(getwd(), "TCGA_OV_RNAseq_expression_correlation_matrix.txt") 
+write.table(RNAseq_correlation_matrix,  file = correlation_filename, col.names  = TRUE, row.names = FALSE, sep = "\t", quote=FALSE)
+
+```
+
+Use the CyRest call to access the aMatReader functionality:
+```{r eval=FALSE}
+amat_url <- "aMatReader/v1/import"
+amat_params = list(files = list(correlation_filename),
+                   delimiter = "TAB",
+                   undirected = FALSE,
+                   ignoreZeros = TRUE,
+                   interactionName = "correlated with",
+                   rowNames = FALSE
+                   )
+ 
+response <- cyrestPOST(operation = amat_url, body = amat_params, base.url = "http://localhost:1234")
+
+current_network_id <- response$data["suid"]
+```
+
+```{r eval=FALSE}
+#relayout network
+layoutNetwork('cose',
+              network = as.numeric(current_network_id))
+```
+
+```{r eval=FALSE}
+renameNetwork(title ="Coexpression_network_pear0_95_new",
+              network = as.numeric(current_network_id))
+```
+
+
+Modify the visualization to see where each genes is predominantly expressed. Look at the 4 different p-values associated with each gene and color the nodes with the type associated with the lowest FDR.
+
+Load in the scoring data. Specify the cancer type where the genes has the lowest FDR value:
+```{r}
+nodes_in_network <- rownames(RNAseq_correlation_matrix)
+
+#add an additional column to the gene scores table to indicate in which samples
+# the gene is significant
+node_class <- vector(length = length(nodes_in_network),mode = "character")
+for(i in 1:length(nodes_in_network)){
+  current_row <- which(RNASeq_gene_scores$Name == nodes_in_network[i])
+  min_pvalue <- min(RNASeq_gene_scores[current_row,
+                                       grep(colnames(RNASeq_gene_scores), pattern = "FDR")])
+  if(RNASeq_gene_scores$FDR.mesen[current_row] <=min_pvalue){
+    node_class[i] <- paste(node_class[i],"mesen",sep = " ")
+  }
+  if(RNASeq_gene_scores$FDR.diff[current_row] <=min_pvalue){
+    node_class[i] <- paste(node_class[i],"diff",sep = " ")
+  }
+  if(RNASeq_gene_scores$FDR.prolif[current_row] <=min_pvalue){
+    node_class[i] <- paste(node_class[i],"prolif",sep = " ")
+  }
+  if(RNASeq_gene_scores$FDR.immuno[current_row] <=min_pvalue){
+    node_class[i] <- paste(node_class[i],"immuno",sep = " ")
+  }
+}
+node_class <- trimws(node_class)
+node_class_df <-data.frame(name=nodes_in_network, node_class,stringsAsFactors = FALSE)
+
+head(node_class_df)
+```
+
+Map the new node attribute and the all the gene scores to the network.
+```{r eval=FALSE}
+loadTableData(RNASeq_gene_scores,table.key.column = "name",data.key.column = "Name")  #default data.frame key is row.names
+
+loadTableData(node_class_df,table.key.column = "name",data.key.column = "name")  #default data.frame key is row.names
+```
+
+Create a color mapping for the different cancer types:
+```{r eval=FALSE}
+#create a new mapping with the different types
+unique_types <- sort(unique(node_class))
+
+coul = brewer.pal(4, "Set1") 
+ 
+# I can add more tones to this palette :
+coul = colorRampPalette(coul)(length(unique_types))
+
+setNodeColorMapping(table.column = "node_class",table.column.values = unique_types,
+                    colors = coul,mapping.type = "d")
+```
+
+```{r correlationnetwork, include=TRUE}
+correlation_network_png_file_name <- file.path(getwd(), "correlation_network.png")
+
+```
+
+```{r eval=FALSE}
+if(file.exists(correlation_network_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  file.remove(correlation_network_png_file_name)
+  } 
+
+#export the network
+exportImage(correlation_network_png_file_name, type = "png")
+```
+
+```{r correlationNetwork2, echo=FALSE, fig.cap="Example correlation network created using aMatReader"}
+knitr::include_graphics(correlation_network_png_file_name)
+```
+
+Cluster the Network: 
+```{r eval=FALSE}
+#make sure it is set to the right network
+  setCurrentNetwork(network = getNetworkName(suid=as.numeric(current_network_id)))
+
+  #cluster the network
+  clustermaker_url <- paste("cluster mcl network=SUID:",current_network_id, sep="")
+  commandsGET(clustermaker_url)
+  
+  #get the clustering results
+  default_node_table <- getTableColumns(table= "node",network = as.numeric(current_network_id))
+ 
+  head(default_node_table)
+```
+
+Perform pathway Enrichment on one of the clusters using g:Profiler[@gprofiler]. g:Profiler is an online functional enrichment web service that will take your gene list and return the set of enriched pathways. For automated analysis g:Profiler has created an R library to interact with it directly from R instead of using the web page. 
+
+Create a function to call g:Profiler and convert the returned results into a generic enrichment map input file:
+```{r}
+tryCatch(expr = { library("gProfileR")}, 
+         error = function(e) { install.packages("gProfileR")}, finally = library("gProfileR"))
+
+#function to run gprofiler using the gprofiler library
+# 
+# The function takes the returned gprofiler results and formats it to the generic EM input file
+#
+# function returns a data frame in the generic EM file format.
+runGprofiler <- function(genes,current_organism = "hsapiens", 
+                         significant_only = F, set_size_max = 200, 
+                         set_size_min = 3, filter_gs_size_min = 5 , exclude_iea = F){
+  
+  gprofiler_results <- gprofiler(genes ,
+                                 significant=significant_only,ordered_query = F,
+                                exclude_iea=exclude_iea,max_set_size = set_size_max,
+                                 min_set_size = set_size_min,
+                                 correction_method = "fdr",
+                                 organism = current_organism,
+                                src_filter = c("GO:BP","REAC"))
+  
+  #filter results
+  gprofiler_results <- gprofiler_results[which(gprofiler_results[,'term.size'] >= 3
+                                        & gprofiler_results[,'overlap.size'] >= filter_gs_size_min ),]
+  
+  # gProfileR returns corrected p-values only.  Set p-value to corrected p-value
+  if(dim(gprofiler_results)[1] > 0){
+    em_results <- cbind(gprofiler_results[,
+                                c("term.id","term.name","p.value","p.value")], 1,
+                                gprofiler_results[,"intersection"])
+  colnames(em_results) <- c("Name","Description", "pvalue","qvalue","phenotype","genes")
+  
+  return(em_results)
+  } else {
+    return("no gprofiler results for supplied query")
+  }
+}
+```
+
+Run g:Profiler. g:Profiler will return a set of pathways and functions that are found to be enriched in our query set of genes.
+```{r eval=FALSE}
+  current_cluster <- "1"
+  #select all the nodes in cluster 1
+  selectednodes <- selectNodes(current_cluster, by.col="__mclCluster")
+  
+  #create a subnetwork with cluster 1
+  subnetwork_suid <- createSubnetwork(nodes="selected")
+  
+  renameNetwork("Cluster1_Subnetwork", network=as.numeric(subnetwork_suid))
+  
+  subnetwork_node_table <- getTableColumns(table= "node",network = as.numeric(subnetwork_suid))
+
+  em_results <- runGprofiler(subnetwork_node_table$name)
+  
+ #write out the g:Profiler results
+ em_results_filename <-file.path(getwd(),
+                            paste("gprofiler_cluster",current_cluster,"enr_results.txt",sep="_"))
+
+  write.table(em_results,em_results_filename,col.name=TRUE,sep="\t",row.names=FALSE,quote=FALSE)
+  
+ 
+  head(em_results)
+```
+
+Create an enrichment map with the returned g:Profiler results. An enrichment map is a different sort of network.  Instead of nodes representing genes, nodes represent pathways or functions. Edges between these pathways or functions represent shared genes or pathway crosstalk. An enrichment map is a way to visualize your enrichment results to help reduce redundancy and uncover main themes. Pathways can also be explored in detail using the features available through the App in Cytoscape. 
+```{r eval=FALSE}
+ em_command = paste('enrichmentmap build analysisType="generic" ', 
+                   'pvalue=',"0.05", 'qvalue=',"0.05",
+                   'similaritycutoff=',"0.25",
+                   'coeffecients=',"JACCARD",
+                   'enrichmentsDataset1=',em_results_filename ,
+                   sep=" ")
+
+  #enrichment map command will return the suid of newly created network.
+  em_network_suid <- commandsRun(em_command)
+  
+  renameNetwork("Cluster1_enrichmentmap", network=as.numeric(em_network_suid))
+```
+
+Export image of resulting Enrichment map.
+
+```{r cluster1em, include=TRUE}
+cluster1em_png_file_name <- file.path(getwd(),"cluster1em.png")
+
+```
+
+```{r eval=FALSE}
+if(file.exists(cluster1em_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  file.remove(cluster1em_png_file_name)
+  } 
+
+#export the network
+exportImage(cluster1em_png_file_name, type = "png")
+```
+
+```{r cluster1emfig, echo=FALSE, fig.cap="Example Enrichment Map created when running an enrichment analysis using g:Profiler with the genes that are part of cluster 1"}
+knitr::include_graphics(cluster1em_png_file_name)
+```
+
+Annotate the Enrichment map to get the general themes that are found in the enrichment results of cluster 1
+```{r eval=FALSE}
+
+#get the column from the nodetable and node table
+  nodetable_colnames <- getTableColumnNames(table="node",  network =  as.numeric(em_network_suid))
+
+  descr_attrib <- nodetable_colnames[grep(nodetable_colnames, pattern = "GS_DESCR")]
+
+  #Autoannotate the network
+  autoannotate_url <- paste("autoannotate annotate-clusterBoosted labelColumn=", descr_attrib," maxWords=3 ", sep="")
+    current_name <-commandsGET(autoannotate_url)
+
+```
+
+Export image of resulting Annotated Enrichment map.
+
+```{r cluster1emannot, include=TRUE}
+cluster1em_annot_png_file_name <- file.path(getwd(), "cluster1em_annot.png")
+```
+
+```{r eval=FALSE}
+if(file.exists(cluster1em_annot_png_file_name)){
+  #cytoscape hangs waiting for user response if file already exists.  Remove it first
+  file.remove(cluster1em_annot_png_file_name)
+  } 
+
+#export the network
+exportImage(cluster1em_annot_png_file_name, type = "png")
+```
+
+```{r cluster1emannotfig, echo=FALSE, fig.cap="Example Annotated Enrichment Map created when running an enrichment analysis using g:Profiler with the genes that are part of cluster 1"}
+knitr::include_graphics(cluster1em_annot_png_file_name)
+```
+
+Dense networks small or large never look like network figures we so often see in journals. A lot of manual tweaking, reorganization and optimization is involved in getting that perfect figure ready network. The above network is what the network starts as. The below figure is what it can look like after a few minutes of manual re-organiazation.  (individual clusters were selected from the auto annotate panel and separated from other clusters)
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/Top-genes-and-coexpression/cluster1em_annot_man.png)
+</center>

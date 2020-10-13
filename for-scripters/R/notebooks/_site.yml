@@ -48,8 +48,8 @@ navbar:
       href: AP-MS-network-analysis.nb.html
     - text: "Shortest path"
       href: Shortest-path.nb.html
-    - text: "Cytoscape automation in R"
-      href: 230_Isserlin_RCy3_intro.nb.html
+    - text: "Top genes and coexpression"
+      href: Top-genes-and-coexpression.nb.html
     - text: "Cytoscape ecosystem tutorial"
       href: Cytoscape-ecosystem-tutorial.nb.html
     - text: '---------'
