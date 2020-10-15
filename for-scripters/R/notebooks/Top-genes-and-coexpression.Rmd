@@ -42,6 +42,11 @@ if(!"gProfileR" %in% installed.packages()){
     install.packages("gProfileR")
 }
 library(gProfileR)
+
+if(!"clusterProfiler" %in% installed.packages()){
+    install.packages("clusterProfiler")
+}
+library(gProfileR)
 ```
 
 # Required Software
@@ -436,83 +441,135 @@ knitr::include_graphics(correlation_network_png_file_name)
 Perform pathway Enrichment on one of the clusters using g:Profiler[@gprofiler]. g:Profiler is an online functional enrichment web service that will take your gene list and return the set of enriched pathways. For automated analysis g:Profiler has created an R library to interact with it directly from R instead of using the web page. 
 
 Create a function to call g:Profiler and convert the returned results into a generic enrichment map input file:
-```{r}
-tryCatch(expr = { library("gProfileR")}, 
-         error = function(e) { install.packages("gProfileR")}, finally = library("gProfileR"))
 
-#function to run gprofiler using the gprofiler library
-# 
-# The function takes the returned gprofiler results and formats it to the generic EM input file
-#
-# function returns a data frame in the generic EM file format.
-runGprofiler <- function(genes,current_organism = "hsapiens", 
-                         significant_only = F, set_size_max = 200, 
-                         set_size_min = 3, filter_gs_size_min = 5 , exclude_iea = F){
-  
-  gprofiler_results <- gprofiler(genes ,
-                                 significant=significant_only,ordered_query = F,
-                                exclude_iea=exclude_iea,max_set_size = set_size_max,
-                                 min_set_size = set_size_min,
-                                 correction_method = "fdr",
-                                 organism = current_organism,
-                                src_filter = c("GO:BP","REAC"))
-  
-  #filter results
-  gprofiler_results <- gprofiler_results[which(gprofiler_results[,'term.size'] >= 3
-                                        & gprofiler_results[,'overlap.size'] >= filter_gs_size_min ),]
-  
-  # gProfileR returns corrected p-values only.  Set p-value to corrected p-value
-  if(dim(gprofiler_results)[1] > 0){
-    em_results <- cbind(gprofiler_results[,
-                                c("term.id","term.name","p.value","p.value")], 1,
-                                gprofiler_results[,"intersection"])
-  colnames(em_results) <- c("Name","Description", "pvalue","qvalue","phenotype","genes")
-  
-  return(em_results)
-  } else {
-    return("no gprofiler results for supplied query")
-  }
-}
-```
+<!-- ```{r} -->
+<!-- tryCatch(expr = { library("gProfileR")},  -->
+<!--          error = function(e) { install.packages("gProfileR")}, finally = library("gProfileR")) -->
 
-Run g:Profiler. g:Profiler will return a set of pathways and functions that are found to be enriched in our query set of genes.
-```{r eval=FALSE}
-  current_cluster <- "1"
-  #select all the nodes in cluster 1
-  selectednodes <- selectNodes(current_cluster, by.col="__mclCluster")
-  
-  #create a subnetwork with cluster 1
-  subnetwork_suid <- createSubnetwork(nodes="selected")
-  
-  renameNetwork("Cluster1_Subnetwork", network=as.numeric(subnetwork_suid))
-  
-  subnetwork_node_table <- getTableColumns(table= "node",network = as.numeric(subnetwork_suid))
+<!-- #function to run gprofiler using the gprofiler library -->
+<!-- #  -->
+<!-- # The function takes the returned gprofiler results and formats it to the generic EM input file -->
+<!-- # -->
+<!-- # function returns a data frame in the generic EM file format. -->
+<!-- runGprofiler <- function(genes,current_organism = "hsapiens",  -->
+<!--                          significant_only = F, set_size_max = 200,  -->
+<!--                          set_size_min = 3, filter_gs_size_min = 5 , exclude_iea = F){ -->
 
-  em_results <- runGprofiler(subnetwork_node_table$name)
-  
- #write out the g:Profiler results
- em_results_filename <-file.path(getwd(),
-                            paste("gprofiler_cluster",current_cluster,"enr_results.txt",sep="_"))
+<!--   gprofiler_results <- gprofiler(genes , -->
+<!--                                  significant=significant_only,ordered_query = F, -->
+<!--                                 exclude_iea=exclude_iea,max_set_size = set_size_max, -->
+<!--                                  min_set_size = set_size_min, -->
+<!--                                  correction_method = "fdr", -->
+<!--                                  organism = current_organism, -->
+<!--                                 src_filter = c("GO:BP","REAC")) -->
 
-  write.table(em_results,em_results_filename,col.name=TRUE,sep="\t",row.names=FALSE,quote=FALSE)
-  
- 
-  head(em_results)
-```
+<!--   #filter results -->
+<!--   gprofiler_results <- gprofiler_results[which(gprofiler_results[,'term.size'] >= 3 -->
+<!--                                         & gprofiler_results[,'overlap.size'] >= filter_gs_size_min ),] -->
+
+<!--   # gProfileR returns corrected p-values only.  Set p-value to corrected p-value -->
+<!--   if(dim(gprofiler_results)[1] > 0){ -->
+<!--     em_results <- cbind(gprofiler_results[, -->
+<!--                                 c("term.id","term.name","p.value","p.value")], 1, -->
+<!--                                 gprofiler_results[,"intersection"]) -->
+<!--   colnames(em_results) <- c("Name","Description", "pvalue","qvalue","phenotype","genes") -->
+
+<!--   return(em_results) -->
+<!--   } else { -->
+<!--     return("no gprofiler results for supplied query") -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- Run g:Profiler. g:Profiler will return a set of pathways and functions that are found to be enriched in our query set of genes. -->
+<!-- ```{r eval=FALSE} -->
+<!--   current_cluster <- "1" -->
+<!--   #select all the nodes in cluster 1 -->
+<!--   selectednodes <- selectNodes(current_cluster, by.col="__mclCluster") -->
+
+<!--   #create a subnetwork with cluster 1 -->
+<!--   subnetwork_suid <- createSubnetwork(nodes="selected") -->
+
+<!--   renameNetwork("Cluster1_Subnetwork", network=as.numeric(subnetwork_suid)) -->
+
+<!--   subnetwork_node_table <- getTableColumns(table= "node",network = as.numeric(subnetwork_suid)) -->
+
+<!--   em_results <- runGprofiler(subnetwork_node_table$name) -->
+
+<!--  #write out the g:Profiler results -->
+<!--  em_results_filename <-file.path(getwd(), -->
+<!--                             paste("gprofiler_cluster",current_cluster,"enr_results.txt",sep="_")) -->
+
+<!--   write.table(em_results,em_results_filename,col.name=TRUE,sep="\t",row.names=FALSE,quote=FALSE) -->
+
+
+<!--   head(em_results) -->
+<!-- ``` -->
 
 Create an enrichment map with the returned g:Profiler results. An enrichment map is a different sort of network.  Instead of nodes representing genes, nodes represent pathways or functions. Edges between these pathways or functions represent shared genes or pathway crosstalk. An enrichment map is a way to visualize your enrichment results to help reduce redundancy and uncover main themes. Pathways can also be explored in detail using the features available through the App in Cytoscape. 
-```{r eval=FALSE}
- em_command = paste('enrichmentmap build analysisType="generic" ', 
-                   'pvalue=',"0.05", 'qvalue=',"0.05",
-                   'similaritycutoff=',"0.25",
-                   'coeffecients=',"JACCARD",
-                   'enrichmentsDataset1=',em_results_filename ,
-                   sep=" ")
 
-  #enrichment map command will return the suid of newly created network.
-  em_network_suid <- commandsRun(em_command)
+<!-- ```{r eval=FALSE} -->
+<!--  em_command = paste('enrichmentmap build analysisType="generic" ',  -->
+<!--                    'pvalue=',"0.05", 'qvalue=',"0.05", -->
+<!--                    'similaritycutoff=',"0.25", -->
+<!--                    'coeffecients=',"JACCARD", -->
+<!--                    'enrichmentsDataset1=',em_results_filename , -->
+<!--                    sep=" ") -->
+
+<!--   #enrichment map command will return the suid of newly created network. -->
+<!--   em_network_suid <- commandsRun(em_command) -->
+
+<!--   renameNetwork("Cluster1_enrichmentmap", network=as.numeric(em_network_suid)) -->
+<!-- ``` -->
+
+Alternative using clusterProfiler: 
+```{r}
+current_cluster <- "1"
+#select all the nodes in cluster 1
+selectednodes <- selectNodes(current_cluster, by.col="__mclCluster")
   
-  renameNetwork("Cluster1_enrichmentmap", network=as.numeric(em_network_suid))
+#create a subnetwork with cluster 1
+subnetwork_suid <- createSubnetwork(nodes="selected")
+subnetwork_node_table <- getTableColumns(table= "node",network = as.numeric(subnetwork_suid))
+
+cp_input <- subnetwork_node_table$geneid
+
+cp_results <- clusterProfiler::enrichGO(
+        gene     = cp_input,
+        OrgDb    = org.Hs.eg.db,
+        ont      = "BP",
+        maxGSSize = 200,
+        minGSSize = 3,
+        pAdjustMethod = "fdr",
+        pvalueCutoff = 0.05, #p.adjust cutoff (https://github.com/GuangchuangYu/clusterProfiler/issues/104)
+        readable = TRUE)
+
+head(cp_results,10)
+```
+
+Filter and format the clusterProfiler output for enrichmentMap:
+```{r}
+## extract dataframe with results from object of type enrichResult
+cp_results_df <- cp_results@result
+
+## create new column for term size from BgRatio
+cp_results_df$term.size <- gsub("/(\\d+)", "", cp_results_df$BgRatio)
+
+## filter for term size to keep only term.size => 3, gene count >= 5 and subset
+cp_results_df <- cp_results_df[which(cp_results_df[,'term.size'] >= 3 & cp_results_df[,'Count'] >= 5),]
+cp_results_df <- cp_results_df[c("ID", "Description", "pvalue", "qvalue", "geneID")]
+## format gene listing column
+cp_results_df$geneID <- gsub("/", ",", cp_results_df$geneID)
+
+## add column for phenotype
+cp_results_df <- cbind(cp_results_df, phenotype=1)
+cp_results_df <- cp_results_df[, c(1, 2, 3, 4, 6, 5)]
+
+## change column headers
+colnames(cp_results_df) <- c("Name","Description", "pvalue","qvalue","phenotype", "genes")
+
+cp_results_filename <-file.path(getwd(),paste("clusterprofiler_cluster",current_cluster,"enr_results.txt",sep="_"))
+write.table(cp_results_df,cp_results_filename,col.name=TRUE,sep="\t",row.names=FALSE,quote=FALSE)
 ```
 
 Export image of resulting Enrichment map.
