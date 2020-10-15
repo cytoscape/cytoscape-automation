@@ -1,14 +1,14 @@
 ---
 title: "Top genes and coexpression"
 author: "by Ruth Isserlin, Kristina Hanspers"
-package: RCy3
 date: "`r Sys.Date()`"
-output: 
+output:
   html_notebook:
-    toc_float: true
-    code_folding: "none"
-#  pdf_document:
-#    toc: true  
+    code_folding: none
+    toc_float: yes
+  html_document:
+    df_print: paged
+package: RCy3
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -71,7 +71,7 @@ There are two data files:
  1. Gene ranks - containing the p-values, FDR and foldchange values for the 4 comparisons (mesenchymal vs rest, differential vs rest, proliferative vs rest and immunoreactive vs rest)
 
 The following script will download and export files to the same directory as this copy of the Rmd file:
-```{r}
+```{r eval=FALSE}
 getwd()
 ```
 
