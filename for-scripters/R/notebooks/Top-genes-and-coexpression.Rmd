@@ -32,21 +32,6 @@ if(!"RColorBrewer" %in% installed.packages()){
     install.packages("RColorBrewer")
 }
 library(RColorBrewer)
-
-# if(!"EnrichmentBrowser" %in% installed.packages()){
-#     install.packages("EnrichmentBrowser")
-# }
-# library(EnrichmentBrowser)
-
-if(!"gProfileR" %in% installed.packages()){
-    install.packages("gProfileR")
-}
-library(gProfileR)
-
-if(!"clusterProfiler" %in% installed.packages()){
-    install.packages("clusterProfiler")
-}
-library(gProfileR)
 ```
 
 # Required Software
@@ -91,15 +76,10 @@ getwd()
 ```
 
 ```{r}
-#define locations for data files
-url_exp <- "https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_expression.txt"
-
-url_scores <-"https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_All_edgeR_scores.txt"
-
 #load data files
-RNASeq_expression_matrix <- read.table(url_exp, header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+RNASeq_expression_matrix <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_expression.txt", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
 
-RNASeq_gene_scores <- read.table(url_scores, header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+RNASeq_gene_scores <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/presentations/modules/RCy3_ExampleData/data/TCGA_OV_RNAseq_All_edgeR_scores.txt", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
 ```
 
 # Use Case 1 - How are my top genes related?
@@ -125,7 +105,7 @@ commandsHelp("help string protein query")
 
 ```{r eval=FALSE}
 mesen_string_interaction_cmd <- paste('string protein query taxonID=9606 limit=150 cutoff=0.9 query="',paste(top_mesenchymal_genes$Name, collapse=","),'"',sep="")
-commandsRun(mesen_string_interaction_cmd)
+commandsPOST(mesen_string_interaction_cmd)
 ```
 
 Layout the network:
@@ -159,10 +139,6 @@ if(file.exists(relayout_string_network_png_file_name)){
   response<- file.remove(relayout_string_network_png_file_name)
   } 
 response <- exportImage(relayout_string_network_png_file_name, type = "png")
-```
-
-```{r relayoutstringnetwork, echo=FALSE, fig.cap="Initial network returned by String from our set of Mesenchymal query genes"}
-knitr::include_graphics(relayout_string_network_png_file_name)
 ```
 
 ### Overlay expression data
@@ -251,10 +227,6 @@ if(file.exists(mesen_string_network_png_file_name)){
   response<- file.remove(mesen_string_network_png_file_name)
   } 
 response <- exportImage(mesen_string_network_png_file_name, type = "png")
-```
-
-```{r mesenstringnetwork, echo=FALSE, fig.cap="Formatted String network from our set of Mesenchymal query genes.  Annotated with our expressin data"}
-knitr::include_graphics(mesen_string_network_png_file_name)
 ```
 
 # Use Case 2 - Which genes have similar expression?
@@ -383,10 +355,6 @@ if(file.exists(correlation_network_png_file_name)){
 exportImage(correlation_network_png_file_name, type = "png")
 ```
 
-```{r correlationNetwork2, echo=FALSE, fig.cap="Example correlation network created using aMatReader"}
-knitr::include_graphics(correlation_network_png_file_name)
-```
-
 ### Cluster the Network
 
 ```{r eval=FALSE}
@@ -449,8 +417,4 @@ if(file.exists(cluster1enr_png_file_name)){
 
 #export the network
 exportImage(cluster1enr_png_file_name, type = "png")
-```
-
-```{r cluster1emfig, echo=FALSE, fig.cap="Example Enrichment Map created when running an enrichment analysis using g:Profiler with the genes that are part of cluster 1"}
-knitr::include_graphics(cluster1enr_png_file_name)
 ```
