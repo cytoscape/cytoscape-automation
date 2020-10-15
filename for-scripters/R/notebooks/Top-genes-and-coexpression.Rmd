@@ -79,7 +79,7 @@ installApp('clusterMaker2')
 ```
 
 # Example Data Set
-We downloaded gene expression data from the Ovarian Serous Cystadenocarcinoma project of The Cancer Genome Atlas (TCGA)[@TCGA], http://cancergenome.nih.gov via the Genomic Data Commons (GDC) portal[@GDC] on 2017-06-14 using TCGABiolinks R package[@TCGABiolinks]. The data includes 300 samples available as RNA-seq data, with reads mapped to a reference genome using MapSplice[@MapSplice] and read counts per transcript determined using the RSEM method[@RSEM]. RNA-seq data are labeled as ‘RNA-Seq V2’, see details at: https://wiki.nci.nih.gov/display/TCGA/RNASeq+Version+2). The RNA-SeqV2 data consists of raw counts similar to regular RNA-seq but RSEM (RNA-Seq by Expectation Maximization) data can be used with the edgeR method. The expression dataset of 300 tumours, with 79 classified as Immunoreactive, 72 classified as Mesenchymal, 69 classified as Differentiated, and 80 classified as Proliferative samples (class definitions were obtained from Verhaak et al.[@OV] Supplementary Table 1, third column). RNA-seq read counts were converted to CPM values and genes with CPM > 1 in at least 50 of the samples are retained for further study (50 is the minimal sample size in the classes). The data was normalized and differential expression was calculated for each cancer class relative to the rest of the samples. 
+We downloaded gene expression data from the Ovarian Serous Cystadenocarcinoma project of The Cancer Genome Atlas (TCGA), http://cancergenome.nih.gov via the Genomic Data Commons (GDC) portal on 2017-06-14 using TCGABiolinks R package. The data includes 300 samples available as RNA-seq data, with reads mapped to a reference genome using MapSplice and read counts per transcript determined using the RSEM method. RNA-seq data are labeled as ‘RNA-Seq V2’, see details at: https://wiki.nci.nih.gov/display/TCGA/RNASeq+Version+2). The RNA-SeqV2 data consists of raw counts similar to regular RNA-seq but RSEM (RNA-Seq by Expectation Maximization) data can be used with the edgeR method. The expression dataset of 300 tumours, with 79 classified as Immunoreactive, 72 classified as Mesenchymal, 69 classified as Differentiated, and 80 classified as Proliferative samples (class definitions were obtained from Verhaak et al. Supplementary Table 1, third column). RNA-seq read counts were converted to CPM values and genes with CPM > 1 in at least 50 of the samples are retained for further study (50 is the minimal sample size in the classes). The data was normalized and differential expression was calculated for each cancer class relative to the rest of the samples. 
 
 There are two data files:
  1. Expression matrix - containing the normalized expression for each gene across all 300 samples.
@@ -259,10 +259,10 @@ knitr::include_graphics(mesen_string_network_png_file_name)
 
 # Use Case 2 - Which genes have similar expression?
 
-Instead of querying existing resources look for correlations in your own dataset to find out which genes have similar expression. There are many tools that can analyze your data for correlation. A popular tool is Weighted Gene Correlation Network Analysis (WGCNA)[@wgcna] which takes expression data and calculates functional modules. As a simple example we can transform our expression dataset into a correlation matrix.  
+Instead of querying existing resources look for correlations in your own dataset to find out which genes have similar expression. There are many tools that can analyze your data for correlation. A popular tool is Weighted Gene Correlation Network Analysis (WGCNA) which takes expression data and calculates functional modules. As a simple example we can transform our expression dataset into a correlation matrix.  
 
 ### Create correlation matrix
-Using the Cytoscape App, aMatReader[@amatreader], we transform our adjacency matrix into an interaction network. First we filter the correlation matrix to contain only the strongest connections (for example, only correlations greater than 0.9). 
+Using the Cytoscape App, aMatReader, we transform our adjacency matrix into an interaction network. First we filter the correlation matrix to contain only the strongest connections (for example, only correlations greater than 0.9). 
 ```{r}
 RNASeq_expression <- RNASeq_expression_matrix[,3:ncol(RNASeq_expression_matrix)]
 
