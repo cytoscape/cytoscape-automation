@@ -254,7 +254,7 @@ Use the CyRest call to access the aMatReader functionality:
 amat_url <- "aMatReader/v1/import"
 amat_params = list(files = list(correlation_filename),
                    delimiter = "TAB",
-                   undirected = FALSE,
+                   undirected = TRUE,
                    ignoreZeros = TRUE,
                    interactionName = "correlated with",
                    rowNames = FALSE
@@ -272,7 +272,7 @@ layoutNetwork('cose',
 ```
 
 ```{r eval=FALSE}
-renameNetwork(title ="Coexpression_network_pear0_95_new",
+renameNetwork(title ="Coexpression_network_pear0_95",
               network = as.numeric(current_network_id))
 ```
 
