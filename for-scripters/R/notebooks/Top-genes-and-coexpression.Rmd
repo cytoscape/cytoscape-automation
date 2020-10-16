@@ -128,19 +128,6 @@ Re-layout the network using the force directed layout but specify some of the pa
 layoutNetwork('force-directed defaultSpringCoefficient=0.000001 defaultSpringLength=50')
 ```
 
-Get a screenshot of the re-laid out network:
-```{r relayout_string_network_screenshot, include=TRUE}
-relayout_string_network_png_file_name <- "relayout_string_network.png"
-```
-
-```{r eval=FALSE}
-if(file.exists(relayout_string_network_png_file_name)){
-  #cytoscape hangs waiting for user response if file already exists.  Remove it first
-  response<- file.remove(relayout_string_network_png_file_name)
-  } 
-response <- exportImage(relayout_string_network_png_file_name, type = "png")
-```
-
 ### Overlay expression data
 Now we can overlay our expression data on the String network. To do this we will be using the loadTableData function from RCy3. It is important to make sure that  that your identifiers types match up. You can check what is used by String by pulling in the column names of the node attribute table.
 ```{r eval=FALSE}
@@ -204,7 +191,10 @@ Change the node shape for our top hits:
 ```{r eval=FALSE}
 getNodeShapes()
 
-setNodeShapeBypass(node.names = top_mesenchymal_genes$Name, new.shapes = "TRIANGLE")
+# select nodes by "display name" column
+selectNodes(top_mesenchymal_genes$Name, "display name")
+setNodeShapeBypass(node.names = getSelectedNodes(), new.shapes = "TRIANGLE")
+clearSelection()
 ```
 
 Change the size of the node to be correlated with the Mesenchymal p-value:
@@ -338,21 +328,6 @@ coul = colorRampPalette(coul)(length(unique_types))
 
 setNodeColorMapping(table.column = "node_class",table.column.values = unique_types,
                     colors = coul,mapping.type = "d")
-```
-
-```{r correlationnetwork, include=TRUE}
-correlation_network_png_file_name <- "correlation_network.png"
-
-```
-
-```{r eval=FALSE}
-if(file.exists(correlation_network_png_file_name)){
-  #cytoscape hangs waiting for user response if file already exists.  Remove it first
-  file.remove(correlation_network_png_file_name)
-  } 
-
-#export the network
-exportImage(correlation_network_png_file_name, type = "png")
 ```
 
 ### Cluster the Network
