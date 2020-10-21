@@ -93,7 +93,7 @@ workingDir <- getwd()
 ```
 
 ```{r}
-url <- "https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/scNetViz/RCy3_ExampleData/data/E-MTAB-5553-data/E-MTAB-5553-normalised-files.zip"
+url <- "https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/scNetViz/E-MTAB-5553-normalised-files.zip"
 
 path <- file.path(workingDir, "E-MTAB-5553-normalised-files.zip")
 download.file(url, path)
