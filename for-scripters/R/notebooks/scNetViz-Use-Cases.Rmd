@@ -1,0 +1,142 @@
+---
+title: "scNetViz Use Cases"
+author: "Krishna Choudhary, Kristina Hanspers"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    code_folding: none
+    toc_float: yes
+  html_document:
+    df_print: paged
+package: RCy3
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/scNetViz-Use-Cases.Rmd).*
+
+<hr />
+scNetViz is a Cytoscape app designed to support the biological interpretation of scRNAseq experiments. This notebook describes the automation of the scNetViz app using the RCy3 package via two use cases.
+
+# Setup
+
+The following use cases require installation of Cytoscape, the scNetViz app and RCy3 library. Download the latest [http://www.cytoscape.org/download.php](Cytoscape) and load RCy3 package: 
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+Launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and that RCy3 is communicating with Cytoscape:
+```{r eval=FALSE}
+ cytoscapePing ()
+```
+
+Install the scNetViz and stringApp Cytoscape apps:
+```{r}
+installApp('STRINGapp')  
+installApp('scNetViz')
+```
+
+# Use Case 1
+In this example, we will browse a single cell expression atlas from within Cytoscape, explore a particular dataset, perform differential expression analysis based on provided categories, generate networks from the top genes from each category, and functionally characterize and visualize the networks. 
+
+## Load data
+This loads the data and opens an experiment table with three tabs, named TPM, Categories and DiffExp. We are going to load the dataset with Accession number E-MTAB-5553:
+```{r}
+RCy3::commandsRun('scnetviz load gxa experiment accession=E-MTAB-5553')
+```
+
+## Calculate Differential Expression
+We will calculate differential expression for K=4 cluster: 
+```{r}
+RCy3::commandsRun('scnetviz calculate diffexp accession=E-MTAB-5553')
+```
+
+## Create Networks
+Fetch protein networks for each cluster. There should be four networks - one each for each cluster and one for all the clusters collectively. We will also collect a list of network names for downstream steps. 
+```{r}
+RCy3::commandsRun('scnetviz create network accession=E-MTAB-5553')
+networks <- getNetworkList()
+```
+
+## Alternative: Calculate Differential Expression and Create Networks
+This is a one-step alternative which replaces the two steps above.
+```{r}
+RCy3::commandsRun('scnetviz create all experiment=E-MTAB-5553')
+```
+
+## Functional Enrichment Analysis
+For each of the networks, we can now calculate functional enrichment using the stringApp. Each network is first "stringified" to enable the retrieval of functional enrichment: 
+```{r}
+lapply(networks, function (x){
+  setCurrentNetwork(x)
+  print(x)
+  RCy3::commandsRun('string retrieve enrichment allNetSpecies=Mus musculus')
+  RCy3::commandsRun('string show charts')
+})
+```
+
+# Use Case 2
+
+In this example, we will import normalized scRNA-seq data and cluster assignments from local files, generate cell plots, perform differential expression analysis based on provided categories, visualize as a combined heatmap and generate networks from the top genes from each category.
+
+## Load data from file
+
+This notebook downloads and exports files to the same directory as this copy of the Rmd file:
+```{r eval=FALSE}
+workingDir <- getwd()
+```
+
+```{r}
+url <- "https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/scNetViz/RCy3_ExampleData/data/E-MTAB-5553-data/E-MTAB-5553-normalised-files.zip"
+
+path <- file.path(workingDir, "E-MTAB-5553-normalised-files.zip")
+download.file(url, path)
+unzip(path, overwrite=T, exdir="E-MTAB-5553")
+
+completeFilePath <- file.path(workingDir,"E-MTAB-5553")
+
+commandToLoadFile <- paste0('scnetviz load experiment file file=',
+                            completeFilePath,
+                            ' species=Mus musculus')
+RCy3::commandsRun(commandToLoadFile)
+```
+
+## Load the category data
+```{r}
+completeFilePath <- file.path(workingDir, "E-MTAB-5553-data/E-MTAB-5553.clusters.tsv")
+commandToAddCategory <- paste0('scnetviz add file category file=',completeFilePath)
+RCy3::commandsRun(commandToAddCategory)
+```
+
+## Generate a UMAP plot
+```{r}
+RCy3::commandsRun('scnetviz calculate UMAP scale=true')
+```
+
+## Perform differential expression analysis
+```{r}
+RCy3::commandsRun('scnetviz calculate diffexp accession=E-MTAB-5553 categoryRow=3')
+```
+
+## Generate heatmap
+Generate a heatmap showing the top differentially expressed genes:
+```{r}
+RCy3::commandsRun('scnetviz ??')
+```
+
+## Fetch protein networks
+```{r}
+RCy3::commandsRun('scnetviz create network accession=E-MTAB-5553')
+```
+
+
+
+
+
+
