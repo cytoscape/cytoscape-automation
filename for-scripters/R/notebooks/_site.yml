@@ -54,6 +54,10 @@ navbar:
       href: Cytoscape-ecosystem-tutorial.nb.html
     - text: '---------'
     - text: External Links
+    - text: "Cytoscape stringApp"
+      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/stringApp.html
+    - text: "Differentially Expressed Genes Network Analysis"
+      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/differentially-expressed-genes
     - text: "CyTargetLinker: use case 1, Rett syndrome extension"
       href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase1/UseCase1_RettSyndrome_Compound_Disease_Network.Rmd
     - text: "CyTargetLinker: use case 2, gene-pathway extension"
@@ -62,6 +66,16 @@ navbar:
       href: https://bioconductor.org/packages/release/bioc/vignettes/rWikiPathways/inst/doc/Pathway-Analysis.html
     - text: "Automation with KEGGScape app"
       href: https://github.com/idekerlab/KEGGscape/blob/master/usecase/f1000-cyauto-workflow.Rmd
+    - text: "Network Layout"
+      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/network-layout.html
+    - text: "Visualizing data"
+      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/mapping-data.html
+    - text: "Custom Graphics and labels"
+      href: http://cytoscape.org/cytoscape-automation/for-scripters/R/notebooks/Custom-Graphics.nb.html
+    - text: "Loading networks"
+      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/loading-networks.html
+    - text: "Importing Network from Table"
+      href: http://rpubs.com/kozo2/565297
 output_dir: "."
 output:
   html_notebook:
