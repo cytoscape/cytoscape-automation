@@ -322,26 +322,25 @@ commandsRun(string.cmd)
 
 ## STRING Disease Query
 
-Now, we will query the **STRING disease** database to retrieve a network of ovarian cancer associated genes, completely independent of our dataset.
+So far, we queried the STRING database with a set of genes we knew were differentially expressed. Next, we will query the **STRING disease** database to retrieve a network genes associated with ovarian cancer, which will be completely independent of our dataset.
 
 ```{r}
-string.cmd = 'string disease query disease="ovarian cancer"'
+string.cmd = 'string disease query disease="ovarian cancer" cutoff="0.95"'
 commandsRun(string.cmd)
 ```
 
-This will bring in the top 100 ovarian cancer associated genes connected with a confidence score greater than 0.4.
-(We did not give them as parameters[100 and 0.4]. This is because the default values are those.)
+This will bring in the top 100 (default) ovarian cancer associated genes connected with a confidence score greater than 0.95. Again, lets extract out the connected nodes:
+
+```{r}
+createSubnetwork(edges='all', subnetwork.name='String ovarian sub')
+```
 
 # Data integration
 
-Next we will use log fold changes and p-values from our TCGA dataset and use them to create a visualization.
-Since the network and data use different identifiers, we first have to do some quick identifier mapping. 
-In this case, we will use the gene symbol in the **display name** column to retrieve **Entrez Gene** identifiers.
-
+Next we will import differential gene expression data from our TCGA dataset to create a visualization. Just like the previous example, we will need to do some identifier mapping to match the data to the network.
 ```{r}
 getTableColumnNames('node')
 ```
-
 
 ```{r}
 mapped.cols <- mapTableColumn("display name",'Human','HGNC','Entrez Gene')
@@ -359,28 +358,29 @@ head(mapped.cols)
 tail(getTableColumnNames('node'))
 ```
 
-We already loaded the data in Example 1 above, into the dataframe `de.genes.full`. We can simply repeat the step of importing the dataframe into the node table in Cytoscape:
+We already loaded the data in Example 1 above, into the dataframe `de.genes.full`. We can simply repeat the step of importing the data frame into the node table in Cytoscape:
 
 ```{r}
-loadTableData(df, data.key.column = "Gene", table = "node", table.key.column = "Entrez Gene")
+loadTableData(de.genes.full, data.key.column = "Gene", table = "node", table.key.column = "Entrez Gene")
 ```
 
 # Visualization
 
-We can now use the integrated data to create a network visualization.
-
-- For node **Fill Color**, create a continuous mapping for **logFC**, with the following blue-red gradient. 
-- First we have to remove the current mapping for node fill color:
+Next, we will create a visualization of the imported data on the network, similarly to what we did earlier:
 
 ```{r}
-getVisualStyleNames()
+style.name = "default"
+setVisualStyle(style.name="default")
+setNodeShapeDefault(new.shape="ELLIPSE", style.name = style.name)
+lockNodeDimensions(new.state="TRUE", style.name = style.name)
+setNodeColorDefault(new.color="#D3D3D3", style.name = style.name)
+setNodeBorderWidthDefault(new.width="2", style.name = style.name)
+setNodeBorderColorDefault(new.color="#616060", style.name = style.name)
+setNodeLabelMapping(table.column="display name",style.name = style.name)
+setNodeFontSizeDefault(4)
 ```
 
-```{r}
-deleteStyleMapping("STRING style v1.5 - ovarian cancer", "NODE_FILL_COLOR")
-```
-
-- Next, we need the min and max of the **logFC** column:
+Next, we need the min and max of the **logFC** column:
 
 ```{r}
 logFC.table <- getTableColumns('node', 'logFC')
@@ -392,30 +392,20 @@ logFC.max <- max(logFC.table, na.rm = T)
 logFC.center <- logFC.min + (logFC.max - logFC.min)/2
 ```
 
-- Let's create the mapping: 
+Let's create the mapping: 
 
 ```{r}
-setNodeFontSizeDefault(4)
-setNodeColorMapping('logFC', c(logFC.min, logFC.center, logFC.max), c('#0000FF', '#FFFFFF', '#FF0000'), style.name ="STRING style v1.5 - ovarian cancer")
+data.values = c(logFC.min, logFC.center, logFC.max)
+node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
+setNodeColorMapping('logFC', data.values, node.colors, style.name=style.name)
 ```
-
-- Change the default node **Fill Color** to light grey.
-
-```{r}
-setNodeColorDefault('#D3D3D3', style.name ="STRING style v1.5 - ovarian cancer")
-```
-
-_Pro-tip: If you apply the **yFiles Organic** layout, you can end up with network views like this..._
-([**yFiles** Layout Algorithms App](http://apps.cytoscape.org/apps/yfileslayoutalgorithms) does not support any automation. Please select it in Cytoscape Desktop menubar.)
-
-![](images/string-ovarian-styled.png)
 
 The TCGA found several genes that were commonly mutated in ovarian cancer, so called "cancer drivers".
 We can add information about these genes to the network visualization, by changing the visual style of these nodes.
 Three of the most important drivers are **TP53**, **BRCA1** and **BRCA2**.
-We will add a thicker, clored border for these genes in the network.
+We will add a thicker, colored border for these genes in the network.
 
-- Select all three driver genes by:
+Select all three driver genes by:
 
 ```{r}
 selectNodes(c("TP53", "BRCA1", "BRCA2"), by.col = "display name")
@@ -427,15 +417,6 @@ selectNodes(c("TP53", "BRCA1", "BRCA2"), by.col = "display name")
 setNodeBorderWidthBypass(getSelectedNodes(), 5)
 setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 ```
-
-The network will now look like this:
-
-![](images/string-ovarian-drivers.png)
-
-# Other Analysis Options
-
-- Exploring networks: finding paths, hubs and modules (clusterMaker, MCODE, jActiveModules, NetworkAnalyzer, PathFinder)
-- Extending networks with Transcription Factors, miRNAs, etc using CyTargetLinker
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:
