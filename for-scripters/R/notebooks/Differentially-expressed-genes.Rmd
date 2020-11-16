@@ -32,13 +32,19 @@ This protocol describes a network analysis workflow in Cytoscape for a set of di
 
 # Installation
 ```{r, eval = FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)){
   install.packages("BiocManager")
+}
 
-if(!"RCy3" %in% installed.packages())
+if(!"RCy3" %in% installed.packages()){}
   BiocManager::install("RCy3")
-
+}
 library(RCy3)
+
+if(!"RColorBrewer" %in% installed.packages()){
+    install.packages("RColorBrewer")
+}
+library(RColorBrewer)
 ```
 
 # Getting started
@@ -138,31 +144,34 @@ tail(getTableColumnNames('node'))
 Next, we will create a visualization of the imported data on the network.
 
 ```{r}
-style.name = "default"
 setVisualStyle(style.name="default")
+style.name = "de genes"
+createVisualStyle(style.name)
 setNodeShapeDefault(new.shape="ELLIPSE", style.name = style.name)
 lockNodeDimensions(new.state="TRUE", style.name = style.name)
+setNodeSizeDefault(new.size="50", style.name = style.name)
 setNodeColorDefault(new.color="#D3D3D3", style.name = style.name)
 setNodeBorderWidthDefault(new.width="2", style.name = style.name)
 setNodeBorderColorDefault(new.color="#616060", style.name = style.name)
 setNodeLabelMapping(table.column="display name",style.name = style.name)
+setNodeFontSizeDefault(new.size="14", style.name = style.name)
 ```
 
 Before we create a mapping for node color representing the range of fold changes, we need the min and max of the **logFC** column:
 
 ```{r}
-logFC.table <- getTableColumns('node', 'logFC')
+logFC.table.up <- getTableColumns('node', 'logFC')
 ```
 
 ```{r}
-logFC.min <- min(logFC.table, na.rm = T)
-logFC.max <- max(logFC.table, na.rm = T)
-logFC.center <- logFC.min + (logFC.max - logFC.min)/2
+logFC.upup.min <- min(logFC.table.up, na.rm = T)
+logFC.up.max <- max(logFC.table.up, na.rm = T)
+logFC.up.center <- logFC.up.min + (logFC.up.max - logFC.up.min)/2
 ```
 
 ```{r}
-data.values = c(logFC.min, logFC.center, logFC.max)
-node.colors <- c(rev(brewer.pal(length(data.values), "YlOrRd")))
+data.values = c(logFC.up.min, logFC.up.center, logFC.up.max)
+node.colors <- c(brewer.pal(length(data.values), "YlOrRd"))
 setNodeColorMapping('logFC', data.values, node.colors, style.name=style.name)
 ```
 
@@ -218,9 +227,6 @@ string.cmd = 'string show charts'
 commandsRun(string.cmd)
 ```
 
-<center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-enrichment-chart-up.png)
-
 ## STRING Protein Query: Down-regulated genes
 
 We are going to repeat the network search, data integration, visualization and enrichment analysis for the set of down-regulated genes by using the first column of [TCGA-Ovarian-MesenvsImmuno-data-down.csv](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-down.csv):
@@ -241,7 +247,7 @@ createSubnetwork(edges='all', subnetwork.name='String de genes down')
 
 ## Data integration
 
-Again, the identifiers in the network needs to be mapped to Entrez Gene:
+Again, the identifiers in the network needs to be mapped to Entrez Gene (NCBI gene):
 
 ```{r}
 mapped.cols <- mapTableColumn('display name', 'Human', 'HGNC', 'Entrez Gene')
@@ -254,36 +260,29 @@ loadTableData(de.genes.full,data.key.column="Gene",table.key.column="Entrez Gene
 ```
 
 ## Visualization
-Next, we will create a visualization of the imported data on the network.
+Next, we can create a visualization starting with the previously defined `de-genes` style:
 
 ```{r}
-style.name = "default"
-setVisualStyle(style.name="default")
-setNodeShapeDefault(new.shape="ELLIPSE", style.name = style.name)
-lockNodeDimensions(new.state="TRUE", style.name = style.name)
-setNodeColorDefault(new.color="#D3D3D3", style.name = style.name)
-setNodeBorderWidthDefault(new.width="2", style.name = style.name)
-setNodeBorderColorDefault(new.color="#616060", style.name = style.name)
-setNodeLabelMapping(table.column="display name",style.name = style.name)
+setVisualStyle(style.name="de genes")
 ```
 
 ```{r}
-logFC.table <- getTableColumns('node', 'logFC')
+logFC.table.down <- getTableColumns('node', 'logFC')
 ```
 
 ```{r}
-logFC.min <- min(logFC.table, na.rm = T)
-logFC.max <- max(logFC.table, na.rm = T)
-logFC.center <- logFC.min + (logFC.max - logFC.min)/2
+logFC.dn.min <- min(logFC.table.down, na.rm = T)
+logFC.dn.max <- max(logFC.table.down, na.rm = T)
+logFC.dn.center <- logFC.dn.min + (logFC.dn.max - logFC.dn.min)/2
 ```
 
 ```{r}
-data.values = c(logFC.min, logFC.center, logFC.max)
-node.colors <- c(rev(brewer.pal(length(data.values), "Blues")))
-setNodeColorMapping('logFC', data.values, node.colors, style.name=style.name)
+data.values = c(logFC.dn.min, logFC.dn.center, logFC.dn.max)
+node.colors <- c(brewer.pal(length(data.values), "Blues"))
+setNodeColorMapping('logFC', data.values, node.colors, style.name="default")
 ```
 
-Applying a force-directed layout, the network will now look something like this:
+Apply a force-directed layout.
 
 ```{r}
 layoutNetwork(paste('force-directed', 
@@ -338,9 +337,6 @@ createSubnetwork(edges='all', subnetwork.name='String ovarian sub')
 # Data integration
 
 Next we will import differential gene expression data from our TCGA dataset to create a visualization. Just like the previous example, we will need to do some identifier mapping to match the data to the network.
-```{r}
-getTableColumnNames('node')
-```
 
 ```{r}
 mapped.cols <- mapTableColumn("display name",'Human','HGNC','Entrez Gene')
@@ -348,17 +344,7 @@ mapped.cols <- mapTableColumn("display name",'Human','HGNC','Entrez Gene')
 
 Here we set **Human** as species, **HGNC** as **Map from**, and **Entrez Gene** as **To**.
 
-```{r}
-head(mapped.cols)
-```
-
-`mapped.cols` displays a report of how many identifiers were mapped. Make note of this information as it impacts all down-stream analysis; If the mapping was unsuccessful, downstream analysis will be as well. You will notice the new column `Entrez Gene` in the Node Table.
-
-```{r}
-tail(getTableColumnNames('node'))
-```
-
-We already loaded the data in Example 1 above, into the dataframe `de.genes.full`. We can simply repeat the step of importing the data frame into the node table in Cytoscape:
+We can now import the data frame with the full data (already loaded the data in Example 1 above) into the node table in Cytoscape:
 
 ```{r}
 loadTableData(de.genes.full, data.key.column = "Gene", table = "node", table.key.column = "Entrez Gene")
@@ -366,37 +352,29 @@ loadTableData(de.genes.full, data.key.column = "Gene", table = "node", table.key
 
 # Visualization
 
-Next, we will create a visualization of the imported data on the network, similarly to what we did earlier:
+Again, we can create a visualization starting with the previously defined `de-genes` style:
 
 ```{r}
-style.name = "default"
-setVisualStyle(style.name="default")
-setNodeShapeDefault(new.shape="ELLIPSE", style.name = style.name)
-lockNodeDimensions(new.state="TRUE", style.name = style.name)
-setNodeColorDefault(new.color="#D3D3D3", style.name = style.name)
-setNodeBorderWidthDefault(new.width="2", style.name = style.name)
-setNodeBorderColorDefault(new.color="#616060", style.name = style.name)
-setNodeLabelMapping(table.column="display name",style.name = style.name)
-setNodeFontSizeDefault(4)
+setVisualStyle(style.name="de genes")
 ```
 
 Next, we need the min and max of the **logFC** column:
 
 ```{r}
-logFC.table <- getTableColumns('node', 'logFC')
+logFC.table.ovarian <- getTableColumns('node', 'logFC')
 ```
 
 ```{r}
-logFC.min <- min(logFC.table, na.rm = T)
-logFC.max <- max(logFC.table, na.rm = T)
-logFC.center <- logFC.min + (logFC.max - logFC.min)/2
+logFC.ov.min <- min(logFC.table.ovarian, na.rm = T)
+logFC.ov.max <- max(logFC.table.ovarian, na.rm = T)
+logFC.ov.center <- logFC.ov.min + (logFC.ov.max - logFC.ov.min)/2
 ```
 
 Let's create the mapping: 
 
 ```{r}
-data.values = c(logFC.min, logFC.center, logFC.max)
-node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
+data.values = c(logFC.ov.min, logFC.ov.center, logFC.ov.max)
+node.colors <- c(brewer.pal(length(data.values), "RdBu"))
 setNodeColorMapping('logFC', data.values, node.colors, style.name=style.name)
 ```
 
@@ -417,6 +395,9 @@ selectNodes(c("TP53", "BRCA1", "BRCA2"), by.col = "display name")
 setNodeBorderWidthBypass(getSelectedNodes(), 5)
 setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 ```
+
+<center>
+![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-ovarian-final.png)
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:
