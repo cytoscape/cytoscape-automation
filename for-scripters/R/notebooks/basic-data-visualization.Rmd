@@ -48,21 +48,11 @@ First, launch Cytoscape and keep it running whenever using RCy3. Confirm that yo
 ```
 
 # Loading Network
-You can download the [demo network session file](https://nrnb.org/data/BasicDataVizDemo.cys) to your current working directory by running...
+Let's open a Cytoscape demo session file: 
 
 ```{r}
-download.file("https://nrnb.org/data/BasicDataVizDemo.cys", "./BasicDataVizDemo.cys", 'curl')
+openSession()
 ```
-
-Now open the demo network using...
-
-```{r}
-openSession(file.location = "./BasicDataVizDemo.cys")
-```
-
-Now you should see a network like this.
-
-![](./data/img/basic-dataviz-demo.png)
 
 # Visualizing Expression Data on Networks
 
@@ -81,8 +71,6 @@ selectNodes(c("YDL194W", "YLR345W"), by.col = "name")
 ```
 
 Selecting one or more nodes in the network will update the Node Table to show only the corresponding row(s).
-
-![](./data/img/basic-dataviz-select-nodes.png)
 
 We can now use the data to manipulate the visual properties of the network by mapping specific data columns to visual style properties:
 

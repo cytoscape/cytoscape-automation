@@ -25,7 +25,7 @@ This protocol describes a network analysis workflow in Cytoscape for a set of di
 - Exporting network visualizations
 
 <center>
-![](./data/img/string-ovarian-final.png)
+![](./data/img/string-ovarian-final.png){height=80%} 
 </center>
 
 <hr />
@@ -418,7 +418,7 @@ setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 ```
 
 <center>
-![](./data/img/string-ovarian-final.png)
+![](./data/img/string-ovarian-final.png){height=80%} 
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:
