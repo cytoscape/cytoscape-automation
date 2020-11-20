@@ -25,7 +25,7 @@ This protocol describes a network analysis workflow in Cytoscape for a set of di
 - Exporting network visualizations
 
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-ovarian-final.png)
+![](./data/img/string-ovarian-final.png)
 </center>
 
 <hr />
@@ -106,7 +106,7 @@ commandsRun(string.cmd)
 The resulting network will load automatically and contains up-regulated genes recognized by STRING, and interactions between them with an evidence score of 0.4 or greater.
 
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-up2.png)
+![](./data/img/string-de-up2.png)
 The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will select only the connected nodes to work with for the rest of this tutorial, by creating a subnetwork based on all edges:
 
 ```{r}
@@ -186,7 +186,7 @@ layoutNetwork(paste('force-directed',
 ```
 
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-up-forcedirected.png)
+![](./data/img/string-de-up-forcedirected.png)
 
 # Enrichment Analysis Options
 
@@ -208,7 +208,7 @@ commandsRun(string.cmd)
 When the enrichment analysis is complete, a new tab titled **STRING Enrichment** will open in the **Table Panel**.
 
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-enrichment.png)
+![](https://cytoscape.org/cytoscape-automation/for-scripters/R/notebooks/data/img/string-enrichment.png)
 
 The STRING app includes several options for filtering and displaying the enrichment results.
 The features are all available at the top of the **STRING Enrichment** tab.
@@ -299,7 +299,7 @@ layoutNetwork(paste('force-directed',
 
 Focusing on the connected part of the network, it should look something like this:
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-down-forcedirected.png)
+![](./data/img/string-de-down-forcedirected.png)
 
 ## STRING Enrichment
 
@@ -418,7 +418,7 @@ setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 ```
 
 <center>
-![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-ovarian-final.png)
+![](./data/img/string-ovarian-final.png)
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:
