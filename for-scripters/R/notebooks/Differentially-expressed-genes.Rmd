@@ -25,7 +25,7 @@ This protocol describes a network analysis workflow in Cytoscape for a set of di
 - Exporting network visualizations
 
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-ovarian-drivers.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-ovarian-final.png)
 </center>
 
 <hr />
@@ -60,7 +60,6 @@ If you haven't already, install the [STRINGapp](http://apps.cytoscape.org/apps/s
 
 ```{r}
 installApp('stringApp')
-installApp('yFiles Layout Algorithms') ##not sure this is necessary anymore
 ```
 
 # Background
@@ -107,7 +106,7 @@ commandsRun(string.cmd)
 The resulting network will load automatically and contains up-regulated genes recognized by STRING, and interactions between them with an evidence score of 0.4 or greater.
 
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-de-up2.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-up2.png)
 The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will select only the connected nodes to work with for the rest of this tutorial, by creating a subnetwork based on all edges:
 
 ```{r}
@@ -180,14 +179,14 @@ Applying a force-directed layout, the network will now look something like this:
 
 ```{r}
 layoutNetwork(paste('force-directed', 
-              'defaultSpringCoefficient=0.0003',
+              'defaultSpringCoefficient=0.00003',
               'defaultSpringLength=50',
               'defaultNodeMass=4',
               sep=' '))
 ```
 
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-de-up-forcedirected.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-up-forcedirected.png)
 
 # Enrichment Analysis Options
 
@@ -209,7 +208,7 @@ commandsRun(string.cmd)
 When the enrichment analysis is complete, a new tab titled **STRING Enrichment** will open in the **Table Panel**.
 
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-enrichment.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-enrichment.png)
 
 The STRING app includes several options for filtering and displaying the enrichment results.
 The features are all available at the top of the **STRING Enrichment** tab.
@@ -292,7 +291,7 @@ Apply a force-directed layout.
 
 ```{r}
 layoutNetwork(paste('force-directed', 
-              'defaultSpringCoefficient=0.0003',
+              'defaultSpringCoefficient=0.00003',
               'defaultSpringLength=50',
               'defaultNodeMass=4',
               sep=' '))
@@ -300,7 +299,7 @@ layoutNetwork(paste('force-directed',
 
 Focusing on the connected part of the network, it should look something like this:
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-de-down-forcedirected.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-de-down-forcedirected.png)
 
 ## STRING Enrichment
 
@@ -390,6 +389,15 @@ data.values = c(logFC.ov.min, logFC.ov.center, logFC.ov.max)
 node.colors <- c(brewer.pal(length(data.values), "RdBu"))
 setNodeColorMapping('logFC', data.values, node.colors, style.name="ovarian")
 ```
+Apply a force-directed layout.
+
+```{r}
+layoutNetwork(paste('force-directed', 
+              'defaultSpringCoefficient=0.00003',
+              'defaultSpringLength=50',
+              'defaultNodeMass=4',
+              sep=' '))
+``` 
 
 The TCGA found several genes that were commonly mutated in ovarian cancer, so called "cancer drivers".
 We can add information about these genes to the network visualization, by changing the visual style of these nodes.
@@ -410,7 +418,7 @@ setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 ```
 
 <center>
-![](https://cytoscape.org/cytoscape-tutorials/protocols/differentially-expressed-genes/string-ovarian-final.png)
+![](https://cytoscape.org/cytoscape-automation/protocols/for-scripters/R/notebooks/data/img/string-ovarian-final.png)
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:
