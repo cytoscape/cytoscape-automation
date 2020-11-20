@@ -46,6 +46,8 @@ navbar:
       href: Cancer-networks-and-data-challenge.R
     - text: "AP-MS network analysis"
       href: AP-MS-network-analysis.nb.html
+    - text: "Differentially Expressed Genes Network Analysis"
+      href: Differentially-expressed-genes.nb.html
     - text: "Shortest path"
       href: Shortest-path.nb.html
     - text: "Top genes and coexpression"
@@ -56,8 +58,6 @@ navbar:
     - text: External Links
     - text: "Cytoscape stringApp"
       href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/stringApp.html
-    - text: "Differentially Expressed Genes Network Analysis"
-      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/differentially-expressed-genes
     - text: "Basic Data Visualization"
       href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/basic-data-visualization.html
     - text: "CyTargetLinker: use case 1, Rett syndrome extension"
