@@ -23,9 +23,7 @@ Cytoscape is an open source software platform for integrating, visualizing, and 
  - Filtering networks based on expression data.
  - Assessing expression data in the context of a biological network.
 
-<center>
-![](./data/img/basic-dataviz-final-network.png)
-</center>
+![](./data/img/basic-dataviz-subnet.png)
 
 <hr />
 
