@@ -70,8 +70,6 @@ navbar:
       href: https://github.com/idekerlab/KEGGscape/blob/master/usecase/f1000-cyauto-workflow.Rmd
     - text: "Network Layout"
       href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/network-layout.html
-    - text: "Visualizing data"
-      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/mapping-data.html
     - text: "Loading networks"
       href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/loading-networks.html
     - text: "Importing Network from Table"
