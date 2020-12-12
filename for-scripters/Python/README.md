@@ -1,4 +1,4 @@
-## What is _py2cytoscape_?
+﻿## What is _py2cytoscape_?
 [py2cytoscape](https://github.com/cytoscape/py2cytoscape) is a collection of utilities for using [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) with Python.  The Network visualization feature is still limited in Python, but with this tool, you can access both Cytoscape and Cytoscape.js network visualization engines from your Python code!
 
 This package is still experimental and in alpha status.
@@ -21,6 +21,7 @@ py2cytocape depends on python-igraph and optionally depends on scipy.
 You can install py2cytoscape with pip.
 
 ### Mac
+
 
 ```shell
 pip install py2cytoscape
