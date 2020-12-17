@@ -1,0 +1,380 @@
+---
+title: "Cytoscape StringApp"
+author: "Kozo Nishida, Kristina Hanspers and Alex Pico"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 4
+    df_print: paged
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/stringApp.Rmd).*
+
+<hr />
+
+In these exercises, we will use the [stringApp](http://apps.cytoscape.org/apps/stringApp) for [Cytoscape](http://cytoscape.org/) to retrieve molecular networks from the [STRING](https://string-db.org/) and [STITCH](http://stitch-db.org/) databases. The exercises will teach you how to:
+
+- retrieve networks for proteins or small-molecule compounds of interest
+- retrieve networks for a disease or arbitrary topics in PubMed
+- layout and visually style the resulting networks
+- import external data and map them onto a network
+- perform enrichment analyses and visualize the results
+- merge and compare networks
+- select proteins by attributes
+- identify functional modules through network clustering
+
+The original version of this tutorial was developed by Lars Juhl Jensen of the Novo Nordisk Center for Protein Research at the University of Copenhagen. We thank professor Jensen for his gracious willingness to allow us to repackage the content for delivery as a Cytoscape tutorial.
+
+<hr />
+
+# Installation
+```{r, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+if(!"RCy3" %in% installed.packages())
+  BiocManager::install("RCy3")
+
+library(RCy3)
+```
+
+# Getting started
+First, launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and running:
+```{r}
+    cytoscapePing()
+    cytoscapeVersionInfo()
+```
+
+The exercises require you to have certain Cytoscape apps and R packages installed.
+
+```{r}
+installApp('stringApp')
+installApp('enhancedGraphics')
+installApp('clusterMaker2')
+```
+
+If you are not already familiar with the STRING database, we highly recommend that you go through the short [STRING exercises](https://jensenlab.org/training/string/) provided by the [Jensen lab](https://jensenlab.org/) to learn about the underlying data before working with them in these exercises.
+
+# Exercise 1
+
+In this exercise, we will perform some simple queries to retrieve molecular networks based on a protein, a small molecule compound, a disease, and a topic in PubMed.
+
+## Protein queries
+
+You can query **STRING** as protein data source (in the following query the **protein name** is **SORCS2**).
+You can select the appropriate organism by setting the **species** option (e.g. **Homo sapiens**).
+(And the following chunk also imports the result into Cytoscape.)
+
+```{r}
+string.cmd = 'string protein query query="SORCS2" species="Homo sapiens"'
+commandsRun(string.cmd)
+```
+
+The limit (Maximum number of interactors) option determines how many interaction partners of your protein(s) of interest will be added to the network.
+By default, if you enter only one protein name, the resulting network will contain 10 additional interactors. If you enter more than one protein name, the network will contain only the interactions among these proteins, unless you explicitly ask for additional proteins.
+
+```{r}
+string.cmd = 'string protein query query="SORCS2" species="Homo sapiens" limit=100'
+commandsRun(string.cmd)
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_SORCS2.png){width=60%}
+
+How many nodes are in the resulting network?
+How does this compare to the maximum number of interactors you specified?
+What types of information does the **Node Table** provide?
+
+## Compound queries
+
+You can query **STITCH** as protein/compound data source (in the following query the **compound name** is **imatinib**).
+You can select the organism and number of additional interactors just like for the protein query above.
+
+```{r}
+string.cmd = 'string compound query query="imatinib" species="Homo sapiens"'
+commandsRun(string.cmd)
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_imatinib.png){width=60%}
+
+How is this network different from the protein-only network with respect to node types and the information provided in the Node Table?
+
+## Disease queries
+
+You can query **STRING** as disease data source (in the following query the **disease term** is **Alzheimer**).
+The stringApp will retrieve a STRING network for the top-N proteins (by default 100) associated with the disease.
+
+```{r}
+string.cmd = 'string disease query disease="Alzheimer"'
+commandsRun(string.cmd)
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_alzheimer.png){width=60%}
+
+Which additional attribute column do you get in the Node Table for a disease query compared to a protein query? (Hint: check the last column.)
+
+## PubMed queries
+
+You can query **STRING** as **PubMed** data source (in the following query the query representing a topic of interest is **jet-lag**).
+You can use any query that would work on the PubMed website, but it should obviously a topic with related genes or proteins. The stringApp will query PubMed for the abstracts, find the top-N proteins (by default 100) associated with these abstracts, and retrieve a STRING network for them.
+
+```{r}
+string.cmd = 'string pubmed query pubmed="jet-lag"'
+commandsRun(string.cmd)
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_jetlag.png){width=60%}
+
+Which attribute column do you get in the Node Table for a PubMed query compared to a disease query? (Hint: check the last columns.)
+
+# Exercise 2
+In this exercise, we will work with a list of 78 proteins that interact with TrkA (tropomyosin-related kinase A) in neuroblastoma cells 10 min after stimulation with NGF (nerve growth factor) ([Emdal et al., 2015](http://stke.sciencemag.org/content/8/374/ra40)). An adapted table with the data from this study is available [here](https://cytoscape.org/cytoscape-tutorials/protocols/data/Emdal2015SciSignal.xlsx).
+
+## Protein network retrieval
+
+Here, we run a query with the first column (UniProt IDs) in the table:
+
+```{r}
+df <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/Emdal2015SciSignal.csv", header = TRUE, sep = ",", quote="\"", stringsAsFactors = FALSE, check.names = FALSE)
+```
+
+```{r}
+string.cmd = paste('string protein query query="', paste(df$UniProt, collapse = '\n'), '"', sep = "")
+commandsRun(string.cmd)
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_trkA.png){width=60%}
+
+How many nodes and edges are there in the resulting network? Do the proteins all form a connected network? Why?
+
+Cytoscape provides several network layout options.
+For example, you can try the **Degree Sorted Circle Layout**
+
+```{r}
+layoutNetwork('degree-circle')
+```
+
+and the **Prefuse Force Directed Layout** with **score** as edge weight
+
+```{r}
+layoutNetwork('force-directed edgeAttribute="score"')
+```
+
+*Can you find a layout that allows you to easily recognize patterns in the network? Try the Edge-weighted Spring Embedded (Kamada-Kawai) Layout with the attribute ‘score’, which is the combined STRING interaction score.*
+
+```{r}
+layoutNetwork('kamada-kawai edgeAttribute="score"')
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_kamada-kawai.png){width=60%}
+
+**Note that [**yFiles** Layout Algorithms App](http://apps.cytoscape.org/apps/yfileslayoutalgorithms) does not support any automation.**
+
+## Discrete color mapping
+
+Cytoscape allows you to map attributes of the nodes and edges to visual properties such as node color and edge width.
+Here, we will map the target family data to the node color.
+
+Lets change the node **Fill Color** with **target family** column in the node table:
+
+```{r}
+column <- "target::family"
+values <- c('Kinase', 'GPCR')
+colors <- c('#FF0000', '#0000FF')
+setNodeColorMapping(column, values, colors, mapping.type = "d", style.name = "STRING style v1.5")
+```
+
+You can find the column names in the node table with
+```{r}
+getTableColumnNames()
+```
+
+You can find the visual style names with
+```{r}
+getVisualStyleNames()
+```
+
+You can also set a default color, e.g. for all nodes that do not have a target family annotation with
+```{r}
+setNodeColorDefault('#FFFFFF', style.name = "STRING style v1.5")
+```
+
+*How many of the proteins in the network are kinases?*
+
+Note that the retrieved network contains a lot of additional information associated with the nodes and edges, such as the protein sequence, tissue expression data (Node Table) as well as the confidence scores for the different interaction evidences (Edge Table). In the following, we will explore these data using Cytoscape.
+
+## Data import
+
+Network nodes and edges can have additional information associated with them that we can load into Cytoscape and use for visualization.
+
+We already imported the data from an Excel spreadsheet derived from data provided in the paper mentioned above. Here we check it again with
+
+```{r}
+head(df)
+```
+
+Now you need to map unique identifiers between the entries in the data and the nodes in the network.
+The key point of this is to identify which nodes in the network are equivalent to which entries in the table.
+This enables mapping of data values into visual properties like Fill Color and Shape.
+This kind of mapping is typically done by comparing the unique Identifier attribute value for each node (Key Column for Network) with the unique Identifier value for each data value (key symbol).
+The **Key Column** for Network allows you to set the node attribute column that is to be used as key to map to.
+In this case it is **query term** because this attribute contains the UniProt accession numbers you entered when retrieving the network.
+
+To import the node attributes file into Cytoscape, run
+
+```{r}
+loadTableData(as.data.frame(df), data.key.column = "UniProt", table = "node", table.key.column = "query term")
+```
+
+If there is a match between the value of a Key in the dataset and the value the Key Column for Network field in the network, all attribute–value pairs associated with the element in the dataset are assigned to the matching node in the network. 
+You will find the imported columns at the end of the Node Table.
+
+## Continuous color mapping
+
+Now, we want to color the nodes according to the protein abundance (log ratio) compared to the cells before NGF treatment.
+Here we set **Column** to the node column containing the data that you want to use (10 min log ratio).
+
+```{r}
+logratio.score.table <- getTableColumns('node', "10 min log ratio")
+```
+
+Since this is a numeric value, we will use the Continuous Mapping as the Mapping Type, and set a color gradient for how abundant each protein is.
+
+```{r}
+logratio.min <- min(logratio.score.table, na.rm = T)
+logratio.max <- max(logratio.score.table, na.rm = T)
+```
+
+```{r}
+if (abs(logratio.min) < logratio.max) {
+  setNodeColorMapping("10 min log ratio", c(-logratio.max, 0, logratio.max), c('#0000FF', '#FFFFFF', '#FF0000'), style.name = "STRING style v1.5")
+} else {
+  setNodeColorMapping("10 min log ratio", c(logratio.min, 0, -logratio.min), c('#0000FF', '#FFFFFF', '#FF0000'), style.name = "STRING style v1.5")
+}
+```
+
+The color gradient blue-white-red gives a visualization of the negative-to-positive abundance ratio.
+
+*Are the up-regulated nodes grouped together?*
+
+## Functional enrichment
+
+Next, we will retrieve functional enrichment for the proteins in our network.
+
+The STRING app has built-in enrichment analysis functionality, which includes enrichment for GO Process, GO Component, GO Function, InterPro, KEGG Pathways, and PFAM.
+
+First, we will run the enrichment on the whole network, against the genome: 
+
+```{r}
+string.cmd = 'string retrieve enrichment allNetSpecies="Homo sapiens", background=genome  selectedNodesOnly="false"'
+commandsRun(string.cmd)
+string.cmd = 'string show enrichment'
+commandsRun(string.cmd)
+```
+
+A new STRING Enrichment tab will appear in the Table Panel on the bottom. 
+It contains a table of enriched terms and corresponding information for each enrichment category.
+
+*Which are the three most statistically significant terms?*
+
+To explore only specific types of terms, e.g. GO terms, and to remove redundant terms from the table, we are going to filter the table to only show GO Process:
+
+```{r}
+string.cmd = 'string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"'
+commandsRun(string.cmd)
+```
+
+In this way, you will see only the statistically significant GO terms that do not represent largely the same set of proteins within the network.
+
+*Do the functional terms assigned to a protein correlate with whether it is up- or down-regulated?*
+
+Next, we will visualize the top-3 enriched terms in the network by using split charts.
+
+```{r}
+string.cmd = 'string show charts'
+commandsRun(string.cmd)
+```
+
+*Do these terms give good coverage of the proteins in network?*
+
+Finally, save the list of enriched terms and associated p-values as a text file locally. Note that this will export a cvs file to your current working directory.
+
+```{r}
+commandsPOST(paste0('table export table="STRING Enrichment: All" options="CSV" outputFile="',paste(getwd(),"string-enrichment-all.csv",sep = "/"),'"'))
+```
+
+# Exercise 3
+
+We are going to use the stringApp to query the [DISEASES](https://diseases.jensenlab.org/) database for proteins associated with Parkinson’s disease and with Alzheimer’s disease, retrieve STRING networks for both, created a combined network for the two neurodegenerative diseases, identify clusters in the network, and color it to compare the diseases.
+
+## Disease network retrieval
+
+Retrieve a network for **Parkinson’s disease** and another for **Alzheimer’s disease**.
+
+```{r}
+string.cmd = 'string disease query disease="Parkinson"'
+commandsRun(string.cmd)
+```
+
+```{r}
+string.cmd = 'string disease query disease="Alzheimer"'
+commandsRun(string.cmd)
+```
+
+## Working with node attributes
+
+Browse through the node attributes table and find the disease score column.
+
+```{r}
+getTableColumnNames()
+```
+
+Sort it descending by values to see the highest disease scores.
+
+```{r}
+disease.score <- getTableColumns('node', "stringdb::disease score")
+disease.score.sorted <- disease.score[order(-disease.score$`stringdb::disease score`),,drop=FALSE]
+head(disease.score.sorted)
+```
+
+The row names are SUIDs for the network nodes.
+You can highlight the corresponding nodes by selecting the rows in the table,
+
+```{r}
+selectNodes(rownames(head(disease.score.sorted)))
+```
+
+Look for an example for a node with a disease score of 5 and one with a disease score below 4.
+
+Rename the **disease score** columns in the two networks to **PD score** and **AD score**, respectively, by 
+
+```{r}
+setCurrentNetwork("String Network - Parkinson's disease")
+renameTableColumn("stringdb::disease score", "stringdb::PD score")
+```
+```{r}
+setCurrentNetwork("String Network - Alzheimer's disease")
+renameTableColumn("stringdb::disease score", "stringdb::AD score")
+```
+
+## Merging networks
+
+Cytoscape provides functionality to merge two or more networks, building either their union, intersection or difference.
+To merge the two disease networks 
+
+```{r}
+
+```
+
+*How many nodes and edges are there in the merged network compared to the two individual disease networks?*
