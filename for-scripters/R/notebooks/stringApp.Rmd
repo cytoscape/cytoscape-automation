@@ -137,6 +137,82 @@ commandsRun(string.cmd)
 Which attribute column do you get in the Node Table for a PubMed query compared to a disease query? (Hint: check the last columns.)
 
 # Exercise 2
+In this exercise, we are going to use the stringApp to query the DISEASES database for proteins associated with ovarian cancer (EOC), retrieve a STRING network for them, and explore the resulting network.
+
+Close the current session in Cytoscape:
+```{r}
+closeSession(save.before.closing=FALSE)
+```
+
+## Retrieve disease network
+First, we will run a disease query for *ovarian cancer*:
+
+```{r}
+string.cmd = 'string disease query disease="ovarian cancer" limit=250'
+commandsRun(string.cmd)
+```
+
+The retrieved network contains a lot of additional information associated with the nodes and edges, such as the protein sequence, tissue expression data, subcellular localization, disease score (Node Table) as well as the confidence scores for the different interaction evidences (Edge Table). In the next few steps, we will explore these data.
+
+Create a dataframe containing the *disease score* and sort it descending by values to see the highest disease scores:
+
+```{r}
+disease.score <- getTableColumns('node', "stringdb::disease score")
+disease.score.sorted <- disease.score[order(-disease.score$`stringdb::disease score`),,drop=FALSE]
+head(disease.score.sorted)
+```
+
+You can highlight the top nodes by selecting the corresponding rows in the table. Here we are selecting the top few nodes based on disease score:
+
+```{r}
+selectNodes(rownames(head(disease.score.sorted)))
+```
+
+## Continuous color mapping
+The stringApp automatically retrieves information about which compartments the proteins are located from the COMPARTMENTS database. Cytoscape allows you to map attributes of the nodes and edges to visual properties such as node color and edge width. Here, we will map the subcellular localization data for nucleus to the node color.
+
+First, let's remove the String style:
+```{r}
+setVisualStyle(style.name="default")
+setNodeShapeDefault(new.shape="ELLIPSE", style.name = "default")
+lockNodeDimensions(new.state="TRUE", style.name = "default")
+setNodeSizeDefault(new.size="50", style.name = "default")
+setNodeColorDefault(new.color="#D3D3D3", style.name = "default")
+setNodeBorderWidthDefault(new.width="2", style.name = "default")
+setNodeBorderColorDefault(new.color="#616060", style.name = "default")
+setNodeLabelMapping(table.column="display name",style.name = "default")
+setNodeFontSizeDefault(new.size="14", style.name = "default")
+```
+
+For each cellular compartment, a score is defined for each node. Next, let's define a dataframe corresponding to the score for nucleus:
+```{r}
+nucleus.nodes <- getTableColumns('node', 'compartment::nucleus')
+```
+
+Define the bounds of the values in the *compartment::nucleus* column:
+```{r}
+nucleus.min <- min(nucleus.nodes, na.rm = T)
+nucleus.max <- max(nucleus.nodes, na.rm = T)
+nucleus.center <- nucleus.min + (nucleus.max - nucleus.min)/2
+```
+
+```{r}
+data.values = c(nucleus.min, nucleus.center, nucleus.max)
+node.colors <- c(brewer.pal(length(data.values), "YlOrRd"))
+setNodeColorMapping('compartment::nucleus', data.values, node.colors, style.name = "STRING style v1.5 - ovarian cancer")
+```
+
+Because many proteins are located in the nucleus, we will identify the proteins with highest confidence of 5 and create a subnetwork.
+
+```{r}
+top.nodes <- row.names(nucleus.nodes)[which(nucleus.nodes[,1]>=5)]
+createSubnetwork(top.nodes,subnetwork.name ='nucleus score 5')
+```
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_nucleus-sub.png){width=60%}
+
+# Exercise 3
 In this exercise, we will work with a list of 78 proteins that interact with TrkA (tropomyosin-related kinase A) in neuroblastoma cells 10 min after stimulation with NGF (nerve growth factor) ([Emdal et al., 2015](http://stke.sciencemag.org/content/8/374/ra40)). An adapted table with the data from this study is available [here](https://cytoscape.org/cytoscape-tutorials/protocols/data/Emdal2015SciSignal.xlsx).
 
 ## Protein network retrieval
@@ -186,7 +262,7 @@ layoutNetwork('kamada-kawai edgeAttribute="score"')
 Cytoscape allows you to map attributes of the nodes and edges to visual properties such as node color and edge width.
 Here, we will map the target family data to the node color.
 
-Lets change the node **Fill Color** with **target family** column in the node table:
+Lets change the node **Fill Color** with **target family** column in the node table.
 
 ```{r}
 column <- "target::family"
@@ -210,24 +286,23 @@ You can also set a default color, e.g. for all nodes that do not have a target f
 setNodeColorDefault('#FFFFFF', style.name = "STRING style v1.5")
 ```
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_trkA2.png){width=60%}
 *How many of the proteins in the network are kinases?*
 
-Note that the retrieved network contains a lot of additional information associated with the nodes and edges, such as the protein sequence, tissue expression data (Node Table) as well as the confidence scores for the different interaction evidences (Edge Table). In the following, we will explore these data using Cytoscape.
+Note that the retrieved network contains a lot of additional information associated with the nodes and edges, such as the protein sequence, tissue expression data (Node Table) as well as the confidence scores for the different interaction evidences (Edge Table). In the following steps, we will explore these data using Cytoscape.
 
 ## Data import
 
 Network nodes and edges can have additional information associated with them that we can load into Cytoscape and use for visualization.
-
-We already imported the data from an Excel spreadsheet derived from data provided in the paper mentioned above. Here we check it again with
+We already imported the data from an Excel spreadsheet derived from data provided in the paper mentioned above. Here we check it again with:
 
 ```{r}
 head(df)
 ```
 
-Now you need to map unique identifiers between the entries in the data and the nodes in the network.
-The key point of this is to identify which nodes in the network are equivalent to which entries in the table.
-This enables mapping of data values into visual properties like Fill Color and Shape.
-This kind of mapping is typically done by comparing the unique Identifier attribute value for each node (Key Column for Network) with the unique Identifier value for each data value (key symbol).
+Now we need to map unique identifiers between the entries in the data and the nodes in the network. The key point of this is to identify which nodes in the network are equivalent to which entries in the table. This enables mapping of data values into visual properties like Fill Color and Shape. This kind of mapping is typically done by comparing the unique Identifier attribute value for each node (Key Column for Network) with the unique Identifier value for each data value (key symbol).
+
 The **Key Column** for Network allows you to set the node attribute column that is to be used as key to map to.
 In this case it is **query term** because this attribute contains the UniProt accession numbers you entered when retrieving the network.
 
@@ -257,14 +332,20 @@ logratio.max <- max(logratio.score.table, na.rm = T)
 ```
 
 ```{r}
-if (abs(logratio.min) < logratio.max) {
-  setNodeColorMapping("10 min log ratio", c(-logratio.max, 0, logratio.max), c('#0000FF', '#FFFFFF', '#FF0000'), style.name = "STRING style v1.5")
-} else {
-  setNodeColorMapping("10 min log ratio", c(logratio.min, 0, -logratio.min), c('#0000FF', '#FFFFFF', '#FF0000'), style.name = "STRING style v1.5")
-}
+logrt.data.values = c(logratio.min, 0, logratio.max)
+logrt.node.colors <- c(brewer.pal(length(logrt.data.values), "RdBu"))
 ```
 
+We will also delete some of the String-specific mappings so that we can see our data on the nodes better:
+```{r}
+deleteStyleMapping(style.name = 'STRING style v1.5 - 1', visual.prop = 'NODE_CUSTOMGRAPHICS_1')
+deleteStyleMapping(style.name = 'STRING style v1.5 - 1', visual.prop = 'NODE_CUSTOMGRAPHICS_2')
+setNodeColorMapping('10 min log ratio', logrt.data.values, logrt.node.colors, style.name = "STRING style v1.5")
+```
 The color gradient blue-white-red gives a visualization of the negative-to-positive abundance ratio.
+
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_trkA-style.png){width=60%}
 
 *Are the up-regulated nodes grouped together?*
 
@@ -306,75 +387,76 @@ string.cmd = 'string show charts'
 commandsRun(string.cmd)
 ```
 
+<center>
+![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/stringApp_trkA-enrich.png){width=60%}
+
 *Do these terms give good coverage of the proteins in network?*
 
-Finally, save the list of enriched terms and associated p-values as a text file locally. Note that this will export a cvs file to your current working directory.
+Finally, you can save the list of enriched terms and associated p-values as a text file locally. Note that this will export a cvs file to your current working directory.
 
 ```{r}
 commandsPOST(paste0('table export table="STRING Enrichment: All" options="CSV" outputFile="',paste(getwd(),"string-enrichment-all.csv",sep = "/"),'"'))
 ```
 
-# Exercise 3
+<!-- # Exercise 3 -->
 
-We are going to use the stringApp to query the [DISEASES](https://diseases.jensenlab.org/) database for proteins associated with Parkinson’s disease and with Alzheimer’s disease, retrieve STRING networks for both, created a combined network for the two neurodegenerative diseases, identify clusters in the network, and color it to compare the diseases.
+<!-- We are going to use the stringApp to query the [DISEASES](https://diseases.jensenlab.org/) database for proteins associated with Parkinson’s disease and with Alzheimer’s disease, retrieve STRING networks for both, created a combined network for the two neurodegenerative diseases, identify clusters in the network, and color it to compare the diseases. -->
 
-## Disease network retrieval
+<!-- ## Disease network retrieval -->
 
-Retrieve a network for **Parkinson’s disease** and another for **Alzheimer’s disease**.
+<!-- Retrieve a network for **Parkinson’s disease** and another for **Alzheimer’s disease**. -->
 
-```{r}
-string.cmd = 'string disease query disease="Parkinson"'
-commandsRun(string.cmd)
-```
+<!-- ```{r} -->
+<!-- string.cmd = 'string disease query disease="Parkinson"' -->
+<!-- commandsRun(string.cmd) -->
+<!-- ``` -->
 
-```{r}
-string.cmd = 'string disease query disease="Alzheimer"'
-commandsRun(string.cmd)
-```
+<!-- ```{r} -->
+<!-- string.cmd = 'string disease query disease="Alzheimer"' -->
+<!-- commandsRun(string.cmd) -->
+<!-- ``` -->
 
-## Working with node attributes
+<!-- ## Working with node attributes -->
 
-Browse through the node attributes table and find the disease score column.
+<!-- Browse through the node attributes table and find the disease score column: -->
 
-```{r}
-getTableColumnNames()
-```
+<!-- ```{r} -->
+<!-- getTableColumnNames() -->
+<!-- ``` -->
 
-Sort it descending by values to see the highest disease scores.
+<!-- Create a dataframe containing the disease score and sort it descending by values to see the highest disease scores: -->
 
-```{r}
-disease.score <- getTableColumns('node', "stringdb::disease score")
-disease.score.sorted <- disease.score[order(-disease.score$`stringdb::disease score`),,drop=FALSE]
-head(disease.score.sorted)
-```
+<!-- ```{r} -->
+<!-- disease.score <- getTableColumns('node', "stringdb::disease score") -->
+<!-- disease.score.sorted <- disease.score[order(-disease.score$`stringdb::disease score`),,drop=FALSE] -->
+<!-- head(disease.score.sorted) -->
+<!-- ``` -->
 
-The row names are SUIDs for the network nodes.
-You can highlight the corresponding nodes by selecting the rows in the table,
+<!-- The row names are SUIDs for the network nodes. -->
+<!-- You can highlight specific nodes by selecting the corresponding rows in the table. Here we are selecting the top few nodes based on disease score: -->
 
-```{r}
-selectNodes(rownames(head(disease.score.sorted)))
-```
+<!-- ```{r} -->
+<!-- selectNodes(rownames(head(disease.score.sorted))) -->
+<!-- ``` -->
 
-Look for an example for a node with a disease score of 5 and one with a disease score below 4.
+<!-- Rename the **disease score** columns in the two networks to **PD score** and **AD score**, respectively: -->
 
-Rename the **disease score** columns in the two networks to **PD score** and **AD score**, respectively, by 
+<!-- ```{r} -->
+<!-- setCurrentNetwork("String Network - Parkinson's disease") -->
+<!-- renameTableColumn("stringdb::disease score", "stringdb::PD score") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- setCurrentNetwork("String Network - Alzheimer's disease") -->
+<!-- renameTableColumn("stringdb::disease score", "stringdb::AD score") -->
+<!-- ``` -->
 
-```{r}
-setCurrentNetwork("String Network - Parkinson's disease")
-renameTableColumn("stringdb::disease score", "stringdb::PD score")
-```
-```{r}
-setCurrentNetwork("String Network - Alzheimer's disease")
-renameTableColumn("stringdb::disease score", "stringdb::AD score")
-```
+<!-- ## Merging networks -->
 
-## Merging networks
+<!-- Cytoscape provides functionality to merge two or more networks, building either their union, intersection or difference. -->
+<!-- To merge the two disease networks  -->
 
-Cytoscape provides functionality to merge two or more networks, building either their union, intersection or difference.
-To merge the two disease networks 
+<!-- ```{r} -->
 
-```{r}
+<!-- ``` -->
 
-```
-
-*How many nodes and edges are there in the merged network compared to the two individual disease networks?*
+<!-- *How many nodes and edges are there in the merged network compared to the two individual disease networks?* -->
