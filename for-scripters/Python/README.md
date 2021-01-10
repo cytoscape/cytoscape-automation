@@ -15,9 +15,6 @@ Cytoscape is a [de-facto standard desktop application for network visualization 
 
 [py4cytoscape](https://github.com/cytoscape/py4cytoscape) supports Python 3.
 
-py4cytocape depends on python-igraph and optionally depends on scipy.
-(We do not include scipy as a py4cytoscape prerequisite dependency.)
-
 You can install py4cytoscape with pip.
 
 ### Mac
