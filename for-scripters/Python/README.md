@@ -25,8 +25,6 @@ You can install py4cytoscape with pip.
 
 ```shell
 pip install py4cytoscape
-#if you use the scipy dependent py4cytoscape method
-pip install scipy
 ```
 
 ### Windows
@@ -43,7 +41,6 @@ Please install python-igraph before you install py4cytoscape, otherwise pip will
 ```
 pip install .\python_igraph-0.7.1.post6-cp35-none-win_amd64.whl
 pip install py4cytoscape
-conda install scipy
 ```
 
 ### Ubuntu Linux
@@ -51,8 +48,6 @@ conda install scipy
 ```shell
 apt install g++ make libxml2-dev python-dev python3-dev zlib1g-dev
 pip install py4cytoscape
-#if you use the scipy dependent py4cytoscape method
-pip install scipy
 ```
 
 ## Features
