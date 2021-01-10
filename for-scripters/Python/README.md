@@ -13,10 +13,7 @@ Cytoscape is a [de-facto standard desktop application for network visualization 
 
 ## Installation
 
-[py4cytoscape](https://github.com/cytoscape/py4cytoscape) supports Python 3 and above.
-
-py4cytocape depends on python-igraph and optionally depends on scipy.
-(We do not include scipy as a py4cytoscape prerequisite dependency.)
+[py4cytoscape](https://github.com/cytoscape/py4cytoscape) supports Python 3.
 
 You can install py4cytoscape with pip.
 
@@ -25,8 +22,6 @@ You can install py4cytoscape with pip.
 
 ```shell
 pip install py4cytoscape
-#if you use the scipy dependent py4cytoscape method
-pip install scipy
 ```
 
 ### Windows
@@ -43,7 +38,6 @@ Please install python-igraph before you install py4cytoscape, otherwise pip will
 ```
 pip install .\python_igraph-0.7.1.post6-cp35-none-win_amd64.whl
 pip install py4cytoscape
-conda install scipy
 ```
 
 ### Ubuntu Linux
@@ -51,8 +45,6 @@ conda install scipy
 ```shell
 apt install g++ make libxml2-dev python-dev python3-dev zlib1g-dev
 pip install py4cytoscape
-#if you use the scipy dependent py4cytoscape method
-pip install scipy
 ```
 
 ## Features
@@ -104,16 +96,3 @@ You can use the Cytoscape.js network visualization widget in Jupyter Notebook. T
 
 ### Data Conversion Utilities to/from [Cytoscape.js](http://js.cytoscape.org/) JSON
 Cytoscape.js JSON is one of the standard data exchange formats in the Cytoscape community.  py4cytoscape includes some graph data conversion utilities for popular graph analysis packages in Python.
-
-Currently, the following graph objects are supported:
-
-* [NetworkX](https://networkx.github.io/) - From / To Cytoscape.js JSON
-* [igraph](http://igraph.org/python/) - From / To Cytoscape.js JSON
-* [pandas DataFrame](http://pandas.pydata.org/) - To Cytoscape.js JSON
-
-And these popular libraries will be supported soon:
-
-* [Numpy adj. matrix](http://www.numpy.org/) (binary/weighted)
-* [graph-tool](http://graph-tool.skewed.de/)
-* [GraphX](https://spark.apache.org/graphx/)
-* [GraphLab](https://github.com/dato-code/Dato-Core)
