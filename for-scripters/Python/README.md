@@ -47,52 +47,14 @@ apt install g++ make libxml2-dev python-dev python3-dev zlib1g-dev
 pip install py4cytoscape
 ```
 
-## Features
+## Source code for py4cytoscape
 
-### cyREST Wrapper (New from 0.4.0)
-[cyREST](http://apps.cytoscape.org/apps/cyrest) is a language-agnostic RESTful API for [Cytoscape 3](http://www.cytoscape.org/what_is_cytoscape.html).  Of course you can drive Cytoscape by calling raw RESTful API using [requests]() or other http client library, but with this wrapper, you can significantly reduce your lines of code.
+https://github.com/cytoscape/py4cytoscape
 
-#### Example: Creating an empty network in Cytoscape from Python
+## Basic tutorials
 
-##### __Without__ py4cytoscape (raw cyREST API call)
+https://py4cytoscape.readthedocs.io/en/latest/tutorials/index.html
 
-```python
-# HTTP Client for Python
-import requests
+## Cytoscape automation in Python
 
-# Standard JSON library
-import json
-
-# Basic Setup
-PORT_NUMBER = 1234
-BASE = 'http://localhost:' + str(PORT_NUMBER) + '/v1/'
-
-# Header for posting data to the server as JSON
-HEADERS = {'Content-Type': 'application/json'}
-
-# Define dictionary of empty network
-empty_network = {
-        'data': {
-            'name': 'I\'m empty!'
-        },
-        'elements': {
-            'nodes':[],
-            'edges':[]
-        }
-}
-
-res = requests.post(BASE + 'networks?collection=My%20Collection', data=json.dumps(empty_network), headers=HEADERS)
-new_network_id = res.json()['networkSUID']
-print('Empty network created: SUID = ' + str(new_network_id))
-```
-
-
-### Embedded Visualization Widget for [Jupyter Notebook](http://jupyter.org/)
-
-![](http://cl.ly/aexk/cyjs_widget.png)
-
-You can use the Cytoscape.js network visualization widget in Jupyter Notebook. This is particularly useful when you share your network analysis results with others.
-
-
-### Data Conversion Utilities to/from [Cytoscape.js](http://js.cytoscape.org/) JSON
-Cytoscape.js JSON is one of the standard data exchange formats in the Cytoscape community.  py4cytoscape includes some graph data conversion utilities for popular graph analysis packages in Python.
+https://github.com/cytoscape/cytoscape-automation/wiki
