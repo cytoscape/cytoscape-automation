@@ -32,6 +32,8 @@ navbar:
       href: Custom-Graphics.nb.html
     - text: "Filtering networks"
       href: Filtering-Networks.nb.html
+    - text: "Network Layout"
+      href: network-layout.nb.html
     - text: "WikiPathways and RCy3"
       href: rWikiPathways-and-RCy3.nb.html
     - text: "Phylogenetic trees"
@@ -68,8 +70,6 @@ navbar:
       href: https://bioconductor.org/packages/release/bioc/vignettes/rWikiPathways/inst/doc/Pathway-Analysis.html
     - text: "Automation with KEGGScape app"
       href: https://github.com/idekerlab/KEGGscape/blob/master/usecase/f1000-cyauto-workflow.Rmd
-    - text: "Network Layout"
-      href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/network-layout.html
     - text: "Loading networks"
       href: https://nrnb.org/gsod2019_kozo_nishida/html_documents/Rmd/loading-networks.html
     - text: "Importing Network from Table"
