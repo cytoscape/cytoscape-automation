@@ -43,11 +43,11 @@ The whole point of RCy3 is to connect with Cytoscape. You will need to install a
 
 **Make sure that Cytoscape is running**
 ```{r eval=FALSE}
- cytoscapePing ()
+cytoscapePing ()
 ```
 
 ```{r eval=FALSE}
- cytoscapeVersionInfo ()
+cytoscapeVersionInfo ()
 ```
 
 To see all the functions available in the RCy3 package: 

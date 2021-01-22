@@ -50,7 +50,7 @@ Additionally, there are examples that demonstrate analytical workflows, relying 
 * Visualizing integrated network analysis using BioNet
 * Performing advanced graph analytics using RBGL
 
-##Loading Networks
+## Loading Networks
 Networks come in all shapes and sizes in multiple formats from multiple sources. Here are just a few of the myriad ways to load networks into Cytoscape using RCy3.
 
 From R Objects. . .

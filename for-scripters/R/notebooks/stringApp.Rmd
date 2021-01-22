@@ -88,7 +88,9 @@ string.cmd = 'string protein query query="SORCS2" species="Homo sapiens" limit=1
 commandsRun(string.cmd)
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_SORCS2.png){width=60%}
+</center>
 
 How many nodes are in the resulting network?
 How does this compare to the maximum number of interactors you specified?
@@ -104,7 +106,9 @@ string.cmd = 'string compound query query="imatinib" species="Homo sapiens"'
 commandsRun(string.cmd)
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_imatinib.png){width=60%}
+</center>
 
 How is this network different from the protein-only network with respect to node types and the information provided in the Node Table?
 
@@ -118,7 +122,9 @@ string.cmd = 'string disease query disease="Alzheimer"'
 commandsRun(string.cmd)
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_alzheimer.png){width=60%}
+</center>
 
 Which additional attribute column do you get in the Node Table for a disease query compared to a protein query? (Hint: check the last column.)
 
@@ -131,8 +137,9 @@ You can use any query that would work on the PubMed website, but it should obvio
 string.cmd = 'string pubmed query pubmed="jet-lag"'
 commandsRun(string.cmd)
 ```
-
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_jetlag.png){width=60%}
+</center>
 
 Which attribute column do you get in the Node Table for a PubMed query compared to a disease query? (Hint: check the last columns.)
 
@@ -201,7 +208,9 @@ top.nodes <- row.names(nucleus.nodes)[which(nucleus.nodes[,1]>=5)]
 createSubnetwork(top.nodes,subnetwork.name ='nucleus score 5')
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_nucleus-sub.png){width=60%}
+</center>
 
 # Exercise 3
 In this exercise, we will work with a list of 541 proteins associated with epithelial ovarian cancer (EOC) as identified by phosphoproteomics in the study by [Francavilla et al](https://doi.org/10.1016/j.celrep.2017.03.015). An adapted table with the data from this study is available [here](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/stringApp/Francavilla2017CellRep.tsv).
@@ -219,7 +228,10 @@ string.cmd = paste('string protein query query="', paste(eoc.df$UniProt, collaps
 commandsRun(string.cmd)
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_eoc.png){width=60%}
+</center>
+
 How many nodes and edges are there in the resulting network? Do the proteins all form a connected network? Why?
 
 Since we will need to refer to this network later, let's give it a more specific name:
@@ -246,7 +258,9 @@ layoutNetwork('force-directed edgeAttribute="score"')
 layoutNetwork('kamada-kawai edgeAttribute="score"')
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_eoc-kamada-kawai.png){width=60%}
+</center>
 
 **Note that [yFiles Layout Algorithms App](http://apps.cytoscape.org/apps/yfileslayoutalgorithms) does not support any automation.**
 
@@ -266,7 +280,9 @@ setNodeColorDefault('#CCCCCC', style.name = "STRING style v1.5")
 setNodeColorMapping(column, values, colors, mapping.type = "d", style.name = "STRING style v1.5")
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_style.png){width=60%}
+</center>
 *How many of the proteins in the network are kinases?*
 
 Note that the retrieved network contains a lot of additional information associated with the nodes and edges, such as the protein sequence, tissue expression data (Node Table) as well as the confidence scores for the different interaction evidences (Edge Table). In the following steps, we will explore these data using Cytoscape.
@@ -321,6 +337,7 @@ The color gradient blue-white-red gives a visualization of the negative-to-posit
 
 <center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_eoc-final.png){width=60%}
+</center>
 
 *Are the up-regulated nodes grouped together?*
 
@@ -364,6 +381,7 @@ commandsRun(string.cmd)
 
 <center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_eoc-enrich.png){width=60%}
+</center>
 
 *Do these terms give good coverage of the proteins in network?*
 
@@ -412,7 +430,9 @@ Let's focus on only the connected nodes:
 createSubnetwork(edges='all', subnetwork.name='Union sub')
 ```
 
+<center>
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/stringApp_union.png){width=80%}
+</center>
 
 <!-- # Exercise 4 -->
 <!-- In this exercise, we will retrieve virus-host networks for two closely related viruses, merge them into a single network, and then will retrieve the functional enrichment for the host proteins in this network. -->

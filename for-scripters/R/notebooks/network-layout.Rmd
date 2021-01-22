@@ -34,25 +34,25 @@ library(RCy3)
 # Getting started
 First, launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and running:
 ```{r}
-    cytoscapePing()
-    cytoscapeVersionInfo()
+cytoscapePing()
+cytoscapeVersionInfo()
 ```
 
 # Applying a Layout Algorithm
 
-- Load the [galFiltered.cys](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/galFiltered.sys) session file.
+Load the [galFiltered.cys](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/galFiltered.sys) session file.
 
 ```{r}
 openSession()
 ```
 
-- Use "fitContent" to see the whole network:
+Use "fitContent" to see the whole network:
 
 ```{r}
 fitContent()
 ```
 <center>
-![](./data/img/prefuse.png)
+![](./data/img/prefuse.png)</center>
 
 The network layout used in this session file is the **Prefuse Force Directed Layout**. This layout is based on the algorithm implemented as part of the [prefuse toolkit](http://www.prefuse.org/).
 The algorithm is very fast and with the right parameters can provide a very visually pleasing layout. The Force Directed Layout can also use a numeric edge attribute as a weight for the length of the spring.
@@ -85,7 +85,7 @@ Network nodes are treated like physical objects that repel each other, such as e
 layoutNetwork('kamada-kawai')
 ```
 <center>
-![](./data/img/edgeweighted.png)
+![](./data/img/edgeweighted.png)</center>
 
 The **circular** algorithm produces layouts that emphasize group and tree structures within a network.
 It partitions the network by analyzing its connectivity structure, and arranges the partitions as separate circles.
@@ -96,7 +96,7 @@ layoutNetwork('circular')
 ```
 
 <center>
-![](./data/img/circular.png)
+![](./data/img/circular.png)</center>
 
 The **Compound Spring Embedder (CoSE) layout** is based on the traditional force-directed layout algorithm with extensions to handle multi-level nesting (compound nodes), edges between nodes of arbitrary nesting levels and varying node sizes.
 It is the suggested Cytoscape layout for compound graphs, although it also works very well with noncompound graphs.
@@ -105,17 +105,17 @@ It is the suggested Cytoscape layout for compound graphs, although it also works
 layoutNetwork('cose')
 ```
 <center>
-![](./data/img/cose.png)
+![](./data/img/cose.png)</center>
 
 # Layout Settings
 
-- To change the settings for a particular algorithm, first you need to check the relevant set of parameters. The following code chunk will display the parameter names.
+To change the settings for a particular algorithm, first you need to check the relevant set of parameters. The following code chunk will display the parameter names.
 
 ```{r}
 getLayoutPropertyNames('cose')
 ```
 
-- To change the settings for a particular algorithm:
+To change the settings for a particular algorithm:
 
 ```{r}
 setLayoutProperties('cose', list(incremental='false', idealEdgeLength=50, springStrength=50, repulsionStrength=50, gravityStrength=50, compoundGravityStrength=50, gravityRange=50, compoundGravityRange=50, smartEdgeLengthCalc='true', smartRepulsionRangeCalc='true'))

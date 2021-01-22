@@ -50,8 +50,8 @@ library(RColorBrewer)
 # Getting started
 First, launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and running:
 ```{r}
-    cytoscapePing()
-    cytoscapeVersionInfo()
+cytoscapePing()
+cytoscapeVersionInfo()
 ```
 
 # Prerequisites
@@ -91,13 +91,13 @@ The two examples are split into two separate workflows below.
 
 # Example 1: STRING Protein Query Up-regulated Genes
 
-- Load the file containing the data for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_UP_full.csv:
+Load the file containing the data for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_UP_full.csv:
 
 ```{r}
 de.genes.up <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-up.csv", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
 ```
 
-- We will use the identifiers in the first column of this datafile to run a **STRING protein query**, with confidence (score) cutoff of 0.4:
+We will use the identifiers in the first column of this datafile to run a **STRING protein query**, with confidence (score) cutoff of 0.4:
 ```{r}
 string.cmd = paste('string protein query query="', paste(de.genes.up$Gene, collapse = '\n'), '" cutoff=0.4  species="Homo sapiens"', sep = "")
 commandsRun(string.cmd)
@@ -107,6 +107,8 @@ The resulting network will load automatically and contains up-regulated genes re
 
 <center>
 ![](./data/img/string-de-up2.png)
+</center>
+
 The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will select only the connected nodes to work with for the rest of this tutorial, by creating a subnetwork based on all edges:
 
 ```{r}
@@ -187,6 +189,7 @@ layoutNetwork(paste('force-directed',
 
 <center>
 ![](./data/img/string-de-up-forcedirected.png)
+</center>
 
 # Enrichment Analysis Options
 
@@ -209,6 +212,7 @@ When the enrichment analysis is complete, a new tab titled **STRING Enrichment**
 
 <center>
 ![](https://cytoscape.org/cytoscape-automation/for-scripters/R/notebooks/data/img/string-enrichment.png)
+</center>
 
 The STRING app includes several options for filtering and displaying the enrichment results.
 The features are all available at the top of the **STRING Enrichment** tab.
@@ -410,7 +414,7 @@ Select all three driver genes by:
 selectNodes(c("TP53", "BRCA1", "BRCA2"), by.col = "display name")
 ```
 
-- Add a style bypass for node **Border Width** (5) and node **Border Paint** (bright pink):
+Add a style bypass for node **Border Width** (5) and node **Border Paint** (bright pink):
 
 ```{r}
 setNodeBorderWidthBypass(getSelectedNodes(), 5)
@@ -419,6 +423,7 @@ setNodeBorderColorBypass(getSelectedNodes(), '#FF007F')
 
 <center>
 ![](./data/img/string-ovarian-final.png) 
+</center>
 
 # Exporting Networks
 Cytoscape provides a number of ways to export results and visualizations:

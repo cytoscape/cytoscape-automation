@@ -43,8 +43,8 @@ library(RCy3)
 # Getting started
 First, launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and running:
 ```{r}
-    cytoscapePing()
-    cytoscapeVersionInfo()
+cytoscapePing()
+cytoscapeVersionInfo()
 ```
 
 # Prerequisites
@@ -69,7 +69,7 @@ install.packages("httr")
 Cytoscape includes a **Network Search** tool for easy import of public network data.
 In addition to core apps that are included with your Cytoscape installation (NDEx and PSICQUIC), the resources listed here will depend on which apps you have installed.
 
-- Find out which apps you have installed:
+Find out which apps you have installed:
 
 ```{r}
 getInstalledApps()
@@ -79,7 +79,7 @@ getInstalledApps()
 
 The [NDEx Project](http://www.ndexbio.org/) provides an open-source framework where scientists and organizations can share, store, manipulate, and publish biological network knowledge.
 
-- Search NDEx for "TP53 AND BARD1":
+Search NDEx for "TP53 AND BARD1":
 
 ```{r}
 library(ndexr)
@@ -88,7 +88,7 @@ networks <- ndex_find_networks(ndexcon, "TP53 AND BARD1")
 print(networks[,c("name","externalId","nodeCount","edgeCount")])
 ```
 
-- We can work with this list. Let’s use the first hit. **Note: you are going to get different hits as this database changes over time, so proceed with any hit you like.**
+We can work with this list. Let’s use the first hit. **Note: you are going to get different hits as this database changes over time, so proceed with any hit you like.**
 
 ```{r}
 networkId = networks$externalId[1]
@@ -96,7 +96,7 @@ network = ndex_get_network(ndexcon, networkId)
 print(network)
 ```
 
-- Import the network into Cytoscape:
+Import the network into Cytoscape:
 
 ```{r}
 importNetworkFromNDEx(networkId)
@@ -114,7 +114,7 @@ STRING is a database of known and predicted protein-protein interactions, and ST
 - Automated Textmining
 - Previous Knowledge in Databases
 
-- Search STRING with the disease keyword "ovarian cancer". The resulting network will load automatically.
+Search STRING with the disease keyword "ovarian cancer". The resulting network will load automatically.
 
 ```{r}
 string.cmd = 'string disease query disease="ovarian cancer"'
@@ -123,13 +123,14 @@ commandsRun(string.cmd)
 
 STRING networks load with a STRING-specific style, which includes 3D protein structure diagrams. 
 
-- Export the image as a png. This will save the png to your current directory.
+Export the image as a png. This will save the png to your current directory.
 
 ```{r}
 exportImage('ovarian_cancer', 'PNG')
 ```
 
-STRING networks also include data as node/interaction attributes, that can be used to create a **Style**. - Let's save the attributes as a dataframe and take a look at the first few rows:
+STRING networks also include data as node/interaction attributes, that can be used to create a **Style**. 
+Let's save the attributes as a dataframe and take a look at the first few rows:
 
 ```{r}
 df <- getTableColumns()
@@ -138,26 +139,26 @@ head(df)
 
 The STRING app includes options to change interaction confidence level, expand the network etc.
 
-- Before changing interaction confidence level, let's find the number of interactions in the network:
+Before changing interaction confidence level, let's find the number of interactions in the network:
 
 ```{r}
 getEdgeCount()
 ```
 
-- Let's increase the confidence level to 0.9, from the default 0.4:
+Let's increase the confidence level to 0.9, from the default 0.4:
 
 ```{r}
 string.cmd = 'string change confidence confidence=0.9 network=CURRENT'
 commandsRun(string.cmd)
 ```
 
-- Now let's get an edge count after changing interaction confidence level:
+Now let's get an edge count after changing interaction confidence level:
 
 ```{r}
 getEdgeCount() 
 ```
 
-- Again, we can export a figure:
+Again, we can export a figure:
 
 ```{r}
 exportImage('before_expand', 'PNG')
@@ -169,13 +170,13 @@ For more detailed information about working with STRING networks in Cytoscape, s
 
 [WikiPathways](https://www.wikipathways.org/) is a collaborative wiki platform with manually pathway models. It currently covers over 2,800 pathways in 29 species-specific collections.
 
-- First, load the WikiPathways R library:
+First, load the WikiPathways R library:
 
 ```{r}
 library(rWikiPathways)
 ```
 
-- Search WikiPathways for 'statin':
+Search WikiPathways for 'statin':
 
 ```{r}
 statin.pathways <- findPathwaysByText('statin')
@@ -187,27 +188,29 @@ WikiPathways search results are displayed as a list of all available pathway mod
 head(statin.pathways)
 ```
 
-- We can restrict the results to **Homo sapiens**:
+We can restrict the results to **Homo sapiens**:
 
 ```{r}
 human.filter <- lapply(statin.pathways, function(x) x$species == "Homo sapiens")
 human.statin.pathways <- statin.pathways[unlist(human.filter)]
 ```
 
-- Loading the pathways will by default preserve the original pathway layout:
+Loading the pathways will by default preserve the original pathway layout:
 
 ```{r}
 lapply(human.statin.pathways, function(x) commandsRun(paste('wikipathways import-as-pathway id=', x$id, sep = '')))
 ```
 
-- The pathway can also be opened as a network:
+The pathway can also be opened as a network:
 
 ```{r}
 lapply(human.statin.pathways, function(x) commandsRun(paste('wikipathways import-as-network id=', x$id, sep = '')))
 ```
 
 WikiPathways model imported as **pathway** and **network**.
-![](https://cytoscape.org/cytoscape-tutorials/protocols/loading-networks/WP-pathway.png) ![](https://cytoscape.org/cytoscape-tutorials/protocols/loading-networks/WP-network.png)
+<center>
+![](https://cytoscape.org/cytoscape-tutorials/protocols/loading-networks/WP-pathway.png){width=70%} ![](https://cytoscape.org/cytoscape-tutorials/protocols/loading-networks/WP-network.png){width=70%}
+</center>
 
 For more detailed information about working with WikiPathways in Cytoscape, see the [rWikiPathways and rCy3](https://cytoscape.org/cytoscape-automation/for-scripters/R/notebooks/rWikiPathways-and-RCy3.nb.html) protocol.
 
@@ -225,7 +228,7 @@ Cytoscape can load locally and remotely stored network data files in a variety o
 
 **SIF** is a simple interaction format consisting of three columns of data: source, interaction and target. To learn more about the SIF format, see the [Cytoscape manual](http://manual.cytoscape.org/en/stable/Supported_Network_File_Formats.html#sif-format).
 
-- Download [*galFiltered.sif*](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/galFiltered.sif) and load the network via:
+Download [*galFiltered.sif*](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/galFiltered.sif) and load the network via:
 
 ```{r}
 library(httr)
@@ -234,7 +237,7 @@ GET(sif_url, write_disk(tf <- tempfile(fileext = ".sif")))
 importNetworkFromFile(tf)
 ```
 
-- To see the whole network, use fitContent:
+To see the whole network, use fitContent:
 
 ```{r}
 fitContent()
@@ -244,7 +247,7 @@ fitContent()
 
 **XGMML** is an XML format and can includes node and edge attributes as well as visual style properties. To learn more about the XGMML format, see the [Cytoscape manual](http://manual.cytoscape.org/en/stable/Supported_Network_File_Formats.html#xgmml-format).
 
-- Download https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/BasicDataVizDemo.xgmml and load the network via
+Download https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/BasicDataVizDemo.xgmml and load the network via
 
 ```{r}
 xgmml_url = "https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/BasicDataVizDemo.xgmml"
