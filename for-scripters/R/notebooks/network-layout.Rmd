@@ -38,15 +38,6 @@ First, launch Cytoscape and keep it running whenever using RCy3. Confirm that yo
     cytoscapeVersionInfo()
 ```
 
-# Prerequisites
-
-The exercises require you to have certain R packages installed.
-
-```{r}
-install.packages("httr")
-library(httr)
-```
-
 # Applying a Layout Algorithm
 
 - Load the [galFiltered.cys](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/galFiltered.sys) session file.
@@ -124,7 +115,7 @@ layoutNetwork('cose')
 getLayoutPropertyNames('cose')
 ```
 
-- To change the settings for a particular algorithm, run
+- To change the settings for a particular algorithm:
 
 ```{r}
 setLayoutProperties('cose', list(incremental='false', idealEdgeLength=50, springStrength=50, repulsionStrength=50, gravityStrength=50, compoundGravityStrength=50, gravityRange=50, compoundGravityRange=50, smartEdgeLengthCalc='true', smartRepulsionRangeCalc='true'))
