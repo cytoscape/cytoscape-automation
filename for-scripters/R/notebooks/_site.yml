@@ -64,6 +64,10 @@ navbar:
       href: basic-data-visualization.nb.html
     - text: "Cytoscape stringApp"
       href: stringApp.nb.html
+    - text: "scNetViz: EMBL-EBI Single Cell Expression Atlas"
+      href: use-case-1.nb.html
+    - text: "scNetViz: Your Own scRNA-Seq Dataset"
+      href: use-case-2.nb.html
     - text: '---------'
     - text: External Links
     - text: "CyTargetLinker: use case 1, Rett syndrome extension"

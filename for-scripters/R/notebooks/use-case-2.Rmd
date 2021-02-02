@@ -1,0 +1,129 @@
+---
+title: "scNetViz: Your Own scRNA-Seq Dataset"
+author: "Krishna Choudhary, Alex Pico"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this example, we will import normalized scRNA-seq data and cluster assignments from local files, generate cell plots, perform differential expression analysis based on provided categories, visualize as a combined heatmap and generate networks from the top genes from each category.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required software
+RCy3 works by connecting with Cytoscape. You will need to install and launch Cytoscape:
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape
+
+
+```{r}
+cytoscapePing()
+```
+
+For this vignette, you’ll need the following apps: 
+
+* the [STRING](https://string-db.org/) app, 
+* the [enhancedGraphics](https://www.cgl.ucsf.edu/cytoscape/utilities3/enhancedcg.shtml) app, 
+* the [cyBrowser](https://www.cgl.ucsf.edu/cytoscape/utilities3/cybrowser.shtml) app, and
+* the [cyPlot](http://apps.cytoscape.org/apps/cyplot) app.
+
+```{r}
+#available in Cytoscape 3.7.0 and above
+installApp('STRINGapp')
+installApp('enhancedGraphics')
+installApp('cyBrowser')
+installApp('cyPlot')
+installApp('scNetViz')
+```
+
+# Download test data
+
+You may use your own scRNA-seq data for the next steps. scNetViz accepts standard outputs from an scRNA-seq processing software such as CellRanger as inputs. For illustration, the following chunk downloads and unzips a test data ([Accession: E-GEOD-109979](https://www.ebi.ac.uk/gxa/sc/experiments/E-GEOD-109979/downloads)) in the same directory as this R Markdown file.
+
+```{r}
+#Download normalized counts
+url_1 <- "https://github.com/cytoscape/cytoscape-tutorials/blob/gh-pages/protocols/data/E-GEOD-109979-normalised-files.zip?raw=true"
+fname_1 <- "E-GEOD-109979-normalised-files.zip"
+download.file(url_1, fname_1)
+unzip(fname_1, overwrite=TRUE, exdir="E-GEOD-109979")
+
+#Download category information
+url_2 <- "https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/E-GEOD-109979.clusters.tsv"
+fname_2 <- "E-GEOD-109979.clusters.tsv"
+download.file(url_2, fname_2)
+```
+
+# Load data from local disk
+
+scNetViz expects complete paths for inputs. Load the normalized count matrix in the current Cytoscape session. The directory with normalized counts must have three files only:
+
+* a file with the count matrix in Matrix Market file format, 
+* a file with the the column names, and 
+* a file with the the row names.
+
+```{r}
+completeFilePath <- file.path(getwd(), "E-GEOD-109979")
+
+commandToLoadFile <- paste0('scnetviz load experiment file file=',
+                            completeFilePath,
+                            ' species=Homo sapiens')
+RCy3::commandsRun(commandToLoadFile)
+```
+
+
+# Load the category data
+
+```{r}
+completeFilePath <- file.path(getwd(), 
+                              "E-GEOD-109979.clusters.tsv")
+
+commandToAddCategory <- paste0('scnetviz add file category file=',
+                               completeFilePath)
+
+RCy3::commandsRun(commandToAddCategory)
+```
+
+
+# Generate a UMAP plot
+
+scNetViz identifies the loaded data with the file name that was input, which is `E-GEOD-109979` for our case. Next, generate UMAP plot and display it in the Cytoscape session (this step may take several minutes to complete). Note that the indexing of rows in the loaded category file starts with 0.
+
+```{r}
+RCy3::commandsRun('scnetviz calculate UMAP scale=true accession=E-GEOD-109979')
+
+RCy3::commandsRun('scnetviz show cell plot accession=E-GEOD-109979 category=E-GEOD-109979.clusters.tsv categoryRow=0')
+```
+
+# Perform differential expression analysis
+
+```{r}
+RCy3::commandsRun('scnetviz calculate diffexp accession=E-GEOD-109979 categoryRow=0')
+```
+
+# Generate heatmap
+
+Generate a heatmap showing the top differentially expressed genes.
+
+```{r}
+RCy3::commandsRun('scnetviz show diff plot type=Heatmap')
+```
+
+# Fetch interaction networks
+
+Fetch interaction networks from the [STRING](https://string-db.org/) database.
+
+```{r}
+RCy3::commandsRun('scnetviz create network accession=E-GEOD-109979')
+```
+
