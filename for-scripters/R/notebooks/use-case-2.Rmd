@@ -7,6 +7,9 @@ output: html_notebook
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/use-case-2.Rmd).*
+
+<hr />
 
 In this example, we will import normalized scRNA-seq data and cluster assignments from local files, generate cell plots, perform differential expression analysis based on provided categories, visualize as a combined heatmap and generate networks from the top genes from each category.
 

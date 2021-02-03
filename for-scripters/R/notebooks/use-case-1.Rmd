@@ -7,6 +7,9 @@ output: html_notebook
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/use-case-1.Rmd).*
+
+<hr />
 
 In this example, we will browse a public single cell expression atlas, explore a particular dataset, perform differential expression analysis based on provided categories, generate networks from the top genes from each category, and functionally characterize and visualize the networks.
 
