@@ -1,0 +1,41 @@
+---
+title: "Jupyter Bridge"
+author: "Yihang Xin, Alex Pico"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/use-case-1.Rmd).*
+
+<hr />
+
+Jupyter-Bridge is a Flask service that executes on a server accessible to both a remote Jupyter server and browser-based Jupyter client. Code running on the server calls Jupyter-Bridge to queue a request that the client will execute, and the client will use Jupyter-Bridge to return a reply. This enables a workflow running on remote Jupyter to execute functions on a PC-local Cytoscape -- the remote Jupyter runs the request through Jupyter-Bridge, where it is picked up by Javascript code running on the Jupyter web page in the PC-local browser, which in turn calls Cytoscape. The Cytoscape response travels the reverse route.
+
+Jupyter-Bridge allows a remote Jupyter Notebook to communicate with a workstation-based Cytoscape as if the Notebook were running on the Cytoscape workstation. A Jupyter Notebook passes a Cytoscape call to an independent Jupyter-Bridge server where it’s picked up by the Jupyter-Bridge browser component and is passed to Cytoscape. The Cytoscape response is returned via the opposite flow. As a result, workflows can reside in the cloud, access cloud resources, and yet still leverage Cytoscape features.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required software
+RCy3 works by connecting with Cytoscape. You will need to install and launch Cytoscape:
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape
+
+# Connect to local Cytoscape
+```{r}
+browserClientJs <- getBrowserClientJs()
+IRdisplay::display_javascript(browserClientJs)
+cytoscapePing()
+```
+
+Visit the [Jupyter Bridge website](https://github.com/cytoscape/jupyter-bridge) for more information.
