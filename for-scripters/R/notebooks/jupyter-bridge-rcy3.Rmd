@@ -38,4 +38,5 @@ IRdisplay::display_javascript(browserClientJs)
 cytoscapePing()
 ```
 
-Visit the [Jupyter Bridge website](https://github.com/cytoscape/jupyter-bridge) for more information.
+Done!
+Visit the [Jupyter Bridge RCy3 Tutorial](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/notebooks/jupyter-bridge-rcy3.ipynb) for more information.
