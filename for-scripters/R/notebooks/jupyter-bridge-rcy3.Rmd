@@ -1,5 +1,5 @@
 ---
-title: "Jupyter Bridge"
+title: "Jupyter Bridge and RCy3"
 author: "Yihang Xin, Alex Pico"
 output: html_notebook
 ---
@@ -7,13 +7,9 @@ output: html_notebook
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/use-case-1.Rmd).*
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/jupyter-bridge-rcy3.Rmd).*
 
 <hr />
-
-Jupyter-Bridge is a Flask service that executes on a server accessible to both a remote Jupyter server and browser-based Jupyter client. Code running on the server calls Jupyter-Bridge to queue a request that the client will execute, and the client will use Jupyter-Bridge to return a reply. This enables a workflow running on remote Jupyter to execute functions on a PC-local Cytoscape -- the remote Jupyter runs the request through Jupyter-Bridge, where it is picked up by Javascript code running on the Jupyter web page in the PC-local browser, which in turn calls Cytoscape. The Cytoscape response travels the reverse route.
-
-Jupyter-Bridge allows a remote Jupyter Notebook to communicate with a workstation-based Cytoscape as if the Notebook were running on the Cytoscape workstation. A Jupyter Notebook passes a Cytoscape call to an independent Jupyter-Bridge server where it’s picked up by the Jupyter-Bridge browser component and is passed to Cytoscape. The Cytoscape response is returned via the opposite flow. As a result, workflows can reside in the cloud, access cloud resources, and yet still leverage Cytoscape features.
 
 # Installation
 ```{r}
@@ -31,12 +27,24 @@ RCy3 works by connecting with Cytoscape. You will need to install and launch Cyt
 * Complete installation wizard
 * Launch Cytoscape
 
-# Connect to local Cytoscape
+# Jupyter Bridge
+
+Jupyter-Bridge is a Flask service that executes on a server accessible to both a remote Jupyter server and browser-based Jupyter client. Code running on the server calls Jupyter-Bridge to queue a request that the client will execute, and the client will use Jupyter-Bridge to return a reply. This enables a workflow running on remote Jupyter to execute functions on a PC-local Cytoscape -- the remote Jupyter runs the request through Jupyter-Bridge, where it is picked up by Javascript code running on the Jupyter web page in the PC-local browser, which in turn calls Cytoscape. The Cytoscape response travels the reverse route.
+
+Jupyter-Bridge allows a remote Jupyter Notebook to communicate with a workstation-based Cytoscape as if the Notebook were running on the Cytoscape workstation. A Jupyter Notebook passes a Cytoscape call to an independent Jupyter-Bridge server where it’s picked up by the Jupyter-Bridge browser component and is passed to Cytoscape. The Cytoscape response is returned via the opposite flow. As a result, workflows can reside in the cloud, access cloud resources, and yet still leverage Cytoscape features.
+
+# Connect to local Cytoscape remotely
 ```{r}
 browserClientJs <- getBrowserClientJs()
 IRdisplay::display_javascript(browserClientJs)
+```
+
+# Check connection
+```{r}
+cytoscapeVersionInfo()
 cytoscapePing()
 ```
 
-Done!
-Visit the [Jupyter Bridge RCy3 Tutorial](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/notebooks/jupyter-bridge-rcy3.ipynb) for more information.
+# Execute Differentially Expressed Genes Network remotely
+Visit the [Jupyter Bridge and Differentially Expressed Genes Network Analysis](https://github.com/cytoscape/cytoscape-automation/blob/master/for-scripters/R/notebooks/jupyter-bridge-rcy3.ipynb) for more information.
+
