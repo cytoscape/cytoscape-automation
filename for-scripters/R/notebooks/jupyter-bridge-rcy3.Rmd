@@ -16,7 +16,7 @@ Jupyter-Bridge is a Flask service that executes on a server accessible to both a
 
 
 
-![Jupyter-Bridge allows a remote Jupyter Notebook to communicate with a workstation-based Cytoscape as if the Notebook were running on the Cytoscape workstation. A Jupyter Notebook passes a Cytoscape call to an independent Jupyter-Bridge server where it’s picked up by the Jupyter-Bridge browser component and is passed to Cytoscape. The Cytoscape response is returned via the opposite flow. As a result, workflows can reside in the cloud, access cloud resources, and yet still leverage Cytoscape features. Jupyter Bridge supports py4cytoscape first, and now RCy3 also support Jupyter-Bridge.](https://raw.githubusercontent.com/cytoscape/jupyter-bridge/master/docs/images/Figure%202.svg)
+![Jupyter-Bridge allows a remote Jupyter Notebook to communicate with a workstation-based Cytoscape as if the Notebook were running on the Cytoscape workstation. A Jupyter Notebook passes a Cytoscape call to an independent Jupyter-Bridge server where it’s picked up by the Jupyter-Bridge browser component and is passed to Cytoscape. The Cytoscape response is returned via the opposite flow. As a result, workflows can reside in the cloud, access cloud resources, and yet still leverage Cytoscape features. Jupyter Bridge supports py4cytoscape (Python library for communicating with Cytoscape) first, and now RCy3 also support Jupyter-Bridge.](https://raw.githubusercontent.com/cytoscape/jupyter-bridge/master/docs/images/Figure%202.svg)
 
 
 
@@ -34,6 +34,8 @@ RCy3 works by connecting with Cytoscape. You will need to install and launch Cyt
 There are a lot of cloud computing services online, such as Google Colab, Amazon EMR Notebook, Microsoft Azure, CoCalc and your own JupyterHub. You can choose your favorite one.
 
 Here we use Google Colab to demonstrate. Visit this [link](https://colab.to/r) to create a new empty R Notebook, and make sure to run code below in the cloud.
+
+You can open this notebook in the Google Colab from Github directly (File -> Open notebook -> Github). Also you can download this notebook and upload it to the Google Colab (File -> Open notebook -> Upload).
 
 # Installation
 Install the latest version of RCy3 in the cloud server from GitHub.
