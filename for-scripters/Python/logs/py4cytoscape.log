@@ -4671,3 +4671,17 @@ Finished
 2021-03-07 22:32:22,978 [DEBUG] py4...: ǀReturning 'cyrest_post': {'data': {'suid': 5537, 'uuid': '0a5c0c0d-7fd8-11eb-9e72-0ac135e8bacf'}, 'errors': []}
 2021-03-07 22:32:22,978 [DEBUG] py4...: Returning 'export_network_to_ndex': '0a5c0c0d-7fd8-11eb-9e72-0ac135e8bacf'
 2021-03-07 22:32:22,978 [DEBUG] py4...: --------------------
+2021-04-04 22:34:28,976 [DEBUG] py4...: Calling cytoscape_version_info()
+2021-04-04 22:34:28,978 [DEBUG] py4...: ǀCalling cyrest_get('version', base_url='http://127.0.0.1:1234/v1')
+2021-04-04 22:34:28,978 [DEBUG] py4...: Attempting to connect to local Cytoscape
+2021-04-04 22:34:29,004 [DEBUG] py4...: Detected local Cytoscape
+2021-04-04 22:34:29,005 [DEBUG] py4...: ǀHTTP POST(http://127.0.0.1:1234/v1/commands/filetransfer/setSandbox), json: {'sandboxName': 'default_sandbox', 'copySamples': True, 'reinitialize': True}
+2021-04-04 22:34:29,134 [DEBUG] py4...: ǀOK[200], content: {
+ "data": {"sandboxPath":"/Users/yxin/CytoscapeConfiguration/filetransfer/default_sandbox"},
+ "errors":[]
+}
+2021-04-04 22:34:29,134 [DEBUG] py4...: ǀHTTP GET(http://127.0.0.1:1234/v1/version)
+2021-04-04 22:34:29,149 [DEBUG] py4...: ǀOK[200], content: {"apiVersion":"v1","cytoscapeVersion":"3.8.2"}
+2021-04-04 22:34:29,150 [DEBUG] py4...: ǀReturning 'cyrest_get': {'apiVersion': 'v1', 'cytoscapeVersion': '3.8.2'}
+2021-04-04 22:34:29,150 [DEBUG] py4...: Returning 'cytoscape_version_info': {'apiVersion': 'v1', 'cytoscapeVersion': '3.8.2', 'automationAPIVersion': '1.0.0', 'py4cytoscapeVersion': '0.0.7'}
+2021-04-04 22:34:29,150 [DEBUG] py4...: --------------------
