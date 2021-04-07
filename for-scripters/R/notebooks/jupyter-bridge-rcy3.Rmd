@@ -11,10 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <hr />
 # Why use Jupyter Bridge
+* Users do not need to worry about dependencies and environment.
+* Easily share notebook-based workflows and data sets
+* Workflows can reside in the cloud, access cloud resources, and yet still use Cytoscape features.
 
 # How Jupyter Bridge works
 
-Jupyter-Bridge is a Flask service that executes on a server accessible to both a remote Jupyter server and browser-based Jupyter client. Code running on the server calls Jupyter-Bridge to queue a request that the client will execute, and the client will use Jupyter-Bridge to return a reply. This enables a workflow running on remote Jupyter to execute functions on a PC-local Cytoscape -- the remote Jupyter runs the request through Jupyter-Bridge, where it is picked up by Javascript code running on the Jupyter web page in the PC-local browser, which in turn calls Cytoscape. The Cytoscape response travels the reverse route.
+Jupyter-Bridge enables a workflow running on remote Jupyter to execute functions on a PC-local Cytoscape -- the remote Jupyter runs the request through Jupyter-Bridge, where it is picked up by Javascript code running on the Jupyter web page in the PC-local browser, which in turn calls Cytoscape. The Cytoscape response travels the reverse route.
 
 
 
