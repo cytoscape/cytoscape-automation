@@ -44,11 +44,12 @@ Here we use Google Colab to demonstrate. Visit this [link](https://colab.to/r) t
 
 # Installation
 Install the latest version of RCy3 in the cloud server from GitHub.
-
-> install.packages("devtools")\
-library(devtools)\
-install_github("cytoscape/RCy3")\
-library(RCy3)\
+```{r eval=FALSE}
+install.packages("devtools")
+library(devtools)
+install_github("cytoscape/RCy3")
+library(RCy3)
+```
 
 
 
@@ -56,15 +57,18 @@ library(RCy3)\
 # Connect to local Cytoscape
 First, build connection between the jupyter notebook and local Cytoscape.
 
-> browserClientJs <- getBrowserClientJs()\
-IRdisplay::display_javascript(browserClientJs)\
-
+```{r eval=FALSE}
+browserClientJs <- getBrowserClientJs()
+IRdisplay::display_javascript(browserClientJs)
+```
 
 # Check connection
 Then, launch Cytoscape and keep it running whenever using RCy3 and Jupyter Bridge. Confirm that you have everything installed and running:
 
-> cytoscapeVersionInfo()\
-cytoscapePing()\
+```{r eval=FALSE}
+cytoscapeVersionInfo()
+cytoscapePing()
+```
 
 Done! Now you can execute a workflow in a remote server-based Jupyter Notebook to leverage your workstation’s Cytoscape. You can also easily share notebook-based workflows and data sets.
 
