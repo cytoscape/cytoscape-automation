@@ -16,9 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/ImportNetworkFromTable.Rmd).*
 
 <hr />
-In addition to importing networks in network file formats, such as sif and xgmml, Cytoscape also supports importing networks from tabular data. In this vignette, the data table represents protein-protein interaction data from a mass-spectrometry experiment.
+In addition to importing networks in network file formats, such as **sif** and **xgmml**, Cytoscape also supports importing networks from tabular data. In this vignette, the data table represents protein-protein interaction data from a mass-spectrometry experiment.
 
 # Installation
 ```{r}
@@ -29,19 +30,21 @@ if(!"RCy3" %in% installed.packages()){
 library(RCy3)
 ```
 
-# Prerequisites
-In addition to this package (RCy3), you will need:
-
-  * **Cytoscape 3.7** or greater, which can be downloaded from https://cytoscape.org/download.html. Simply follow the installation instructions on screen.
-* Complete installation wizard
-* Launch Cytoscape 
+# Getting started
+First, launch Cytoscape and keep it running whenever using RCy3. Confirm that you have everything installed and running:
+```{r}
+    cytoscapePing()
+    cytoscapeVersionInfo()
+```
 
 # Background
-The data used for this protocol represents interactions between human and HIV proteins by Jäger et al (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3310911/). In this quantitative AP-MS experiment, a relatively small number of bait proteins were used to pull down a larger set of prey proteins.
+The data used for this protocol represents interactions between human and HIV proteins by [Jäger et al](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3310911/). In this quantitative AP-MS experiment, a relatively small number of bait proteins were used to pull down a larger set of prey proteins.
+
+Note that this tutorial does not describe how to pre-process the raw AP-MS data, the data used here is already scored and filtered.
 
 # Import Network
 
-First we need to read in the example data file:
+First let's read in the example data file:
 
 ```{r}
 apms.data<-read.csv(file="https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/AP-MS/ap-ms-demodata_simple.csv", stringsAsFactors = FALSE)
@@ -53,7 +56,7 @@ Now we can create a data frame for the network edges (interactions) using the im
 edges <- data.frame(source=apms.data[,"Bait"],target=apms.data[,"Prey"], AP.MS.Score=apms.data[,"AP.MS.Score"],stringsAsFactors=FALSE)
 ```
 
-Finally, we use the edge data fram to create the network. Note that we don't need to define a data frame for nodes, as all nodes in this case are represented in the edge data frame.
+Finally, we use the edge data frame to create the network. Note that we don't need to define a data frame for nodes, as all nodes in this case are represented in the edge data frame.
 
 ```{r}
 createNetworkFromDataFrames(edges=edges, title="apms network", collection = "apms collection")
@@ -62,11 +65,16 @@ createNetworkFromDataFrames(edges=edges, title="apms network", collection = "apm
 The imported network consists of multiple smaller subnetworks, each representing a bait node and its associated prey nodes.
 
 # Loading Data
-There is one other column of data for the "Prey" proteins that we want to load into this network, the "HEKScore".
+There is one other column of data for the prey proteins that we want to load into this network, the **HEKScore**.
 
-In this data, the Prey nodes are repeated for each interactions with a Bait node, so the data contains different values for the same attribute (for example HEKScore), for each Prey node. During import, the last value imported will overwrite prior values and visualizations using this attribute thus only shows the last value.
+In this data, the prey nodes are repeated for each interactions with a Bait node, so the data contains different values for the same attribute (for example HEKScore), for each Prey node. During import, the last value imported will overwrite prior values and visualizations using this attribute thus only shows the last value.
 
 ```{r}
 loadTableData(apms.data[,c("Prey","HEKScore")], data.key.column="Prey")
 ```
+
+The imported network consists of multiple smaller subnetworks, each representing a bait node and its associated prey nodes:
+
+<center>
+![](./data/img/apms-nw.png)
 
