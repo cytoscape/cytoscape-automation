@@ -11,8 +11,6 @@ To learn more about Cytoscape Automation, visit our [FAQ](https://docs.google.co
 
 Also see our repo directories for [Script Writers](for-scripters) and for [App Developers](for-app-developers).
 
-```Note to repository maintainers: Please *DO NOT* move this page ... the Cytoscape Automation paper refers directly to it.```
-
 ## Experimental
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=rstudio) (for R)
