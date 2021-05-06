@@ -32,6 +32,7 @@ RCy3 works by connecting with Cytoscape. You will need to install and launch Cyt
 * Download the latest Cytoscape from http://www.cytoscape.org/download.php
 * Complete installation wizard
 * Launch Cytoscape
+* Install the filetransfer app from https://apps.cytoscape.org/apps/filetransfer
 
 # Prerequisites (Cloud server)
 There are a lot of cloud computing services online, such as Google Colab, Amazon EMR Notebook, Microsoft Azure, CoCalc and your own JupyterHub. You can choose your favorite one.
