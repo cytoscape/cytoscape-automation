@@ -70,10 +70,12 @@ navbar:
       href: use-case-2.nb.html
     - text: '---------'
     - text: External Links
-    - text: "CyTargetLinker: use case 1, Rett syndrome extension"
-      href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase1/UseCase1_RettSyndrome_Compound_Disease_Network.Rmd
-    - text: "CyTargetLinker: use case 2, gene-pathway extension"
-      href: https://github.com/CyTargetLinker/cytargetlinker-tutorials/blob/master/R/UseCase2/Usecase2_DEGs_Pathway_Network.Rmd
+    - text: "CyTargetLinker: use case 1, PPI Compound / Disease Extension"
+      href: https://github.com/CyTargetLinker/cytargetlinker-automation/blob/master/R-automation/UseCase1/UseCase1.Rmd
+    - text: "CyTargetLinker: use case 2, Gene-Pathway extension"
+      href: https://github.com/CyTargetLinker/cytargetlinker-automation/blob/master/R-automation/UseCase2/UseCase2.Rmd
+    - text: "CyTargetLinker: use case 3, Author - Publication - Journal Network"
+      href: https://github.com/CyTargetLinker/cytargetlinker-automation/blob/master/R-automation/UseCase3/UseCase3.Rmd
     - text: "Pathway Analysis with WikiPathways"
       href: https://bioconductor.org/packages/release/bioc/vignettes/rWikiPathways/inst/doc/Pathway-Analysis.html
     - text: "Automation with KEGGScape app"
