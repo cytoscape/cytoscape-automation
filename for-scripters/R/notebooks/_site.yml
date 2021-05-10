@@ -42,6 +42,8 @@ navbar:
       href: rWikiPathways-and-RCy3.nb.html
     - text: "Phylogenetic trees"
       href: Phylogenetic-trees.nb.html
+    - text: "Jupyter Bridge and RCy3"
+      href: jupyter-bridge-rcy3.nb.html
     - text: '---------'
     - text: Workshops and Use Cases
     - text: "RCy3 use cases"
