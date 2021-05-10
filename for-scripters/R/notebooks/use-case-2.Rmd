@@ -111,7 +111,7 @@ RCy3::commandsRun('scnetviz show cell plot accession=E-GEOD-109979 category=E-GE
 # Perform differential expression analysis
 
 ```{r}
-#RCy3::commandsRun('scnetviz calculate diffexp accession=E-GEOD-109979 categoryRow=0')
+RCy3::commandsRun('scnetviz calculate diffexp accession=E-GEOD-109979 categoryRow=0')
 ```
 
 # Generate heatmap
