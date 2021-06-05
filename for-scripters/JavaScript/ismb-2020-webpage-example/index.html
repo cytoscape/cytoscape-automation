@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cytoscape Ecosystem Tutorial: JavaScript</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://unpkg.com/ndex-client@0.0.2/dist/build/bundle.js"></script>
+  <script type='text/javascript'>
+    const ndexServerUrl = 'https://ndexbio.org/v2';
+    const ndex = new ndexClient.NDEx(ndexServerUrl);
+    const NETWORK_UUID = 'b1e9a489-bbe7-11ea-aaef-0ac135e8bacf'
+    const STYLE_NETWORK_UUID = 'b1c1aa27-bbe7-11ea-aaef-0ac135e8bacf'
+
+    var network_SUID = undefined;
+    var style_network_SUID = undefined;
+
+    var new_network_UUID = undefined;
+
+    const CYREST_BASE_URL = 'http://127.0.0.1:1234';
+
+    function updateButton(element) {
+      element.innerHTML = element.innerHTML + ' [DONE]';
+    }
+
+  </script>
+</head>
+
+<body>
+  <h1>Cytoscape Ecosystem Tutorial</h1>
+  <h2>Prerequisites</h2>
+  <list>
+    <li>An installed and running version of Cytoscape.</li>
+    <li>An internet connection.</li>
+    <li>An NDEx account (one is provided in this tutorial).</li>
+  </list>
+
+  <h2>PART 1</h2>
+  <h2>The JavaScript NDEx Client</h2>
+  <p>
+    The NDEx JavaScript client provides a convenient wrapper around around the NDEx server API. NDEx networks are
+    transfered in the CX (Cytoscape Exchange) format. This client library does not provide common network manipulation
+    functionality.
+  </p>
+  <p>
+    The GitHub source for the NDEx JavaScript Client is available at <a
+      href='https://github.com/ndexbio/ndex-js-client'>https://github.com/ndexbio/ndex-js-client</a>
+  </p>
+  <h4>Web-Page Import</h4>
+  <pre class='code'>
+    //NDEx JavaScript client import
+    &lt;script src=&quot;https://unpkg.com/ndex-client@0.0.2/dist/build/bundle.js&quot;&gt;&lt;/script&gt;</pre>
+  <h4>Initialization</h4>
+  <pre class='code'>
+    // NDEx JavaScript client set up
+    const ndexServerUrl = 'https://ndexbio.org/v2';
+
+    const ndex = new ndexClient.NDEx(ndexServerUrl);
+    
+    ndex.setBasicAuth(username, password).value</pre>
+  <p>For this demo, we have preset the username and password to one specific to this tutorial, but you can also change
+    the username and password below to your own acount.</p>
+
+  <form
+    onsubmit="ndex.setBasicAuth(document.getElementById('ndex-username').value,document.getElementById('ndex-password').value); updateButton(this); return false;">
+    <label for="ndex-username">NDEx User ID:</label>
+    <input type="text" id="ndex-username" name="ndex-username" value='ismbdemo'><br><br>
+    <label for="ndex-password">NDEx Password:</label>
+    <input type="password" id="ndex-password" name="ndex-password" value='ismbdemo2020'><br><br>
+    <input type="submit" value='Initialize NDEx JavaScript Client'>
+  </form>
+
+  <h2>Download the First Example Network Summary From NDEx to the JavaScript Environment</h2>
+  <p> <em>ndex.getNetworkSummary</em> makes the request to the specified NDEx server URL with the UUID (universally
+    unique identifier) of the network. The server returns the summary of the network in JSON format.</p>
+  <pre class='code'>
+    // Get the network summary.
+    ndex.getNetworkSummary(uuid).then((response) => {
+
+      // This is a callback, executed when the response of the NDEx call is available. 
+      // In our case, we set the value of a document element with the JSON response.
+      document.getElementById('network-summary').value = JSON.stringify(response, null, 2);
+    });</pre>
+  <script type="text/javascript">
+    // Use the NDEx javascript client to fetch the JSON summary of the network.
+
+    function getNetworkSummary(uuid, button) {
+
+      ndex.getNetworkSummary(uuid).then((response) => {
+        document.getElementById('network-summary').value = JSON.stringify(response, null, 2);
+        updateButton(button)
+      });
+    }
+  </script>
+  <button onClick='getNetworkSummary(NETWORK_UUID, this)'>Get
+    Network Summary</button>
+  <br><br>
+  <form>
+    <label for="network-summary">Network Summary:</label><br>
+    <textarea readonly id="network-summary" name="network-summary" rows="27" cols="60"></textarea>
+    <br><br>
+  </form>
+
+  <h2>Download the Network to Cytoscape</h2>
+
+  <p>We use the JavaScript fetch function to communicate with the Cytoscape Desktop via HTTP. Cytoscape includes a core
+    app called CyREST, which functions as a local REST server. The CyREST API exposes many of Cytoscape's core
+    operations and the operations provided by its Apps. All of the functionality available in CyREST is documented and
+    can be interacted with by using the <em>Help > Automation</em> menu within Cytoscape.
+  <p>In this step, we use the <em>POST /cyndex2/v1/networks</em> endpoint to import the network from NDEx into the
+    Cytoscape environment. The method returns a session ID (SUID) for the downloaded network, enabling us to reference
+    it in the next steps.</p>
+
+  <pre class='code'>
+    // This is the JSON sent as a body parameter to the REST endpoint.
+    // For this endpoint, we set the NDEx URL, the UUID of the network we wish to import, 
+    // and the username and password we are using to access NDEx.
+    const cyRESTParams = {
+      // Be mindful that for current versions of CyNDEx2, https is not yet supported.
+      // This must be an http URL.
+      serverUrl: serverUrl,
+      uuid: uuid,
+      username: username,
+      password: password
+    }
+
+    //These constants build the URL that will be used to access CyREST
+    const CYREST_BASE_URL = 'http://127.0.0.1:1234';
+    const importNetworkUrl = CYREST_BASE_URL + '/cyndex2/v1/networks'
+
+    // This is our fetch statement, including the URL we have built, and our body parameter. 
+    // In our case, we are performing our fetch synchronously, using the await statement. 
+    // You can also use asynchronous fetch processing.
+    const response = await fetch(importNetworkUrl, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cyRESTParams)
+    });
+
+    //Here, we extract the Cytoscape SUID from the fetch response.
+    const json = await response.json();
+    const suid = json.data.suid;</pre>
+
+  <script type="text/javascript">
+
+    async function importNetwork(serverUrl, uuid, username, password) {
+
+      const cyRESTParams = {
+        serverUrl: serverUrl.replace('https', 'http'),
+        uuid: uuid,
+        username: username,
+        password: password
+      }
+
+      const importNetworkUrl =
+        CYREST_BASE_URL + '/cyndex2/v1/networks'
+      console.log('Calling CyREST POST:', importNetworkUrl)
+
+      const response = await fetch(importNetworkUrl, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cyRESTParams)
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json))
+      const suid = json.data.suid;
+      console.log('network SUID: ' + suid);
+      return suid;
+    }
+  </script>
+  <button
+    onClick='importNetwork(ndexServerUrl, NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => {network_SUID = suid; updateButton(this);});'>Import
+    to Cytoscape</button>
+
+  <h2>Use Another Network as a Visual Style Template</h2>
+
+  <p>
+    One of the easiest ways to apply a visual style to a network is to copy that style from another network. This lets
+    you work on the style of your network in Cytoscape using the interactive style editor, then save the network to NDEx
+    for future use as a template.
+
+    This can be achieved using JavaScript and CyREST, starting by importing the template network, using the same method
+    we used above.
+  </p>
+  <button
+    onClick='importNetwork(ndexServerUrl, STYLE_NETWORK_UUID, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(suid => {style_network_SUID = suid; updateButton(this);});'>Import
+    to Cytoscape</button>
+  <p>
+    Once loaded, the name of the template network becomes the name of its style and the
+    <em>GET /v1/apply/styles/{style}/{network}</em> method assigns that style to another network, specified by that
+    network's SUID.
+  </p>
+
+  <pre class='code'>
+  const applyStyleURL = CYREST_BASE_URL + '/v1/apply/styles/' + encodeURI(style) + '/' + networkSUID;
+  
+  const response = await fetch(applyStyleURL, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  });</pre>
+
+  <script type="text/javascript">
+
+    async function applyStyle(networkSUID, style) {
+
+      const applyStyleURL =
+        CYREST_BASE_URL + '/v1/apply/styles/' + encodeURI(style) + '/' + networkSUID;
+      console.log('Calling CyREST POST:', applyStyleURL)
+
+      const response = await fetch(applyStyleURL, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json));
+    }
+  </script>
+
+  <button onClick='applyStyle(network_SUID, "NDEx default style v2-Style"); updateButton(this);'>Apply Style</button>
+
+  <h2>Apply a Layout to the Network</h2>
+
+  <p>Similarly to applying a style to a network, we can perform a layout in Cytoscape using the <em>GET
+      /v1/apply/layouts/{layout}/{network}</em> </p>
+
+  <pre class='code'>
+  const applyLayoutURL = CYREST_BASE_URL + '/v1/apply/layouts/' + encodeURI(layout) + '/' + networkSUID;
+
+  const response = await fetch(applyLayoutURL, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  });</pre>
+
+  <script type="text/javascript">
+
+    async function applyLayout(networkSUID, layout) {
+
+      const applyLayoutURL =
+        CYREST_BASE_URL + '/v1/apply/layouts/' + encodeURI(layout) + '/' + networkSUID;
+      console.log('Calling CyREST POST:', applyLayoutURL)
+
+      const response = await fetch(applyLayoutURL, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json));
+    }
+  </script>
+
+  <button onClick='applyLayout(network_SUID, "force-directed"); updateButton(this);'>Apply Layout</button>
+
+  <h2>Step 5: Export network to NDEx</h2>
+
+  <p>
+    Similarly to our network import, we can save networks to NDEx using the <em>POST /cyndex2/v1/networks/{network}</em>
+    method. Here you can also control whether the network is publicly accessible or private to your account.
+  </p>
+  <p>
+    Note: By itself, "public" does not mean that users can find the network by searching NDEx. This is so that searches
+    are not cluttered by networks that were convenient to make public but which are not intended for general use. To
+    make a network findable in searches, you need to go to your account on the NDEx site and change that setting. In the
+    context of a tutorial where you access NDEx programmatically, you can see how important this is: no one wants to
+    find the 20,000 networks you accidentally loaded to your account because of a bug in your code.
+  </p>
+
+  <pre class='code'>
+  // This is the JSON sent as a body parameter to the REST endpoint.
+  // This is similar to the import parameter structure, 
+  // but with the addition of the isPublic field.
+  const cyRESTParams = {
+    // Be mindful that for current versions of CyNDEx2, https is not yet supported.
+    // This must be an http URL.
+    serverUrl: serverUrl,
+    username: username,
+    password: password,
+    isPublic: false
+  };
+
+  const exportNetworkUrl =
+    CYREST_BASE_URL + '/cyndex2/v1/networks/' + suid;
+
+    const response = await fetch(exportNetworkUrl, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cyRESTParams)
+    });
+    const json = await response.json();
+  </pre>
+
+  <script type="text/javascript">
+
+    async function exportNetwork(suid, serverUrl, username, password) {
+      const cyRESTParams = {
+        serverUrl: serverUrl.replace('https', 'http'),
+        username: username,
+        password: password,
+        isPublic: false
+      };
+
+      const exportNetworkUrl =
+        CYREST_BASE_URL + '/cyndex2/v1/networks/' + suid;
+      console.log('Calling CyREST POST:', exportNetworkUrl);
+
+      const response = await fetch(exportNetworkUrl, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cyRESTParams)
+      });
+      const json = await response.json();
+      console.log('Response JSON: ' + JSON.stringify(json));
+      const uuid = json.data.uuid;
+      console.log('saved network UUID: ' + uuid);
+      return uuid;
+    }
+  </script>
+  <button
+    onClick='exportNetwork(network_SUID, ndexServerUrl, document.getElementById("ndex-username").value, document.getElementById("ndex-password").value).then(uuid => { new_network_UUID = uuid; updateButton(this)});'>Export
+    to NDEx</button>
+  <br>
+  <br>
+  <script src="https://unpkg.com/cytoscape-cx2js@0.6.4/build/bundle.js"></script>
+  <script src="https://unpkg.com/cytoscape@3.6.0/dist/cytoscape.min.js"></script>
+  <script src="./script.js"></script>
+
+  <h2>PART 2</h2>
+  <h2>Displaying CX Networks Using Cytoscape.js</h2>
+  <p>
+    Any CX data can be rendered interactively using the <a href="https://js.cytoscape.org/">Cytoscape.js</a> library.
+    Cytoscape.js is a powerful web-based rendering engine for networks, and can perform many useful operations such as
+    algorithmic layouts, network analyses, and others. The Cytoscape.js webpage has thorough documentation on its many
+    features.
+  </p>
+  <p>
+    We will load both of our networks from PART 1: the original network from NDEx, and the version we modified in
+    Cytoscape. We rely on two public libraries: Cytoscape.js and the cx2js conversion utility.
+  </p>
+  <pre class='code'>
+    &lt;script src=&quot;https://unpkg.com/cytoscape-cx2js@0.6.4/build/bundle.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://unpkg.com/cytoscape@3.6.0/dist/cytoscape.min.js&quot;&gt;&lt;/script&gt;</pre>
+
+  <p>Once these libraries are available, we can use the NDEx JavaScript Client to get the raw CX data for a network.
+    This data is then passed to the <em>displayCX</em> function, which uses these two libraries to convert and render
+    the network within a named document element in the web page. The <em>displayCX</em> function can be viewed <a
+      href="./script.js">here</a>.</p>
+  <pre class='code'>
+  //We are using 
+  ndex.getRawNetwork(uuid).then((cx) => { displayCX(cx, element); });</pre>
+
+
+  <h4>Original Network</h4>
+  <div id="cy1"></div>
+
+  <script type="text/javascript">
+    function displayNDExCX(uuid, element) {
+      ndex.getRawNetwork(uuid).then((cx) => { displayCX(cx, element); });
+    }
+  </script>
+
+  <button onClick='displayNDExCX(NETWORK_UUID, "cy1")'>Display original NDEx Network</button>
+  <!--<iframe src="./README.md" title="W3Schools Free Online Web Tutorials"></iframe>-->
+  <h4>Modified Network</h4>
+  <div id="cy2"></div>
+  <button onClick='displayNDExCX(new_network_UUID, "cy2")'>Display network modified by Cytoscape</button>
+
+</body>
+
+</html>

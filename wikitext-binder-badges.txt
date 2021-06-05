@@ -1,0 +1,24 @@
+R
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=rstudio) 
+Launch RStudio online using the Binder badge above. Then follow these steps:
+1. In RStudio, go to the *Terminal* tab and run this command to launch Cytoscape:
+```
+xvfb-run bash ~/cytoscape-unix-3.7.2/cytoscape.sh
+```
+2. Wait ~15 seconds for Cytoscape to launch. You will see a karaf prompt in the Terminal when complete (ignore messages about OpenCL). You will *not* see the Cytoscape desktop, as it is running in the background. You can see status messages in the Console.
+3. Open any of the Rmd files in the working directory of RStudio. Feel free to run or modify any of the provided scripts, but note that your changes will not be saved. *Binder provides only a temporary online space to try out Cytoscape in R.*
+
+Or, visit the collection of [Cytoscape Rmd Notebooks](http://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/) to view HTML versions or download Rmd files for local usage. Brief descriptions and links are also provided below...
+
+
+PYTHON
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cytoscape/cytoscape-automation/master?urlpath=lab/tree/for-scripters/Python)
+Launch JupyterLab using the Binder badge above. Then follow these steps:
+1. In JupyterLab, go to the *Terminal* tab and run this command to launch Cytoscape:
+```
+xvfb-run bash ~/cytoscape-unix-3.7.2/cytoscape.sh
+```
+2. Wait ~15 seconds for Cytoscape to launch. You will see a karaf prompt in the Terminal when complete (ignore messages about OpenCL). You will *not* see the Cytoscape desktop, as it is running in the background.
+3. Open any of the .ipynb files in the working directory of JuypterLab. Feel free to run or modify any of the provided scripts, but note that your changes will not be saved. *Binder provides only a temporary online space to try out Cytoscape in Python.*
+
+Or, browse the links below to view Python notebooks as rendered by GitHub...
