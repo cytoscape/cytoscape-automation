@@ -4,8 +4,10 @@ author: "Krishna Choudhary, Alex Pico"
 output: html_notebook
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
 ```
 *The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/use-case-2.Rmd).*
 
