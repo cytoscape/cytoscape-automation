@@ -1,9 +1,6 @@
 ﻿## What is _py4cytoscape_?
 [py4cytoscape](https://github.com/cytoscape/py4cytoscape) is a collection of utilities for using [Cytoscape](http://www.cytoscape.org/) and [Cytoscape.js](http://js.cytoscape.org/) with Python.  The Network visualization feature is still limited in Python, but with this tool, you can access both Cytoscape and Cytoscape.js network visualization engines from your Python code!
 
-This package is still experimental and in alpha status.
-[![Build Status](https://travis-ci.org/idekerlab/py2cytoscape.svg?branch=develop)](https://travis-ci.org/idekerlab/py2cytoscape)
-[![PyPI](https://img.shields.io/pypi/v/py2cytoscape.svg)](https://pypi.python.org/pypi/py2cytoscape)
 
 ### Background
 
