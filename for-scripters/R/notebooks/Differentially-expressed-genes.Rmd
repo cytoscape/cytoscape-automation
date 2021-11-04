@@ -40,11 +40,6 @@ if(!"RCy3" %in% installed.packages()){
   BiocManager::install("RCy3")
 }
 library(RCy3)
-
-if(!"RColorBrewer" %in% installed.packages()){
-    install.packages("RColorBrewer")
-}
-library(RColorBrewer)
 ```
 
 # Getting started
@@ -91,10 +86,11 @@ The two examples are split into two separate workflows below.
 
 # Example 1: STRING Protein Query Up-regulated Genes
 
-Load the file containing the data for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_UP_full.csv:
+Load the file containing the differential gene expression data and filter for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_data.csv:
 
 ```{r}
-de.genes.up <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-up.csv", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+de.genes <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno_data.csv", header = TRUE, sep = ",", quote="\"", stringsAsFactors = FALSE)
+de.genes.up <- de.genes[which(de.genes$logFC >= 1.8 & de.genes$FDR.adjusted.Pvalue <= 0.05),]
 ```
 
 We will use the identifiers in the first column of this datafile to run a **STRING protein query**, with confidence (score) cutoff of 0.4:
@@ -117,21 +113,19 @@ createSubnetwork(edges='all', subnetwork.name='String de genes up')
 
 # Data Integration
 
-Next we will import log fold changes and p-values from our TCGA dataset to create a visualization. Since the STRING network is a protein-protein network, it is annotated with protein identifiers (Uniprot and Ensembl protein), as well as HGNC gene symbols. Our data from TCGA has NCBI Gene identifiers (formerly Entrez), so before importing the data we are going to use the ID Mapper functionality in Cytoscape to map the network to NCBI Gene.
+Next we will create a visualization from the log fold changes and p-values from our TCGA dataset. Since the STRING network is a protein-protein network, it is annotated with protein identifiers (Uniprot and Ensembl protein), as well as HGNC gene symbols. Our data from TCGA has NCBI Gene identifiers (formerly Entrez), so before importing the data we are going to use the ID Mapper functionality in Cytoscape to map the network to NCBI Gene.
 
 ```{r}
 mapped.cols <- mapTableColumn('display name', 'Human', 'HGNC', 'Entrez Gene')
 ```
 
-We can now import the differential gene expression data and integrate it with the network (node) table in Cytoscape.
+We can now integrate the same differential gene expression data with the network (node) table in Cytoscape.
 For importing the data we will use the following mapping: 
 
 - **Key Column for Network** should be **Entrez Gene**, which is the column we just added.
 - **Gene** should be the key of the data(`de.genes.full`).
 
 ```{r}
-de.genes.full <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno_data.csv", header = TRUE, sep = ",", quote="\"", stringsAsFactors = FALSE)
-
 loadTableData(de.genes.full,data.key.column="Gene",table.key.column="Entrez Gene")
 ```
 
