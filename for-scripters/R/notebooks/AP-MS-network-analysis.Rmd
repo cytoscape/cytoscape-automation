@@ -35,11 +35,6 @@ if(!"RCy3" %in% installed.packages()){
     BiocManager::install("RCy3")
 }
 library(RCy3)
-
-if(!"RColorBrewer" %in% installed.packages()){
-    install.packages("RColorBrewer")
-}
-library(RColorBrewer)
 ```
 
 # Prerequisites
@@ -117,7 +112,7 @@ We will also specify how to merge the attribute containing the node name (symbol
 ```{r}
 merge.cmd<-paste('network merge',
                  'operation=union',
-                 'sources="apms network,String Network"',
+                 'sources="apms network,STRING network"',
                  'nodeKeys="Uniprot,query term"', 
                  'nodeMergeMap="{name,display name,display name, string}"')
 commandsRun(merge.cmd)
@@ -128,7 +123,7 @@ When the merged network first loads, it will have the STRING style applied. Howe
 
 First, let's set our AP-MS network as the current network:
 ```{r}
-setCurrentNetwork('union: apms network,String Network')
+setCurrentNetwork('union: apms network,STRING network')
 setCurrentView()
 ```
 
@@ -160,9 +155,7 @@ The STRING app has built-in enrichment analysis functionality, which includes en
 commandsRun('string make string network="current"')
 
 string.cmd<-paste('string retrieve enrichment', 
-                  'allNetSpecies="Homo sapiens"',
-                  'background="genome"',
-                  'selectedNodesOnly="false"')
+                  'allNetSpecies="Homo sapiens"')
 commandsRun(string.cmd)
 ```
 
@@ -199,18 +192,10 @@ setEdgeColorMapping("interaction", "AP-MS", "#55AA55", "d", style.name = style.n
 setEdgeLineWidthMapping('AP.MS.Score', table.column.values=c(0,1), widths=c(1,5), mapping.type="c", style.name=style.name)
 ```
 
-First, we define the range of data values for the mapping, and the Brewer palette to use:
+Now, we define a color gradient based on the data values in the `JurkatScore` column:
 
 ```{r}
-data.values = c(0,0.5,1)
-display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="seq") # div,qual,seq,all
-node.colors <- c(rev(brewer.pal(length(data.values), "Purples")))
-```
-
-Next, we apply the mapping to the network:
-
-```{r}
-setNodeColorMapping('JurkatScore', data.values, node.colors, style.name=style.name)
+setNodeColorMapping('JurkatScore', colors = paletteColorBrewerPurples, style.name=style.name)
 ```
 
 We now have a visualization of the network highlighting the ap-ms experimental data (green edges), as well as additional known interactions (grey edges), with node color indicating the Jurkat Score from the data.

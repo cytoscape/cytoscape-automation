@@ -133,15 +133,15 @@ Next, we will create a visualization of the imported data on the network. Let's 
 ```{r}
 copyVisualStyle(from.style = "default", to.style = "de genes up")
 setVisualStyle("de genes up")
-setNodeShapeDefault("ELLIPSE", style.name = "de genes up")
-lockNodeDimensions("TRUE", style.name = "de genes up")
-setNodeSizeDefault("50", style.name = "de genes up")
-setNodeColorDefault("#D3D3D3", style.name = "de genes up")
-setNodeBorderWidthDefault("2", style.name = "de genes up")
-setNodeBorderColorDefault("#616060", style.name = "de genes up")
-setNodeLabelMapping("display name",style.name = "de genes up")
-setNodeFontSizeDefault("14", style.name = "de genes up")
-setEdgeOpacityDefault(100, style.name = "de genes up")
+setNodeShapeDefault("ELLIPSE", "de genes up")
+lockNodeDimensions("TRUE", "de genes up")
+setNodeSizeDefault("50", "de genes up")
+setNodeColorDefault("#D3D3D3", "de genes up")
+setNodeBorderWidthDefault("2", "de genes up")
+setNodeBorderColorDefault("#616060", "de genes up")
+setNodeLabelMapping("display name", "de genes up")
+setNodeFontSizeDefault("14", "de genes up")
+setEdgeOpacityDefault(100, "de genes up")
 ```
 
 Then we can use the **logFC** values to produce a gradient of node fill colors:
