@@ -227,21 +227,8 @@ setNodeLabelMapping('display name', style.name)
 ```
 
 #### Visualize expression data
-Now let's update the style with a mapping for mean expression. The first step is to grab the column data from Cytoscape and pull out the min and max to define our data mapping range of values.
-```{r}
-brc.expr.network = getTableColumns('node','expr.mean')  
-min.brc.expr = min(brc.expr.network[,1],na.rm=TRUE)
-max.brc.expr = max(brc.expr.network[,1],na.rm=TRUE)
-data.values = c(min.brc.expr,0,max.brc.expr)
-```
+Now let's update the style with a mapping for mean expression using a standard Color Brewer palette.
 
-Next, we use the RColorBrewer package to help us pick good colors to pair with our data values. 
-```{r}
-display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="div") # div,qual,seq,all
-node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
-```
-
-Finally, we use the handy *mapVisualProperty* function to construct the data object that CyREST needs to specify style mappings and then we'll send them off to Cytoscape with *updateStyleMappings*.
 ```{r}
 setNodeColorMapping('expr.mean', colors=paletteColorBrewerRdBu, style.name=style.name)
 ```
