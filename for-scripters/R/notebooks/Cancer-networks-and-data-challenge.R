@@ -129,7 +129,7 @@ createSubnetwork(edges='all',
 # ...from first neighbors of top 3 genes, using the network connectivity 
 # together with the data to direct discovery.
 ## ------------------------------------------------------------------------
-setCurrentNetwork(network="String Network - ovarian cancer")
+setCurrentNetwork(network="STRING network - ovarian cancer")
 top.nodes <- row.names(disease.score.table)[tail(
   order(disease.score.table[,1]),3)]
 
@@ -143,7 +143,7 @@ top.nodes <- row.names(disease.score.table)[tail(
 # ...from diffusion algorithm starting with top 3 genes, using the network 
 # connectivity in a more subtle way than just first-degree neighbors.
 ## ------------------------------------------------------------------------
-setCurrentNetwork(network="String Network - ovarian cancer")
+setCurrentNetwork(network="STRING network - ovarian cancer")
 selectNodes(nodes=top.nodes)
 diffusionBasic() # diffusion!
 createSubnetwork('selected',subnetwork.name = 'top disease diffusion')
@@ -179,7 +179,7 @@ str(brc.mut)  # gene names in column named 'Hugo_Symbol'
 
 #### CHALLENGE ####
 ## How to return to the breast cancer network?
-##  network = "String Network - breast cancer"
+##  network = "STRING network - breast cancer"
 ###################
 
 layoutNetwork('force-directed') #uses same settings as previously set
@@ -220,39 +220,10 @@ help(package="RCy3")
 ###################
 
 #### Visualize expression data
-# Now let's update the style with a mapping for mean expression. The first 
-# step is to grab the column data from Cytoscape and pull out the min and 
-# max to define our data mapping range of values.
-## ------------------------------------------------------------------------
-brc.expr.network = getTableColumns('node','expr.mean')
-min.brc.expr = min(brc.expr.network[,1],na.rm=TRUE)
-max.brc.expr = max(brc.expr.network[,1],na.rm=TRUE)
-data.values = c(min.brc.expr,0,max.brc.expr)
-
-# Next, we use the RColorBrewer package to help us pick good colors to pair 
-# with our data values.
-## ------------------------------------------------------------------------
-display.brewer.all(length(data.values), 
-                   colorblindFriendly=TRUE, type="div") 
-node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
-
-# Finally, we use the handy *mapVisualProperty* function to construct the 
-# data object that CyREST needs to specify style mappings and then we'll 
-# send them off to Cytoscape with *updateStyleMappings*.
-## ------------------------------------------------------------------------
+# Now let's update the style with a mapping for mean expression.
 
 #### CHALLENGE ####
-## Given 'data.values' and 'node.colors' set a node color mapping.
-###################
-
-# Pro-tip: depending on your data, it may be better to balance your color 
-# range over negative and positive values bounded by the largest absolute
-# min or max data value, so that color intensity scales similarly in both 
-# directions.
-
-#### CHALLENGE ####
-## Redefine 'data.values' to be balanced
-## Redo node color mapping with new values
+## Given the 'expr.mean' column and the 'paletteColorBrewerRdBu' color palette, set a node color mapping.
 ###################
 
 ### Visualize mutation data
@@ -260,20 +231,8 @@ node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
 # steps, but this time mapping mutation counts to *both* node border width 
 # and color. 
 ## ------------------------------------------------------------------------
-brc.mut.network = getTableColumns('node','mut_count')
-min.brc.mut = min(brc.mut.network[,1],na.rm=TRUE)
-max.brc.mut = max(brc.mut.network[,1],na.rm=TRUE)
-data.values = c(min.brc.mut,20,max.brc.mut)
-display.brewer.all(length(data.values), 
-                   colorblindFriendly=TRUE, type="seq")
-border.colors <- c(brewer.pal(3, "Reds"))
-setNodeBorderColorMapping('mut_count',
-                          data.values,border.colors,
-                          style.name=style.name)
-border.width <- c(2,4,8)
-setNodeBorderWidthMapping('mut_count',
-                          data.values,border.width,
-                          style.name=style.name)
+setNodeBorderColorMapping('mut_count', colors = paletteColorBrewerReds, style.name=style.name)
+setNodeBorderWidthMapping('mut_count', widths = c(2,8), style.name=style.name) # min and max width values are arbitrarily provided here
 
 # Pro-tip: This is a useful pair of visual properties to map to a single 
 # data column. See why?
@@ -306,7 +265,7 @@ top.mut
   
 # Let's switch back over to the Ovarian Cancer network and load our data.
 ## ------------------------------------------------------------------------
-setCurrentNetwork(network="String Network - ovarian cancer")
+setCurrentNetwork(network="STRING network - ovarian cancer")
 clearSelection()
 str(ovc.expr)  # gene names in row.names of data.frame
 str(ovc.mut)  # gene names in column named 'Hugo_Symbol'
