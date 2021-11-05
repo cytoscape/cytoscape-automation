@@ -91,13 +91,13 @@ This produces an initial gradient ranging from blue to red for expression values
 
 To visualize the significance of measurements, let's add a contiuous mapping for 'gal80Rsig' p-values to Node Border Color:
 ```{r}
-setNodeBorderColorMapping('gal80Rsig',c(0,0.05), c("#FFFFFF","#FF0000","#FF0000","#FFFFFF"),style.name="galFiltered Style")
+setNodeBorderColorMapping('gal80Rsig',c(0,0.05), c("#FF0000","#FF0000","#FF0000","#555555"),style.name="galFiltered Style")
 ```
 
 *Note: We are supplying a min and max points, together with *four *color values. Providing n+2 values will result in assigning "below min" and "above max" mappings (see image).*
 
 <center>
-![](./data/img/sig-gradient.png)
+![](./data/img/sig-gradient2.png)
 </center>
 ...and let's also map the same gal80RSig values to set the Node Border Widths:
 
