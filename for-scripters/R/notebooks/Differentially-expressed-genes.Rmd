@@ -349,7 +349,7 @@ Cytoscape provides a number of ways to export results and visualizations:
 - As an image:
 
 ```{r}
-exportImage('./differentially-expressed-genes', 'PDF')
+exportImage('differentially-expressed-genes', 'PDF')
 ```
 
 *Note: PNG, SVG, JPEG and PS are also supported*

@@ -171,13 +171,13 @@ Cytoscape provides a number of ways to save results and visualizations:
 - As a session:
 
 ```{r}
-saveSession('./basic-data-visualization.cys')
+saveSession('basic-data-visualization.cys')
 ```
 
 - As an image:
 
 ```{r}
-exportImage('./basic-data-visualization', 'PDF')
+exportImage('basic-data-visualization', 'PDF')
 ```
 
 *Note: PNG, SVG, JPEG and PS are also supported*
@@ -191,7 +191,7 @@ exportNetworkToNDEx("user", "pass", TRUE) #requires a free NDEx account
 - As a graph format file (Formats: "CX JSON", "Cytoscape.js JSON", "GraphML", "XGMML", "SIF",...):
 
 ```{r}
-exportNetwork('./basic-data-visualization', 'CX')
+exportNetwork('basic-data-visualization', 'CX')
 ```
 
 *Note: cyjs, graphML, xGMML and SIF are also supported*
