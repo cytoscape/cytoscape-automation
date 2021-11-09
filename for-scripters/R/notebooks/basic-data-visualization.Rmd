@@ -102,10 +102,10 @@ setNodeBorderColorMapping('gal80Rsig',c(0,0.05), c("#FF0000","#FF0000","#FF0000"
 ...and let's also map the same gal80RSig values to set the Node Border Widths:
 
 ```{r}
-setNodeBorderWidthMapping('gal80Rsig',c(0,0.05),c(4,4),style.name="galFiltered Style")
+setNodeBorderWidthMapping('gal80Rsig',c(0,0.05),c(4,4,4,1),style.name="galFiltered Style")
 ```
 
-*Note: We are supplying the same min and max points, together with just two width values. Providing n values will result in 1:1 assignments.*
+*Note: We are supplying the same min and max points, together with n+2 width values.*
 
 <center>
 ![](./data/img/styles-done.png)
