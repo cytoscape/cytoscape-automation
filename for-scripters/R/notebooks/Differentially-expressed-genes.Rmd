@@ -109,7 +109,7 @@ The resulting network will load automatically and contains up-regulated genes re
 The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will you a handy utility app for Cytoscape to select the largest connected component and create a subnetwork with it.
 
 ```{r}
-installApp("largestSubnetwork")
+installApp("Largest Subnetwork")
 commandsRun("network select subnetwork createSubnetwork=true")
 ```
 
