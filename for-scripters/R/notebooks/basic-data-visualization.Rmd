@@ -23,7 +23,7 @@ Cytoscape is an open source software platform for integrating, visualizing, and 
  - Filtering networks based on expression data.
  - Assessing expression data in the context of a biological network.
 
-![](./data/img/basic-dataviz-subnet.png)
+![](./data/img/final.png)
 
 <hr />
 
@@ -64,14 +64,6 @@ For this tutorial, the experimental data was part of the Cytoscape session file 
 ![](./data/img/basic-dataviz-galbrowse3.png)
 </center>
 
-You can select nodes in the network by 
-
-```{r}
-selectNodes(c("YDL194W", "YLR345W"), by.col = "name")
-```
-
-Selecting one or more nodes in the network will update the Node Table to show only the corresponding row(s).
-
 We can now use the data to manipulate the visual properties of the network by mapping specific data columns to visual style properties:
 
 The **gal80Rexp** expression values will be mapped to node color; nodes with low expression will be colored blue, nodes with high expression will be colored red.
@@ -82,77 +74,43 @@ Significance for expression values will be mapped to Node Border Width, so nodes
 Let's specify the node fill color as a gradient ranging from **blue to red** for expression values using a continuous mapping for the 'gal80Rexp' column:
 
 ```{r}
-gal80Rexp.score.table <- getTableColumns('node','gal80Rexp')
-gal80Rexp.min <- min(gal80Rexp.score.table, na.rm = T)
-gal80Rexp.max <- max(gal80Rexp.score.table, na.rm = T)
-data.values = c(gal80Rexp.min, 0, gal80Rexp.max)
-display.brewer.all(length(data.values), colorblindFriendly=TRUE, type="div") # div,qual,seq,all
-node.colors <- c(rev(brewer.pal(length(data.values), "RdBu")))
-setNodeColorMapping('gal80Rexp', data.values, node.colors, style.name="galFiltered Style")
+setNodeColorMapping('gal80Rexp', colors=paletteColorBrewerRdBu, style.name="galFiltered Style")
 ```
+
+*Note: we are using `paletteColorBrewerRdBu` to generate a set of three standardized colors balanced for a divergent gradient (low, mid, high), which are automatically extracted from the `gal80RExp` column.*
+
 
 This produces an initial gradient ranging from blue to red for expression values. Notice that the nodes in the network change color.
 
-<center>
-![](./data/img/basic-dataviz-nodefill.png)
-</center>
-
-## Set Default Node Color
-
-Some nodes in the network don't have any data, and for those nodes, the default color applies. In our case, the default color is blue, which falls within the spectrum of our blue-red gradient. This is not ideal for data visualization, so a useful trick is to choose a color outside the gradient spectrum to distinguish nodes with no defined expression value.
-
-We can set default node color to light gray color:
-
-```{r}
-setNodeColorDefault('#D3D3D3', style.name = "galFiltered Style")
-```
-
-## Set Node Border Width
-
-To visualize the significance of measurements, let's add a contiuous mapping for 'gal80Rsig' p-values to Node Border Width and Node Border Color:
-```{r}
-gal80Rsig.score.table <- getTableColumns('node','gal80Rsig')
-gal80Rsig.min <- min(gal80Rsig.score.table, na.rm = T)
-gal80Rsig.max <- max(gal80Rsig.score.table, na.rm = T)
-data.values <- c(gal80Rsig.min, 0.05, gal80Rsig.sig)
-border.colors <- c(rev(brewer.pal(3, "Reds")))
-border.width <- c(10,10,2)
-
-setNodeBorderColorMapping('gal80Rsig',data.values,border.colors,style.name="galFiltered Style")
-setNodeBorderWidthMapping('gal80Rsig',data.values,border.width,style.name="galFiltered Style")
-```
-
-The significant node now have a thicker, dark red border:
 
 <center>
-![](./data/img/basic-dataviz-datamapped.png)
+![](./data/img/exp-gradient.png)
 </center>
 
-# Layouts
-An important aspect of network visualization is the layout, meaning the positioning of nodes and edges. Our network had a preset layout in the original file you imported, but this can be changed.
+## Set Node Border Color and Width
 
-- Let's change the layout to **Degree Sorted Circle Layout**:
-
+To visualize the significance of measurements, let's add a contiuous mapping for 'gal80Rsig' p-values to Node Border Color:
 ```{r}
-layoutNetwork("degree-circle")
+setNodeBorderColorMapping('gal80Rsig',c(0,0.05), c("#FF0000","#FF0000","#FF0000","#555555"),style.name="galFiltered Style")
 ```
 
-<center>
-![](./data/img/basic-dataviz-degree.png)
-</center>
-In this layout, nodes are sorted by degree (connectedness), with the highest degree node at the 6 o'clock position, and remaining nodes are sorted counter clock-wise based on decreasing degree.
+*Note: We are supplying a min and max points, together with *four *color values. Providing n+2 values will result in assigning "below min" and "above max" mappings (see image).*
 
-For this network, a degree-sorted circle layout may not be the most effective. Instead, let's try a force-directed layout instead, which may work better with this network.
+<center>
+![](./data/img/sig-gradient2.png)
+</center>
+...and let's also map the same gal80RSig values to set the Node Border Widths:
 
 ```{r}
-layoutNetwork("force-directed")
+setNodeBorderWidthMapping('gal80Rsig',c(0,0.05),c(4,4,4,1),style.name="galFiltered Style")
 ```
 
+*Note: We are supplying the same min and max points, together with n+2 width values.*
+
 <center>
-![](./data/img/basic-dataviz-forcedirected.png)
+![](./data/img/styles-done.png)
 </center>
 
-Cytoscape supports many different layout algorithms, described in detail in the [Cytoscape manual](http://manual.cytoscape.org/en/stable/Navigation_and_Layout.html?highlight=layout#automatic-layout-algorithms).
 
 # Select Nodes
 
@@ -162,36 +120,39 @@ Let's select a subset of nodes with high expression in the gal80 knockout:
 
 
 ```{r}
-createColumnFilter('myFilter', 'gal80Rexp', 2.00, "GREATER_THAN")
+createColumnFilter('myFilter', 'gal80Rexp', 2, "GREATER_THAN")
 ```
 
-You should now see only a few nodes in the network selected (highlighted yellow).
+You should now see only three nodes in the network selected (highlighted yellow).
 
-## Expand Selection and Create New Network
+## Expand Selection 
 
-We have now selected only the few top expressing nodes. To see the context of these nodes in the larger network, we can expand the selection of nodes to include the nodes connecting to the selected nodes, i.e. the first neighbors. Once we have that larger selection, we can create a new network.
-
-Select the first neighbors of selected nodes:
+We have now selected only the few top expressing nodes. To see the context of these nodes in the larger network, we can expand the selection to second-degree neighbors:
 
 ```{r}
-selectFirstNeighbors()
+selectFirstNeighbors() # first degree
+selectFirstNeighbors() # second degree
 ```
 
-We can now create a network from the selection:
+## Create New Network
+Finally, we can create a subnetwork from this selection and apply a layout algorithm:
 
 ```{r}
 createSubnetwork(nodes="selected", subnetwork.name='galFiltered sub')
+layoutNetwork('force-directed')
 ```
 
+*Note: Cytoscape supports many different layout algorithms, described in detail in the [Cytoscape manual](http://manual.cytoscape.org/en/stable/Navigation_and_Layout.html?highlight=layout#automatic-layout-algorithms).*
+
 <center>
-![](./data/img/basic-dataviz-subnet.png)
+![](./data/img/final.png)
 </center>
 
 Digging into the biology of this network, it turns out that GAL4 is repressed by GAL80. Both nodes (GAL4 and GAL11) show fairly small changes in expression, and neither change is statistically significant: they are pale blue with thin borders. These slight changes in expression suggest that the critical change affecting the red nodes might be somewhere else in the network, and not either of these nodes. GAL4 interacts with GAL80, which shows a significant level of repression: it is medium blue with a thicker border.
 
-Note that while GAL80 shows evidence of significant repression, most nodes interacting with GAL4 show significant levels of induction: they are rendered as red rectangles. GAL11 is a general transcription co-factor with many interactions.
+Note that while GAL80 shows evidence of significant repression (blue), most nodes interacting with GAL4 show significant levels of induction (red). GAL11 is a general transcription co-factor with many interactions.
 
-Putting all of this together, we see that the ***transcriptional activation activity of Gal4 is repressed by Gal80***. So, repression of Gal80 increases the transcriptional activation activity of Gal4. Even though the expression of Gal4 itself did not change much, ***the Gal4 transcripts were much more likely to be active transcription factors when Gal80 was repressed***. This explains why there is so much up-regulation in the vicinity of Gal4.
+Putting all of this together, we see that the ***transcriptional activation activity of Gal4 is repressed by Gal80***. So, repression of Gal80 increases the transcriptional activation activity of Gal4. Even though the expression of Gal4 itself did not significantly change (no red border), ***the Gal4 transcripts were much more likely to be active transcription factors when Gal80 was repressed***. This explains why there is so much up-regulation in the vicinity of Gal4.
 
 # Summary
 
@@ -210,31 +171,27 @@ Cytoscape provides a number of ways to save results and visualizations:
 - As a session:
 
 ```{r}
-saveSession('./basic-data-visualization.cys')
+saveSession('basic-data-visualization.cys')
 ```
 
 - As an image:
 
 ```{r}
-exportImage('./basic-data-visualization', 'PDF')
-exportImage('./basic-data-visualization', 'PNG')
-exportImage('./basic-data-visualization', 'JPEG')
-exportImage('./basic-data-visualization', 'SVG')
-exportImage('./basic-data-visualization', 'PS')
+exportImage('basic-data-visualization', 'PDF')
 ```
+
+*Note: PNG, SVG, JPEG and PS are also supported*
 
 - To a public repository:
 
 ```
-exportNetworkToNDEx("user", "pass", TRUE)
+exportNetworkToNDEx("user", "pass", TRUE) #requires a free NDEx account
 ```
 
 - As a graph format file (Formats: "CX JSON", "Cytoscape.js JSON", "GraphML", "XGMML", "SIF",...):
 
 ```{r}
-exportNetwork('./basic-data-visualization', 'CX')
-exportNetwork('./basic-data-visualization', 'cyjs')
-exportNetwork('./basic-data-visualization', 'graphML')
-exportNetwork('./basic-data-visualization', 'xGMML')
-exportNetwork('./basic-data-visualization', 'SIF')
+exportNetwork('basic-data-visualization', 'CX')
 ```
+
+*Note: cyjs, graphML, xGMML and SIF are also supported*

@@ -40,11 +40,6 @@ if(!"RCy3" %in% installed.packages()){
   BiocManager::install("RCy3")
 }
 library(RCy3)
-
-if(!"RColorBrewer" %in% installed.packages()){
-    install.packages("RColorBrewer")
-}
-library(RColorBrewer)
 ```
 
 # Getting started
@@ -91,15 +86,17 @@ The two examples are split into two separate workflows below.
 
 # Example 1: STRING Protein Query Up-regulated Genes
 
-Load the file containing the data for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_UP_full.csv:
+Load the file containing the differential gene expression data and filter for up-regulated genes, TCGA-Ovarian-MesenvsImmuno_data.csv:
 
 ```{r}
-de.genes.up <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-up.csv", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
+de.genes <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno_data.csv", header = TRUE, sep = ",", quote="\"", stringsAsFactors = FALSE)
+de.genes.up <- de.genes[which(de.genes$logFC >= 1.8 & de.genes$FDR.adjusted.Pvalue <= 0.05),]
 ```
 
-We will use the identifiers in the first column of this datafile to run a **STRING protein query**, with confidence (score) cutoff of 0.4:
+We will use the identifiers in the first column of this datafile to run a **STRING protein query**, with confidence (score) cutoff of 0.4 and no additional proteins (limit = 0):
+
 ```{r}
-string.cmd = paste('string protein query query="', paste(de.genes.up$Gene, collapse = '\n'), '" cutoff=0.4  species="Homo sapiens"', sep = "")
+string.cmd = paste('string protein query query="', paste(de.genes.up$Gene, collapse = '\n'), '" cutoff=0.4 limit=0 species="Homo sapiens"', sep = "")
 commandsRun(string.cmd)
 ```
 
@@ -109,30 +106,19 @@ The resulting network will load automatically and contains up-regulated genes re
 ![](./data/img/string-de-up2.png)
 </center>
 
-The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will select only the connected nodes to work with for the rest of this tutorial, by creating a subnetwork based on all edges:
+The networks consists of one large connected component, several smaller networks, and some unconnected nodes. We will you a handy utility app for Cytoscape to select the largest connected component and create a subnetwork with it.
 
 ```{r}
-createSubnetwork(edges='all', subnetwork.name='String de genes up')
+installApp("Largest Subnetwork")
+commandsRun("network select subnetwork createSubnetwork=true")
 ```
 
 # Data Integration
 
-Next we will import log fold changes and p-values from our TCGA dataset to create a visualization. Since the STRING network is a protein-protein network, it is annotated with protein identifiers (Uniprot and Ensembl protein), as well as HGNC gene symbols. Our data from TCGA has NCBI Gene identifiers (formerly Entrez), so before importing the data we are going to use the ID Mapper functionality in Cytoscape to map the network to NCBI Gene.
+Next we will create a visualization from the log fold changes and p-values from our TCGA dataset. Our data from TCGA has NCBI Gene identifiers, and our STRING network retained these identifiers in the "query term" column.
 
 ```{r}
-mapped.cols <- mapTableColumn('display name', 'Human', 'HGNC', 'Entrez Gene')
-```
-
-We can now import the differential gene expression data and integrate it with the network (node) table in Cytoscape.
-For importing the data we will use the following mapping: 
-
-- **Key Column for Network** should be **Entrez Gene**, which is the column we just added.
-- **Gene** should be the key of the data(`de.genes.full`).
-
-```{r}
-de.genes.full <- read.table("https://raw.githubusercontent.com/cytoscape/cytoscape-tutorials/gh-pages/protocols/data/TCGA-Ovarian-MesenvsImmuno_data.csv", header = TRUE, sep = ",", quote="\"", stringsAsFactors = FALSE)
-
-loadTableData(de.genes.full,data.key.column="Gene",table.key.column="Entrez Gene")
+loadTableData(de.genes, data.key.column="Gene", table.key.column="query term")
 ```
 
 You will notice two new columns (logFC and FDR.adjusted.Pvalue) in the Node Table. 
@@ -142,46 +128,35 @@ tail(getTableColumnNames('node'))
 ```
 
 # Visualization
-Next, we will create a visualization of the imported data on the network. 
-
-```{r}
-setVisualStyle(style.name="default")
-setNodeShapeDefault(new.shape="ELLIPSE", style.name = "default")
-lockNodeDimensions(new.state="TRUE", style.name = "default")
-setNodeSizeDefault(new.size="50", style.name = "default")
-setNodeColorDefault(new.color="#D3D3D3", style.name = "default")
-setNodeBorderWidthDefault(new.width="2", style.name = "default")
-setNodeBorderColorDefault(new.color="#616060", style.name = "default")
-setNodeLabelMapping(table.column="display name",style.name = "default")
-setNodeFontSizeDefault(new.size="14", style.name = "default")
-```
-
-Before we create a mapping for node color representing the range of fold changes, we need the min and max of the **logFC** column:
-
-```{r}
-logFC.table.up <- getTableColumns('node', 'logFC')
-```
-
-```{r}
-logFC.up.min <- min(logFC.table.up, na.rm = T)
-logFC.up.max <- max(logFC.table.up, na.rm = T)
-logFC.up.center <- logFC.up.min + (logFC.up.max - logFC.up.min)/2
-```
+Next, we will create a visualization of the imported data on the network. Let's set all the defaults first:
 
 ```{r}
 copyVisualStyle(from.style = "default", to.style = "de genes up")
-setVisualStyle(style.name="de genes up")
-
-data.values = c(logFC.up.min, logFC.up.center, logFC.up.max)
-node.colors <- c(brewer.pal(length(data.values), "YlOrRd"))
-setNodeColorMapping('logFC', data.values, node.colors, style.name="de genes up")
+setVisualStyle("de genes up")
+setNodeShapeDefault("ELLIPSE", "de genes up")
+lockNodeDimensions("TRUE", "de genes up")
+setNodeSizeDefault("50", "de genes up")
+setNodeColorDefault("#D3D3D3", "de genes up")
+setNodeBorderWidthDefault("2", "de genes up")
+setNodeBorderColorDefault("#616060", "de genes up")
+setNodeLabelMapping("display name", "de genes up")
+setNodeFontSizeDefault("14", "de genes up")
+setEdgeOpacityDefault(100, "de genes up")
 ```
+
+Then we can use the **logFC** values to produce a gradient of node fill colors:
+
+```{r}
+setNodeColorMapping('logFC', colors=paletteColorBrewerYlOrRd, style.name="de genes up")
+```
+
+*Note: we are using `paletteColorBrewerYlOrRd` to generate a set of standardized colors balanced for a sequential gradient (low to high), which are automatically matched to the `logFC` column values.*
 
 Applying a force-directed layout, the network will now look something like this:
 
 ```{r}
 layoutNetwork(paste('force-directed', 
-              'defaultSpringCoefficient=0.00003',
+              'defaultSpringCoefficient=0.000009',
               'defaultSpringLength=50',
               'defaultNodeMass=4',
               sep=' '))
@@ -193,7 +168,7 @@ layoutNetwork(paste('force-directed',
 
 # Enrichment Analysis Options
 
-Next, we are going to perform enrichment anlaysis uing the STRING app.
+Next, we are going to perform enrichment analysis uing the STRING app.
 
 ## STRING Enrichment
 
@@ -202,10 +177,8 @@ The STRING app has built-in enrichment analysis functionality, which includes en
 First, we will run the enrichment on the whole network, against the genome: 
 
 ```{r}
-string.cmd = 'string retrieve enrichment allNetSpecies="Homo sapiens", background=genome  selectedNodesOnly="false"'
-commandsRun(string.cmd)
-string.cmd = 'string show enrichment'
-commandsRun(string.cmd)
+commandsRun('string retrieve enrichment allNetSpecies="Homo sapiens"')
+commandsRun('string show enrichment')
 ```
 
 When the enrichment analysis is complete, a new tab titled **STRING Enrichment** will open in the **Table Panel**.
@@ -220,24 +193,22 @@ The features are all available at the top of the **STRING Enrichment** tab.
 We are going to filter the table to only show GO Process:
 
 ```{r}
-string.cmd = 'string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"'
-commandsRun(string.cmd)
+commandsRun('string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"')
 ```
 
 Next, we will add a split donut chart to the nodes representing the top terms:
 
 ```{r}
-string.cmd = 'string show charts'
-commandsRun(string.cmd)
+commandsRun('string show charts')
 ```
 
 ## STRING Protein Query: Down-regulated genes
 
-We are going to repeat the network search, data integration, visualization and enrichment analysis for the set of down-regulated genes by using the first column of [TCGA-Ovarian-MesenvsImmuno-data-down.csv](https://cytoscape.github.io/cytoscape-tutorials/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-down.csv):
+We are going to repeat the network search, data integration, visualization and enrichment analysis for the set of down-regulated genes by subsetting our original dataset for downregulated logFC genes:
 
 ```{r}
-de.genes.down <- read.table("https://cytoscape.github.io/cytoscape-tutorials/protocols/data/TCGA-Ovarian-MesenvsImmuno-data-down.csv", header = TRUE, sep = "\t", quote="\"", stringsAsFactors = FALSE)
-string.cmd = paste('string protein query query="', paste(de.genes.down$Gene, collapse = '\n'), '" cutoff=0.4  species="Homo sapiens"', sep = "")
+de.genes.down <- de.genes[which(de.genes$logFC <= -1.1 & de.genes$FDR.adjusted.Pvalue <= 0.05),]
+string.cmd = paste('string protein query query="', paste(de.genes.down$Gene, collapse = '\n'), '" cutoff=0.4 limit=0 species="Homo sapiens"', sep = "")
 commandsRun(string.cmd)
 ```
 
@@ -246,56 +217,32 @@ commandsRun(string.cmd)
 Let's select only the connected nodes to work with for the rest of this tutorial, by creating a subnetwork based on all edges:
 
 ```{r}
-createSubnetwork(edges='all', subnetwork.name='String de genes down')
+commandsRun("network select subnetwork createSubnetwork=true")
 ```
 
 ## Data integration
 
-Again, the identifiers in the network needs to be mapped to Entrez Gene (NCBI gene):
+Again, we can import the data, mapping to the "query term" column:
 
 ```{r}
-mapped.cols <- mapTableColumn('display name', 'Human', 'HGNC', 'Entrez Gene')
-```
-
-We can now import the data:
-
-```{r}
-loadTableData(de.genes.full,data.key.column="Gene",table.key.column="Entrez Gene")
+loadTableData(de.genes,data.key.column="Gene",table.key.column="query term")
 ```
 
 ## Visualization
-Next, we can create a visualization. Note that the `default` style has been altered in the previous example, so we can simply switch to `default` to get started:
+Next, we can create a visualization. Note that we can reuse most of the previous style (e.g., all the default settings) and just provide a new node color mapping with downregulated color scheme, like `paletteColorBrewerBlues`:
 
 ```{r}
-setVisualStyle(style.name="default")
-```
-
-The node fill color has to be redefined for down-regulated genes:
-```{r}
-logFC.table.down <- getTableColumns('node', 'logFC')
-```
-
-```{r}
-logFC.dn.min <- min(logFC.table.down, na.rm = T)
-logFC.dn.max <- max(logFC.table.down, na.rm = T)
-logFC.dn.center <- logFC.dn.min + (logFC.dn.max - logFC.dn.min)/2
-```
-
-```{r}
-copyVisualStyle(from.style = "default", to.style = "de genes down")
+copyVisualStyle(from.style = "de genes up", to.style = "de genes down")
 setVisualStyle(style.name="de genes down")
 
-data.values = c(logFC.dn.min, logFC.dn.center, logFC.dn.max)
-node.colors <- c(brewer.pal(length(data.values), "Blues"))
-setNodeColorMapping('logFC', data.values, node.colors, style.name="de genes down")
-
+setNodeColorMapping('logFC', colors=paletteColorBrewerBlues, style.name="de genes down")
 ```
 
 Apply a force-directed layout.
 
 ```{r}
 layoutNetwork(paste('force-directed', 
-              'defaultSpringCoefficient=0.00003',
+              'defaultSpringCoefficient=0.00001',
               'defaultSpringLength=50',
               'defaultNodeMass=4',
               sep=' '))
@@ -310,26 +257,18 @@ Focusing on the connected part of the network, it should look something like thi
 Now we can perform STRING Enrichment analysis on the resulting network:
 
 ```{r}
-string.cmd = 'string retrieve enrichment allNetSpecies="Homo sapiens", background=genome  selectedNodesOnly="false"'
-commandsRun(string.cmd)
-string.cmd = 'string show enrichment'
-commandsRun(string.cmd)
+commandsRun('string retrieve enrichment allNetSpecies="Homo sapiens"')
+commandsRun('string show enrichment')
 ```
 
 Filter the analysis results for non-redundant GO Process terms only. 
 
 ```{r}
-string.cmd = 'string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"'
-commandsRun(string.cmd)
+commandsRun('string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"')
 ```
 
 ```{r}
-string.cmd = 'string show charts'
-commandsRun(string.cmd)
-
-## This part doesn't work yet
-##string.cmd = "string settings chartType='Pie Chart' nTerms=3 showEnhancedLabels='FALSE' showGlassBallEffect='FALSE' defaultPalette='ColorBrewer Set1 colors' showImage='FALSE'"
-##commandsRun(string.cmd)
+commandsRun('string show charts')
 ```
 
 ## STRING Disease Query
@@ -337,19 +276,18 @@ commandsRun(string.cmd)
 So far, we queried the STRING database with a set of genes we knew were differentially expressed. Next, we will query the **STRING disease** database to retrieve a network genes associated with ovarian cancer, which will be completely independent of our dataset.
 
 ```{r}
-string.cmd = 'string disease query disease="ovarian cancer" cutoff="0.95"'
-commandsRun(string.cmd)
+commandsRun('string disease query disease="ovarian cancer" cutoff="0.95"')
 ```
 
 This will bring in the top 100 (default) ovarian cancer associated genes connected with a confidence score greater than 0.95. Again, lets extract out the connected nodes:
 
 ```{r}
-createSubnetwork(edges='all', subnetwork.name='String ovarian sub')
+commandsRun("network select subnetwork createSubnetwork=true")
 ```
 
 # Data integration
 
-Next we will import differential gene expression data from our TCGA dataset to create a visualization. Just like the previous example, we will need to do some identifier mapping to match the data to the network.
+Next we will load the same differential gene expression data from our TCGA dataset to create a visualization. This time we will need to do some identifier mapping to match the data to the network.
 
 ```{r}
 mapped.cols <- mapTableColumn("display name",'Human','HGNC','Entrez Gene')
@@ -357,49 +295,29 @@ mapped.cols <- mapTableColumn("display name",'Human','HGNC','Entrez Gene')
 
 Here we set **Human** as species, **HGNC** as **Map from**, and **Entrez Gene** as **To**.
 
-We can now import the data frame with the full data (already loaded the data in Example 1 above) into the node table in Cytoscape:
+We can now import the data frame with the data into the node table in Cytoscape:
 
 ```{r}
-loadTableData(de.genes.full, data.key.column = "Gene", table = "node", table.key.column = "Entrez Gene")
+loadTableData(de.genes, data.key.column = "Gene", table = "node", table.key.column = "Entrez Gene")
 ```
 
 # Visualization
 
-Again, we can create a visualization:
+Again, we can create a visualization reusing our prior style and setting a new color gradient for the nodes:
 
 ```{r}
-setVisualStyle(style.name="default")
-```
-
-Next, we need the min and max of the **logFC** column:
-
-```{r}
-logFC.table.ovarian <- getTableColumns('node', 'logFC')
-```
-
-```{r}
-logFC.ov.min <- min(logFC.table.ovarian, na.rm = T)
-logFC.ov.max <- max(logFC.table.ovarian, na.rm = T)
-logFC.ov.center <- logFC.ov.min + (logFC.ov.max - logFC.ov.min)/2
-```
-
-Let's create the mapping: 
-
-```{r}
-copyVisualStyle(from.style = "default", to.style = "ovarian")
+copyVisualStyle(from.style = "de genes up", to.style = "ovarian")
 setVisualStyle(style.name="ovarian")
 
-data.values = c(logFC.ov.min, logFC.ov.center, logFC.ov.max)
-node.colors <- c(brewer.pal(length(data.values), "RdBu"))
-setNodeColorMapping('logFC', data.values, node.colors, style.name="ovarian")
+setNodeColorMapping('logFC', colors=paletteColorBrewerRdBu, style.name="ovarian")
 ```
 Apply a force-directed layout.
 
 ```{r}
 layoutNetwork(paste('force-directed', 
-              'defaultSpringCoefficient=0.00003',
+              'defaultSpringCoefficient=0.000006',
               'defaultSpringLength=50',
-              'defaultNodeMass=4',
+              'defaultNodeMass=2',
               sep=' '))
 ``` 
 
@@ -431,21 +349,13 @@ Cytoscape provides a number of ways to export results and visualizations:
 - As an image:
 
 ```{r}
-exportImage('./differentially-expressed-genes', 'PDF')
-exportImage('./differentially-expressed-genes', 'PNG')
-exportImage('./differentially-expressed-genes', 'JPEG')
-exportImage('./differentially-expressed-genes', 'SVG')
-exportImage('./differentially-expressed-genes', 'PS')
+exportImage('differentially-expressed-genes', 'PDF')
 ```
+
+*Note: PNG, SVG, JPEG and PS are also supported*
 
 - To a public repository:
 
 ```
-exportNetworkToNDEx("user", "password", TRUE)
-```
-
-- As a Cytoscape JSON file:
-
-```{r}
-exportNetwork('./differentially-expressed-genes', 'cyjs')
+exportNetworkToNDEx("user", "password", TRUE) #requires a free NDEx account
 ```

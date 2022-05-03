@@ -44,11 +44,11 @@ Here we use Google Colab to demonstrate. Visit this [link](https://colab.to/r) t
 <span style="color:red"> Make sure to run code below in the cloud!!!</span>
 
 # Installation
-Install the latest version of RCy3 in the cloud server from GitHub.
+Install the latest version of RCy3 from Bioconductor.
 ```{r eval=FALSE}
-install.packages("devtools")
-library(devtools)
-install_github("cytoscape/RCy3")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("RCy3")
 library(RCy3)
 ```
 

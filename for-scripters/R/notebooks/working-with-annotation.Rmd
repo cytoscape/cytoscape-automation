@@ -1,0 +1,114 @@
+---
+title: "Advanced Visualization: Working with Annotations"
+author: "Yihang Xin, Kristina Hanspers, Alex Pico"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/working-with-annotation.Rmd).*
+
+<hr />
+This short notebook reviews how to add annotations in Cytoscape.
+
+# Installation
+Install the latest version of RCy3 from Bioconductor.
+```{r eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("RCy3")
+library(RCy3)
+```
+
+# Required Software
+The whole point of RCy3 is to connect with Cytoscape. You will need to install and launch Cytoscape: 
+    
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape 
+
+# Check connection
+Then, launch Cytoscape and keep it running whenever using RCy3 and Jupyter Bridge. Confirm that you have everything installed and running:
+```{r eval=FALSE}
+cytoscapeVersionInfo()
+cytoscapePing()
+```
+
+
+
+# Background
+Annotations in Cytoscape
+Cytoscape has three separate drawing surfaces on which the network and annotations are drawn:
+
+* Network canvas: where nodes and edges are drawn.
+* Background canvas: the drawing surface behind nodes and edges.
+* Foreground canvas: the drawing surface in front of nodes and edges.
+
+Annotations are drawn either on the foreground or background canvases, and are exported as objects. They are high quality graphically, allowing for export of images. Annotation types:
+
+* Shapes, Text, Bounded Text, Images and Arrows
+* Groups, to group annotations together
+
+
+# Annotation Panel in the Cytoscape
+You can find annotation tab on the left side of the Cytoscape, and you can manually add annotations there. You can also add annotation via commands to acheive automation.
+
+
+# Adding a Label Annotation
+Import STE12 subnetwork of galFiltered network, for use with this tutorial.
+
+```{r eval=FALSE}
+importNetworkFromNDEx('8f800fbf-35e5-11ec-b3be-0ac135e8bacf')
+```
+
+Create and execute the funtion to add a text annotation.
+
+```{r eval=FALSE}
+addAnnotationText(text='Mutation', network='current')
+```
+You will notice the annotation is located at the center of the network. To adjust the location of the annotation, first click the Toggle Annotation Selection. The annotation can now be moved by click and drag.
+
+Or you can enter x and y parameter when you create the annotation.
+```{r eval=FALSE}
+addAnnotationText(text='Protein', network='current', x.pos = 2500, y.pos = 2500)
+```
+To customize the appearance of the annotation, you can specify the font, color etc in the function.
+```{r eval=FALSE}
+addAnnotationText(text='Gene', network='current', x.pos=2550, y.pos=2550, fontSize=48, color='#FD39B8', fontStyle='bold')
+```
+You can find other command arguments [here](http://localhost:1234/v1/swaggerUI/swagger-ui/index.html?url=http%3A%2F%2Flocalhost%3A1234%2Fv1%2Fcommands%2Fswagger.json#!/annotation/annotation_add_text).
+
+
+# Adding a Shape Annotation
+```{r eval=FALSE}
+addAnnotationShape(customShape="RECTANGLE",network='current',x.pos=2250, y.pos=2390, fillColor='#e0f3db', height=200, width=240)
+```
+
+
+By default the shape will be drawn on the foreground canvas, obstructing any nodes behind it. To move it to the background cavnas, select the shape in the Layers tab in the Annotation panel and click the Push Annotations to Background Layer arrow just below the list.
+
+Or you can add canvas argument in your function.
+First, let us delete this shape annotation.
+```{r eval=FALSE}
+deleteAnnotation(names="Shape 1")
+```
+Then, we add the correct one.
+```{r eval=FALSE}
+addAnnotationShape(customShape="RECTANGLE", canvas='background',network='current',x.pos=2250, y.pos=2390, fillColor='#e0f3db', height=200, width=240)
+```
+As usual, you can choose border color, border opacity, fill color and other parameters by adding arguments in the command.
+
+You can find other command arguments [here](http://localhost:1234/v1/swaggerUI/swagger-ui/index.html?url=http%3A%2F%2Flocalhost%3A1234%2Fv1%2Fcommands%2Fswagger.json#!/annotation/annotation_add_shape).
+
+
+# Editing Annotations
+Existing annotations can be updated via annotation update commands. You may notice that each annotation has its own unique ID. When you want to update a exisiting annotaion, the unique ID is required. You can also use annotation names to update the annotation.
+
+All annotation ID can be found by listing annotation.
+```{r eval=FALSE}
+annotationList <- getAnnotationList(network='current')
+annotationList
+```
+
+
