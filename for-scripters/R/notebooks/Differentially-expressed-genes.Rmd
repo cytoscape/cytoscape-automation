@@ -193,7 +193,7 @@ The features are all available at the top of the **STRING Enrichment** tab.
 We are going to filter the table to only show GO Process:
 
 ```{r}
-commandsRun('string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"')
+commandsRun('string filter enrichment categories="GO Biological Process", overlapCutoff = "0.5", removeOverlapping = "true"')
 ```
 
 Next, we will add a split donut chart to the nodes representing the top terms:
@@ -264,7 +264,7 @@ commandsRun('string show enrichment')
 Filter the analysis results for non-redundant GO Process terms only. 
 
 ```{r}
-commandsRun('string filter enrichment categories="GO Process", overlapCutoff = "0.5", removeOverlapping = "true"')
+commandsRun('string filter enrichment categories="GO Biological Process", overlapCutoff = "0.5", removeOverlapping = "true"')
 ```
 
 ```{r}

@@ -90,7 +90,7 @@ loadTableData(apms.data[,2:5], data.key.column="Prey")
 # Augmenting Network with Existing Protein-protein Interaction Data 
 We are going to use existing protein-protein interaction data to enrich the network, using the STRING database with the human protein nodes as input.
 
-Let's collect all the UniProt identifiers from the data, and create a text string that we can use to query STRING:
+Let's collect all the UniProt identifiers from the data, and create a text string that we can use to query STRING. For this purpose, we are going to specify the type of network as "physical subnetwork", since we are looking for protein complexes:
 
 ```{r}
 uniprot.str<-toString(apms.data[,"UniProt"])
@@ -98,7 +98,7 @@ string.cmd<-paste('string protein query',
                   'query="',uniprot.str,'"', 
                   'species="Homo sapiens"', 
                   'limit=0', 
-                  'cutoff=0.999',
+                  'cutoff=0.999', 'networkType="physical subnetwork"',
                   sep= ' ')
 commandsRun(string.cmd)
 ```
@@ -106,13 +106,13 @@ commandsRun(string.cmd)
 The resulting network contains known interactions between the human proteins, with an evidence score of 0.999 or greater.
 
 # Merge Networks
-To incorprate the new information into our AP-MS network, we need merge the STRING and AP-MS networks. We can use the Uniprot IDs available in both networks as the matching attribute, "Uniprot" in the AP-MS network, and "query term in the String network.
+To incorporate the new information into our AP-MS network, we need merge the STRING and AP-MS networks. We can use the Uniprot IDs available in both networks as the matching attribute, "Uniprot" in the AP-MS network, and "query term in the String network.
 We will also specify how to merge the attribute containing the node name (symbol), which is contained in the "name" attribute for the AP-MS network and the "display name" for the String network. 
 
 ```{r}
 merge.cmd<-paste('network merge',
                  'operation=union',
-                 'sources="apms network,STRING network"',
+                 'sources="apms network,STRING network (physical)"',
                  'nodeKeys="Uniprot,query term"', 
                  'nodeMergeMap="{name,display name,display name, string}"')
 commandsRun(merge.cmd)
@@ -123,7 +123,7 @@ When the merged network first loads, it will have the STRING style applied. Howe
 
 First, let's set our AP-MS network as the current network:
 ```{r}
-setCurrentNetwork('union: apms network,STRING network')
+setCurrentNetwork('union: apms network,STRING network (physical)')
 setCurrentView()
 ```
 
@@ -168,7 +168,7 @@ The STRING app includes several options for filtering and displaying the enrichm
 
 ```{r}
 commandsRun(paste('string filter enrichment', 
-                  'categories="GO Process"',
+                  'categories="GO Biological Process"',
                   'removeOverlapping="true"',
                   sep = ' '))
 ```
