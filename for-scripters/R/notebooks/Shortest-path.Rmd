@@ -1,14 +1,14 @@
 ---
 title: "Shortest Path with RBGL"
 author: "by Alexander Pico"
-package: RCy3
 date: "`r Sys.Date()`"
-output: 
+output:
   html_notebook:
-    toc_float: true
-    code_folding: "none"
-#  pdf_document:
-#    toc: true  
+    toc_float: yes
+    code_folding: none
+  html_document:
+    df_print: paged
+package: RCy3
 ---
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 This vignette will show you how to perform a shortest path calculation using RBGL on a network in Cytoscape. RBGL is a Biocondutor package that offers an array of analytical functions for graphs.
 
 # Installation
-```{r}
+```{r eval=FALSE}
 if(!"RCy3" %in% installed.packages()){
     install.packages("BiocManager")
     BiocManager::install("RCy3")
@@ -50,9 +50,11 @@ cytoscapePing()
 ![](https://cytoscape.github.io/cytoscape-automation/for-scripters/R/notebooks/data/img/shortest.png)
 </center>
 
-Convert a sample Cytoscape network to a graph object.
+Convert a sample Cytoscape network to a graph object (after removing a multiedge).
 ```{r}
 openSession()
+selectEdges("YPL248C (pp) YML051W","name")
+deleteSelectedEdges()
 g <- createGraphFromNetwork()
 ```
 	
