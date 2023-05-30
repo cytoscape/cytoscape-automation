@@ -303,4 +303,3 @@ You can export extremely high resolution images, including vector graphic format
 exportImage(filename='tutorial_image2', type = 'PDF') #.pdf
 ?exportImage
 ```
-
