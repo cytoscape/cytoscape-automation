@@ -4,3 +4,5 @@
 .Ruserdata
 for-scripters/R/tutorial_*
 .DS_Store
+.ipynb_checkpoints
+logs
