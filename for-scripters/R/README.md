@@ -21,4 +21,6 @@ lapply(list.files("notebooks","*.Rmd"), function(x) rmarkdown::render(paste("not
 rmarkdown::render("notebooks/index.Rmd","html_document")
 ```
 
-5. Commit and push updated files to make updated notebooks avalable. 
+5. Commit and push updated files to make updated notebooks avalable.
+
+6. Update Colab notebooks in colab folder.
