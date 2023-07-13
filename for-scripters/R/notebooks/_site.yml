@@ -40,6 +40,10 @@ navbar:
       href: ImportNetworkFromTable.nb.html
     - text: "WikiPathways and RCy3"
       href: rWikiPathways-and-RCy3.nb.html
+    - text: "WikiPathways Data Visualization Basic"
+      href: wikipathways-data-visualiztion-basic.nb.html
+    - text: "WikiPathways Data Visualization Advanced"
+      href: wikipathways-data-visualiztion-advanced.nb.html
     - text: "Phylogenetic trees"
       href: Phylogenetic-trees.nb.html
     - text: "Jupyter Bridge and RCy3"

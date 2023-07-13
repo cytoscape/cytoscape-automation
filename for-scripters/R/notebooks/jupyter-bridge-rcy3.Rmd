@@ -75,4 +75,3 @@ Done! Now you can execute a workflow in a remote server-based Jupyter Notebook t
 
 # Use case: Run differentially expressed genes network analysis in the cloud
 Visit the [Jupyter Bridge RCy3 and Differentially Expressed Genes Network Analysis](https://colab.research.google.com/drive/1iiYtjVrc0qFjzDAAdccgwByZWH1DPp2U?usp=sharing) for the detailed workflow.
-

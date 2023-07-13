@@ -131,4 +131,3 @@ Fetch interaction networks from the [STRING](https://string-db.org/) database.
 ```{r}
 RCy3::commandsRun('scnetviz create network accession=E-GEOD-109979')
 ```
-

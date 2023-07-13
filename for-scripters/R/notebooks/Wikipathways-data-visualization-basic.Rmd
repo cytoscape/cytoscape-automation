@@ -1,0 +1,100 @@
+---
+title: "WikiPathways Data Visualization Basic"
+author: "Yihang Xin, Kristina Hanspers and Alex Pico"
+output:
+  html_document:
+    df_print: paged
+  html_notebook:
+    toc_float: yes
+    code_folding: none
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Wikipathways-data-visualiztion-basic.Rmd).*
+
+<hr />
+
+WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identfiers, which can be used for computation and data visualization.
+
+The following workflow describes pathway import and data visualization.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required software
+RCy3 works by connecting with Cytoscape. You will need to install and launch Cytoscape:
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape
+
+
+```{r}
+cytoscapePing()
+```
+
+For this vignette, you’ll need the following apps: 
+
+* the [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app, 
+
+```{r}
+#available in Cytoscape 3.7.0 and above
+installApp('WikiPathways')
+```
+
+# Import Cell Cycle pathway into Cytoscape.
+
+
+```{r}
+RCy3::commandsRun('wikipathways import-as-pathway id=WP179')
+```
+
+The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic (Best et el., 2015). The data was downloaded from Expression Atlas.
+
+```{r}
+ df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
+
+RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl" )
+
+```
+
+# Data Visualization: Node Fill Color
+
+We now have the data in Cytoscape, linked to the pathway, and ready to map to visual properties of the nodes in the network. For this workflow, we will choose data from one of the cancer types, "breast carcinoma", and visualize the fold change as Node Fill Color.
+
+```{r}
+RCy3::setNodeColorMapping('X.breast.carcinoma..vs..normal...foldChange', colors=paletteColorBrewerRdBu, style.name="WikiPathways")
+```
+
+# Data Visualization: Node Border Width
+
+We also have a significance measure for the fold change, which we can add to our visualization. For this, we will use both Node Border Width and Node Border Size to visualize the p value.
+```{r}
+RCy3::setNodeBorderWidthMapping('X.breast.carcinoma..vs..normal..pValue', table.column.values=c(0,0.05), widths=c(5,5,1,1), mapping.type='c', style.name="WikiPathways")
+
+RCy3::setNodeBorderColorDefault('#5A5A5A',style.name="WikiPathways")
+```
+
+# Data Visualization: Node Border Color
+
+```{r results=FALSE}
+RCy3::setNodeBorderColorMapping('X.breast.carcinoma..vs..normal..pValue', c(0, 0.05,0.05), c('#FC0FC0', '#FC0FC0', '#5A5A5A'), mapping.type='c', style.name="WikiPathways")
+```
+
+We now have our example data visualized on the pathway, with fold change represented as a gradient node fill color and significance as node border color/width.
+
+# Saving and Exporting Data Visualization
+```{r}
+RCy3::saveSession('wikipathway-data-visualization-basic')
+RCy3::exportImage('wikipathway-data-visualization-basic', type = "png")
+```
+
