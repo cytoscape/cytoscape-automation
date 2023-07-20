@@ -1,0 +1,112 @@
+---
+title: "WikiPathways Data Visualization Advanced"
+author: "Yihang Xin, Kristina Hanspers and Alex Pico"
+output:
+  html_document:
+    df_print: paged
+  html_notebook:
+    toc_float: yes
+    code_folding: none
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE
+)
+```
+*The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Wikipathways-data-visualiztion-basic.Rmd).*
+
+<hr />
+WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identfiers, which can be used for computation and data visualization.
+
+This workflow describes how to work with multiple WikiPathways pathways in Cytoscape, specifically how to visualize multiple data points on a set of pathways of interest. This analysis assumes that we already have a list of pathways of interest. This list could come from enrichment analysis, but could also be a list of pathways of interest from prior knowledge.
+
+The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic (Best et el., 2015). The data was downloaded from Expression Atlas.
+
+If you are continuing from the previous workflow, make sure the session is saved and then select File → Close Session to start from scratch.
+
+# Installation
+```{r}
+if(!"RCy3" %in% installed.packages()){
+    install.packages("BiocManager")
+    BiocManager::install("RCy3")
+}
+library(RCy3)
+```
+
+# Required software
+RCy3 works by connecting with Cytoscape. You will need to install and launch Cytoscape:
+
+* Download the latest Cytoscape from http://www.cytoscape.org/download.php
+* Complete installation wizard
+* Launch Cytoscape
+
+
+```{r}
+cytoscapePing()
+```
+
+For this vignette, you’ll need the following apps: 
+
+* the [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app, 
+
+```{r}
+#available in Cytoscape 3.7.0 and above
+installApp('WikiPathways')
+```
+
+# Import pathways into Cytoscape.
+
+
+```{r}
+RCy3::commandsRun('wikipathways import-as-pathway id=WP179')
+```
+
+```{r}
+RCy3::commandsRun('wikipathways import-as-pathway id=WP2446')
+```
+
+```{r}
+RCy3::commandsRun('wikipathways import-as-pathway id=WP4830')
+```
+
+```{r}
+RCy3::commandsRun('wikipathways import-as-pathway id=WP707')
+```
+The 4 pathways will be listed as separate network collections in the Network Panel.
+
+
+# Data Import
+
+```{r}
+ df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
+
+RCy3::getNetworkList()
+```
+
+```{r}
+RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl", network = RCy3::getNetworkList()[1] )
+
+RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl", network = RCy3::getNetworkList()[2] )
+
+RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl", network = RCy3::getNetworkList()[3] )
+
+RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl", network = RCy3::getNetworkList()[4] )
+
+```
+Each network should now have multiple extra columns corresponding to fold change and p-value for several cancer types.
+
+
+# Data Visualization: Node Fill Color
+To visualize the data on the pathways, we are going to use Cytoscape's built-in function for Custom Graphics to visualize the fold change values for three cancer types: breast carcinoma, pancreatic adenocarcinoma and colorectal carcinoma. For this particular workflow, the visualized data points should be of the same type, for example fold changes.
+
+```{r}
+RCy3::setNodeCustomHeatMapChart(c('X.pancreatic.adenocarcinoma..vs..normal...foldChange','X.colorectal.carcinoma..vs..normal...foldChange','X.breast.carcinoma..vs..normal...foldChange'), colors=c('#FF0000', '#FFFFFF','#0000FF'), style.name="WikiPathways")
+```
+
+The three data points are now visualized as vertical stripes, each with a gradient from blue-red for fold change. Note that for this particular graphic (heatmap with horizontal orientation), the data points are displayed in the opposite order from how they were listed in the Custom Graphics interface, so in this case from left to right it is showing pancreatic adenocarcinoma vs normal, colorectal carcinoma vs normal and breast carcinoma vs normal.
+# Saving and Exporting Data Visualization
+```{r}
+RCy3::saveSession('wikipathway-data-visualization-advanved')
+RCy3::exportImage('wikipathway-data-visualization-advanved', type = "png")
+```
+
