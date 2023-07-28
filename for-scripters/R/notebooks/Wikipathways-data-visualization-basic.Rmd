@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <hr />
 
-WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identfiers, which can be used for computation and data visualization.
+WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identifiers, which can be used for computation and data visualization.
 
 The following workflow describes pathway import and data visualization.
 
