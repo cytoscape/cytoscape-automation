@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 *The R markdown is available from the pulldown menu for* Code *at the upper-right, choose "Download Rmd", or [download the Rmd from GitHub](https://raw.githubusercontent.com/cytoscape/cytoscape-automation/master/for-scripters/R/notebooks/Wikipathways-data-visualiztion-basic.Rmd).*
 
 <hr />
-WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identfiers, which can be used for computation and data visualization.
+WikiPathways is a database of biological pathways maintained by and for the scientific community. Each pathway model in the database is annotated with database identifiers, which can be used for computation and data visualization.
 
 This workflow describes how to work with multiple WikiPathways pathways in Cytoscape, specifically how to visualize multiple data points on a set of pathways of interest. This analysis assumes that we already have a list of pathways of interest. This list could come from enrichment analysis, but could also be a list of pathways of interest from prior knowledge.
 
-The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic (Best et el., 2015). The data was downloaded from Expression Atlas.
+The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic ([Best et el., 2015](https://www.cell.com/cancer-cell/fulltext/S1535-6108(15)00349-9)). The data was downloaded from [Expression Atlas](https://www.ebi.ac.uk/gxa/experiments/E-GEOD-68086/Downloads).
 
 If you are continuing from the previous workflow, make sure the session is saved and then select File → Close Session to start from scratch.
 
@@ -47,7 +47,7 @@ cytoscapePing()
 
 For this vignette, you’ll need the following apps: 
 
-* the [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app, 
+* The [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app
 
 ```{r}
 #available in Cytoscape 3.7.0 and above
@@ -78,7 +78,7 @@ The 4 pathways will be listed as separate network collections in the Network Pan
 # Data Import
 
 ```{r}
- df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
+df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
 
 RCy3::getNetworkList()
 ```
