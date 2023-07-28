@@ -44,7 +44,7 @@ cytoscapePing()
 
 For this vignette, you’ll need the following apps: 
 
-* the [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app, 
+* The [wikiPathways](https://apps.cytoscape.org/apps/wikipathways) app, 
 
 ```{r}
 #available in Cytoscape 3.7.0 and above
@@ -58,10 +58,10 @@ installApp('WikiPathways')
 RCy3::commandsRun('wikipathways import-as-pathway id=WP179')
 ```
 
-The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic (Best et el., 2015). The data was downloaded from Expression Atlas.
+The data we will be using for this workflow (E-GEOD-68086.csv) is from a study investigating the RNA-seq signatures of platelets from patients with various types of cancer, in an effort to develop a platelet-based diagnostic ([Best et el., 2015](https://www.cell.com/cancer-cell/fulltext/S1535-6108(15)00349-9)). The data was downloaded from [Expression Atlas](https://www.ebi.ac.uk/gxa/experiments/E-GEOD-68086/Downloads).
 
 ```{r}
- df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
+df <- read.csv(file="https://cytoscape.github.io/cytoscape-tutorials/protocols/data/E-GEOD-68086.csv", stringsAsFactors = FALSE)
 
 RCy3::loadTableData(df, data.key.column = "Gene.ID", table.key.column = "Ensembl" )
 
@@ -77,16 +77,17 @@ RCy3::setNodeColorMapping('X.breast.carcinoma..vs..normal...foldChange', colors=
 
 # Data Visualization: Node Border Width
 
-We also have a significance measure for the fold change, which we can add to our visualization. For this, we will use both Node Border Width and Node Border Size to visualize the p value.
+We also have a significance measure for the fold change, which we can add to our visualization. For this, we will use both Node Border Width and Node Border Color to visualize the p value. Let's start with Node Border Width:
 ```{r}
 RCy3::setNodeBorderWidthMapping('X.breast.carcinoma..vs..normal..pValue', table.column.values=c(0,0.05), widths=c(5,5,1,1), mapping.type='c', style.name="WikiPathways")
-
-RCy3::setNodeBorderColorDefault('#5A5A5A',style.name="WikiPathways")
 ```
 
 # Data Visualization: Node Border Color
 
+Significant genes now have a thicker node border, but we can also add color to further visualize significant nodes. We will set the default Node Border Color to dark grey, then update the Node Border Color for significant nodes to pink:
 ```{r results=FALSE}
+RCy3::setNodeBorderColorDefault('#5A5A5A',style.name="WikiPathways")
+
 RCy3::setNodeBorderColorMapping('X.breast.carcinoma..vs..normal..pValue', c(0, 0.05,0.05), c('#FC0FC0', '#FC0FC0', '#5A5A5A'), mapping.type='c', style.name="WikiPathways")
 ```
 
