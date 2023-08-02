@@ -8,7 +8,7 @@ output:
     toc_float: yes
     code_folding: none
 ---
-```{r, echo = FALSE}
+```{r echo=FALSE}
 knitr::opts_chunk$set(
   eval=FALSE
 )
@@ -100,7 +100,7 @@ Each network should now have multiple extra columns corresponding to fold change
 To visualize the data on the pathways, we are going to use Cytoscape's built-in function for Custom Graphics to visualize the fold change values for three cancer types: breast carcinoma, pancreatic adenocarcinoma and colorectal carcinoma. For this particular workflow, the visualized data points should be of the same type, for example fold changes.
 
 ```{r}
-RCy3::setNodeCustomHeatMapChart(c('X.pancreatic.adenocarcinoma..vs..normal...foldChange','X.colorectal.carcinoma..vs..normal...foldChange','X.breast.carcinoma..vs..normal...foldChange'), colors=c('#FF0000', '#FFFFFF','#0000FF'), style.name="WikiPathways")
+RCy3::setNodeCustomHeatMapChart(c('X.pancreatic.adenocarcinoma..vs..normal...foldChange','X.colorectal.carcinoma..vs..normal...foldChange','X.breast.carcinoma..vs..normal...foldChange'), colors=c('#FF0000','#FFFFFF','#0000FF','#FFFFFF'), style.name="WikiPathways")
 ```
 
 The three data points are now visualized as vertical stripes, each with a gradient from blue-red for fold change. Note that for this particular graphic (heatmap with horizontal orientation), the data points are displayed in the opposite order from how they were listed in the Custom Graphics interface, so in this case from left to right it is showing pancreatic adenocarcinoma vs normal, colorectal carcinoma vs normal and breast carcinoma vs normal.

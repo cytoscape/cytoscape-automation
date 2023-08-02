@@ -8,7 +8,7 @@ output:
     toc_depth: 4
     df_print: paged
 ---
-```{r, echo = FALSE}
+```{r echo=FALSE}
 knitr::opts_chunk$set(
   eval=FALSE
 )
@@ -28,7 +28,7 @@ Cytoscape is an open source software platform for integrating, visualizing, and 
 <hr />
 
 # Installation
-```{r, eval = FALSE}
+```{r eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 

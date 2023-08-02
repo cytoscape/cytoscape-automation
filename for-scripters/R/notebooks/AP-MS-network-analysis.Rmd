@@ -10,7 +10,7 @@ output:
 #  pdf_document:
 #    toc: true    
 ---
-```{r, echo = FALSE}
+```{r echo=FALSE}
 knitr::opts_chunk$set(
   eval=FALSE
 )
