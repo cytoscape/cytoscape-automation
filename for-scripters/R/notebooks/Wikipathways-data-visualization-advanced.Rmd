@@ -106,7 +106,7 @@ RCy3::setNodeCustomHeatMapChart(c('X.pancreatic.adenocarcinoma..vs..normal...fol
 The three data points are now visualized as vertical stripes, each with a gradient from blue-red for fold change. Note that for this particular graphic (heatmap with horizontal orientation), the data points are displayed in the opposite order from how they were listed in the Custom Graphics interface, so in this case from left to right it is showing pancreatic adenocarcinoma vs normal, colorectal carcinoma vs normal and breast carcinoma vs normal.
 # Saving and Exporting Data Visualization
 ```{r}
-RCy3::saveSession('wikipathway-data-visualization-advanved')
-RCy3::exportImage('wikipathway-data-visualization-advanved', type = "png")
+RCy3::saveSession('wikipathway-data-visualization-advanced')
+RCy3::exportImage('wikipathway-data-visualization-advanced', type = "png")
 ```
 

@@ -41,9 +41,9 @@ navbar:
     - text: "WikiPathways and RCy3"
       href: rWikiPathways-and-RCy3.nb.html
     - text: "WikiPathways Data Visualization Basic"
-      href: Wikipathways-data-visualiztion-basic.nb.html
+      href: Wikipathways-data-visualization-basic.nb.html
     - text: "WikiPathways Data Visualization Advanced"
-      href: Wikipathways-data-visualiztion-advanced.nb.html
+      href: Wikipathways-data-visualization-advanced.nb.html
     - text: "Phylogenetic trees"
       href: Phylogenetic-trees.nb.html
     - text: "Jupyter Bridge and RCy3"
